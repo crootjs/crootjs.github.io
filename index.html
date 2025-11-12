@@ -1,647 +1,889 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-
-  <!-- Basic Page Needs
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <title>CrootJS: Simple JS Boilerplate</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-
-  <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/custom.css">
-
-  <!-- Scripts
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-  <link rel="stylesheet" href="css/github-prettify-theme.css">
-  <script src="js/site.js"></script>
-
-  <!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSCroot - Pure Vanilla JavaScript ES6+ Modules Static Web Transformer</title>
+    <meta name="description" content="Transform static websites into dynamic experiences effortlessly with JSCroot. Pure Vanilla JavaScript ES6+ Modules with anti-deface protection and low-cost deployment.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: #111827;
+            background-color: #F8F9FA;
+            overflow-x: hidden;
+        }
+        
+        /* Color System Variables */
+        :root {
+            --primary-500: #007AFF;
+            --primary-700: #0059B8;
+            --primary-100: #E5F2FF;
+            --accent-green: #17A962;
+            --neutral-900: #111827;
+            --neutral-600: #4B5563;
+            --neutral-500: #6B7280;
+            --neutral-0: #FFFFFF;
+            --neutral-100: #F8F9FA;
+            --neutral-200: #E9ECEF;
+            --code-bg: #0A0A0A;
+            --code-text: #E4E4E7;
+        }
+        
+        /* Spacing System (8px scale) */
+        .space-xs { margin: 8px; }
+        .space-sm { margin: 16px; }
+        .space-md { margin: 24px; }
+        .space-lg { margin: 32px; }
+        .space-xl { margin: 48px; }
+        .space-xxl { margin: 64px; }
+        .space-xxxl { margin: 96px; }
+        
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+        
+        h2 {
+            font-size: clamp(32px, 4vw, 40px);
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+        
+        p {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--neutral-600);
+            margin-bottom: 16px;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 250ms ease-out;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-500);
+            color: var(--neutral-0);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-700);
+            transform: scale(1.03);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--neutral-900);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--neutral-100);
+        }
+        
+        /* Navigation */
+        .nav {
+            background-color: var(--neutral-0);
+            padding: 16px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--neutral-900);
+            font-weight: 600;
+            font-size: 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--neutral-600);
+            font-weight: 500;
+            transition: color 250ms ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-500);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 96px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--neutral-100) 0%, var(--primary-100) 100%);
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-tagline {
+            color: var(--neutral-600);
+            font-size: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 96px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+        
+        .feature-card {
+            background-color: var(--neutral-0);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 300ms ease-out;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 24px rgba(0, 122, 255, 0.15);
+        }
+        
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 16px;
+        }
+        
+        .feature-icon.green {
+            color: var(--accent-green);
+        }
+        
+        /* Code Examples Section */
+        .code-examples {
+            padding: 96px 0;
+            background-color: var(--neutral-0);
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 32px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .code-title {
+            color: var(--code-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        
+        .copy-btn {
+            background-color: transparent;
+            border: 1px solid var(--neutral-200);
+            color: var(--neutral-600);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 250ms ease;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--neutral-100);
+        }
+        
+        .code-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--code-text);
+            line-height: 1.6;
+        }
+        
+        .code-content .comment {
+            color: #6A737D;
+        }
+        
+        .code-content .keyword {
+            color: #F97583;
+        }
+        
+        .code-content .string {
+            color: #9ECBFF;
+        }
+        
+        .code-content .function {
+            color: #B392F0;
+        }
+        
+        .code-content .import {
+            color: #79B8FF;
+        }
+        
+        /* Hosting Section */
+        .hosting {
+            padding: 96px 0;
+        }
+        
+        .hosting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 48px;
+        }
+        
+        .hosting-item {
+            background-color: var(--neutral-0);
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--neutral-600);
+            transition: all 250ms ease;
+        }
+        
+        .hosting-item:hover {
+            color: var(--primary-500);
+            transform: translateY(-4px);
+        }
+        
+        /* Examples Section */
+        .examples {
+            padding: 96px 0;
+            background-color: var(--neutral-0);
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+        
+        .example-card {
+            background-color: var(--neutral-100);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 300ms ease-out;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 24px rgba(0, 122, 255, 0.15);
+        }
+        
+        .example-preview {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-green) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neutral-900);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .example-content {
+            padding: 24px;
+        }
+        
+        .example-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--neutral-900);
+        }
+        
+        .example-description {
+            color: var(--neutral-600);
+            margin-bottom: 16px;
+        }
+        
+        .example-link {
+            color: var(--primary-500);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .example-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 96px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+            color: var(--neutral-0);
+        }
+        
+        .cta h2 {
+            color: var(--neutral-0);
+            margin-bottom: 24px;
+        }
+        
+        .cta p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            font-size: 20px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .cta .btn-primary {
+            background-color: var(--neutral-0);
+            color: var(--primary-500);
+        }
+        
+        .cta .btn-primary:hover {
+            background-color: var(--neutral-100);
+            transform: scale(1.03);
+        }
+        
+        .cta .btn-secondary {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--neutral-0);
+        }
+        
+        .cta .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--neutral-900);
+            color: var(--neutral-500);
+            padding: 48px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--neutral-0);
+            font-weight: 600;
+            font-size: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .footer-links a {
+            color: var(--neutral-500);
+            text-decoration: none;
+            transition: color 250ms ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-500);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid var(--neutral-600);
+            padding-top: 24px;
+            margin-top: 24px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 100px 0 64px;
+            }
+            
+            .features-grid,
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hosting-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero-buttons,
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
-<body class="code-snippets-visible">
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
-    <section class="header">
-      <h2 class="title">A dead simple, responsive boilerplate.</h2>
-      <a class="button button-primary" href="https://github.com/dhg/Skeleton/releases/download/2.0.4/Skeleton-2.0.4.zip" onClick="_gaq.push(['_trackEvent', 'skeleton', 'download'])">Download</a>
-      <div class="value-props row">
-        <div class="four columns value-prop">
-          <img class="value-img" src="images/feather.svg">
-          Light as a feather at ~400 lines &amp; built with mobile in mind.
-        </div>
-        <div class="four columns value-prop">
-          <img class="value-img" src="images/pens.svg">
-          Styles designed to be a starting point, not a UI framework.
-        </div>
-        <div class="four columns value-prop">
-          <img class="value-img" src="images/watch.svg">
-          Quick to start with zero compiling or installing necessary.
-        </div>
-      </div>
-    </section>
-
-    <div class="navbar-spacer"></div>
-    <nav class="navbar">
-      <div class="container">
-        <ul class="navbar-list">
-          <li class="navbar-item"><a class="navbar-link" href="#intro">Intro</a></li>
-          <li class="navbar-item">
-            <a class="navbar-link" href="#" data-popover="#codeNavPopover">Code</a>
-            <div id="codeNavPopover" class="popover">
-              <ul class="popover-list">
-                <li class="popover-item">
-                  <a class="popover-link" href="#grid">Grid</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#typography">Typography</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#buttons">Buttons</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#forms">Forms</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#lists">Lists</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#code">Code</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#tables">Tables</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#queries">Queries</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="#utilities">Utilities</a>
-                </li>
-              </ul>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">
+                    <i data-lucide="code-2" width="32" height="32"></i>
+                    <span>JSCroot</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                    <li><a href="#hosting">Hosting</a></li>
+                    <li><a href="#docs">Docs</a></li>
+                </ul>
             </div>
-          </li>
-          <li class="navbar-item"><a class="navbar-link" href="#examples">Examples</a></li>
-          <li class="navbar-item">
-            <a class="navbar-link" href="#" data-popover="#moreNavPopover">More</a>
-            <div id="moreNavPopover" class="popover">
-              <ul class="popover-list">
-                <li class="popover-item">
-                  <a class="popover-link" href="https://github.com/dhg/Skeleton">On Github</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="https://github.com/dhg/Skeleton#browser-support">Browsers</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="https://github.com/dhg/Skeleton#license">License</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="https://github.com/dhg/Skeleton#extensions">Extensions</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="https://github.com/dhg/Skeleton/releases">Versions</a>
-                </li>
-                <li class="popover-item">
-                  <a class="popover-link" href="https://github.com/dhg/Skeleton#colophon">Colophon</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
+        </div>
     </nav>
 
-    <!-- Why use Skeleton -->
-    <div class="docs-section" id="intro">
-      <h6 class="docs-header">Is Skeleton for you?</h6>
-      <p>You should use Skeleton if you're embarking on a smaller project or just don't feel like you need all the utility of larger frameworks. Skeleton only styles a handful of standard HTML elements and includes a grid, but that's often more than enough to get started. In fact, <u>this site is built on Skeleton and has ~200 lines of custom CSS</u> (half of which is the docking navigation).</p>
-      <p>Love Skeleton and want to Tweet it, share it, or star it? Well, I appreciate that <3</p>
-      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.getskeleton.com" data-text="Skeleton - A dead simple, responsive boilerplate." data-via="dhg" data-related="dhg">Tweet</a>
-      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-      <!-- <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.getskeleton.com&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=21&amp;appId=151131931646052" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:21px; width:140px" allowTransparency="true"></iframe> -->
-      <iframe src="https://ghbtns.com/github-btn.html?user=dhg&repo=Skeleton&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-      <iframe src="https://ghbtns.com/github-btn.html?user=dhg&repo=Skeleton&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-    </div>
-
-    <!-- Grid -->
-    <div class="docs-section" id="grid">
-      <h6 class="docs-header">The grid</h6>
-      <p>The grid is a <u>12-column fluid grid with a max width of 960px</u>, that shrinks with the browser/device at smaller sizes. The max width can be changed with one line of CSS and all columns will resize accordingly. The syntax is simple and it makes coding responsive much easier. Go ahead, resize the browser. </p>
-      <div class="example-grid docs-example">
-        <div class="row">
-          <div class="one column">One</div>
-          <div class="eleven columns">Eleven</div>
-        </div>
-        <div class="row">
-          <div class="two columns">Two</div>
-          <div class="ten columns">Ten</div>
-        </div>
-        <div class="row">
-          <div class="three columns">Three</div>
-          <div class="nine columns">Nine</div>
-        </div>
-        <div class="row">
-          <div class="four columns">Four</div>
-          <div class="eight columns">Eight</div>
-        </div>
-        <div class="row">
-          <div class="five columns">Five</div>
-          <div class="seven columns">Seven</div>
-        </div>
-        <div class="row">
-          <div class="six columns">Six</div>
-          <div class="six columns">Six</div>
-        </div>
-        <div class="row">
-          <div class="seven columns">Seven</div>
-          <div class="five columns">Five</div>
-        </div>
-        <div class="row">
-          <div class="eight columns">Eight</div>
-          <div class="four  columns">Four</div>
-        </div>
-        <div class="row">
-          <div class="nine columns">Nine</div>
-          <div class="three columns">Three</div>
-        </div>
-        <div class="row">
-          <div class="ten columns">Ten</div>
-          <div class="two columns">Two</div>
-        </div>
-        <div class="row">
-          <div class="eleven columns">Eleven</div>
-          <div class="one column">One</div>
-        </div>
-      </div>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><!-- .container is main centered wrapper -->
-<div class="container">
-
-  <!-- columns should be the immediate child of a .row -->
-  <div class="row">
-    <div class="one column">One</div>
-    <div class="eleven columns">Eleven</div>
-  </div>
-
-  <!-- just use a number and class 'column' or 'columns' -->
-  <div class="row">
-    <div class="two columns">Two</div>
-    <div class="ten columns">Ten</div>
-  </div>
-
-  <!-- there are a few shorthand columns widths as well -->
-  <div class="row">
-    <div class="one-third column">1/3</div>
-    <div class="two-thirds column">2/3</div>
-  </div>
-  <div class="row">
-    <div class="one-half column">1/2</div>
-    <div class="one-half column">1/2</div>
-  </div>
-
-</div>
-
-<!-- Note: columns can be nested, but it's not recommended since Skeleton's grid has %-based gutters, meaning a nested grid results in variable with gutters (which can end up being *really* small on certain browser/device sizes) -->
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Typography -->
-    <div class="docs-section" id="typography">
-      <h6 class="docs-header">Typography</h6>
-      <p>Type is all set with the <code>rems</code>, so font-sizes and spacial relationships can be responsively sized based on a single <code>&lt;html&gt;</code> font-size property. Out of the box, Skeleton never changes the <code>&lt;html&gt;</code> font-size, but it's there in case you need it for your project. All measurements are still base 10 though so, an <code>&lt;h1&gt;</code> with <code>5.0rem</code>font-size just means <code>50px</code>.</p>
-      <div class="docs-example">
-        <div class="row">
-          <div class="six columns">
-            <p><strong>The typography base</strong> is <a href="http://www.google.com/fonts/specimen/Raleway">Raleway</a> served by Google, set at 15rem (15px) over a 1.6 line height (24px). Other type basics like <a href="#">anchors</a>, <strong>strong</strong>, <em>emphasis</em>, and <u>underline</u> are all obviously included.</p>
-            <p><strong>Headings</strong> create a family of distinct sizes each with specific <code>letter-spacing</code>, <code>line-height</code>, and <code>margins</code>.</p>
-          </div>
-          <div class="six columns">
-            <h1>Heading<span class="heading-font-size"> <code>&lt;h1&gt;</code> 50rem</span></h1>
-            <h2>Heading<span class="heading-font-size"> <code>&lt;h2&gt;</code> 42rem</span></h2>
-            <h3>Heading<span class="heading-font-size"> <code>&lt;h3&gt;</code> 36rem</span></h3>
-            <h4>Heading<span class="heading-font-size"> <code>&lt;h4&gt;</code> 30rem</span></h4>
-            <h5>Heading<span class="heading-font-size"> <code>&lt;h5&gt;</code> 24rem</span></h5>
-            <h6>Heading<span class="heading-font-size"> <code>&lt;h6&gt;</code> 15rem</span></h6>
-          </div>
-        </div>
-      </div>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><!-- Standard Headings -->
-<h1>Heading</h1>
-<h2>Heading</h2>
-<h3>Heading</h3>
-<h4>Heading</h4>
-<h5>Heading</h5>
-<h6>Heading</h6>
-
-<!-- Base type size -->
-<p>The base type is 15px over 1.6 line height (24px)</p>
-
-<!-- Other styled text tags -->
-<strong>Bolded</strong>
-<em>Italicized</em>
-<a>Colored</a>
-<u>Underlined</u>
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Buttons -->
-    <div class="docs-section" id="buttons">
-      <h6 class="docs-header">Buttons</h6>
-      <p>Buttons come in two basic flavors in Skeleton. The standard <code>&lt;button&gt;</code> element is plain, whereas the <code>.button-primary</code> button is vibrant and prominent. Button styles are applied to a number of appropriate form elements, but can also be arbitrarily attached to anchors with a <code>.button</code> class.</p>
-      <div class="docs-example">
-        <div>
-          <a class="button" href="#">Anchor button</a>
-          <button>Button element</button>
-          <input type="submit" value="submit input">
-          <input type="button" value="button input">
-        </div>
-        <div>
-          <a class="button button-primary" href="#">Anchor button</a>
-          <button class="button-primary">Button element</button>
-          <input class="button-primary" type="submit" value="submit input">
-          <input class="button-primary" type="button" value="button input">
-        </div>
-      </div>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><!-- Standard buttons -->
-<a class="button" href="#">Anchor button</a>
-<button>Button element</button>
-<input type="submit" value="submit input">
-<input type="button" value="button input">
-
-<!-- Primary buttons -->
-<a class="button button-primary" href="#">Anchor button</a>
-<button class="button-primary">Button element</button>
-<input class="button-primary" type="submit" value="submit input">
-<input class="button-primary" type="button" value="button input">
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Forms -->
-    <div class="docs-section" id="forms">
-      <h6 class="docs-header">Forms</h6>
-      <p>Forms are a huge pain, but hopefully these styles make it a bit easier. All inputs, select, and buttons are normalized for a common height cross-browser so inputs can be stacked or placed alongside each other.</p>
-      <div class="docs-example docs-example-forms">
-        <form>
-          <div class="row">
-            <div class="six columns">
-              <label for="exampleEmailInput">Your email</label>
-              <input class="u-full-width" type="email" placeholder="test@mailbox.com" id="exampleEmailInput">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content fade-in-up">
+                <div style="margin-bottom: 48px;">
+                    <i data-lucide="rocket" width="64" height="64" style="color: var(--primary-500);"></i>
+                </div>
+                <h1>Transform Static Websites into Dynamic Experiences. Instantly.</h1>
+                <p class="hero-tagline">JSCroot is a pure Vanilla JavaScript ES6+ Modules library that breathes life into your static HTML with zero dependencies.</p>
+                <div class="hero-buttons">
+                    <a href="#docs" class="btn btn-primary">
+                        <i data-lucide="book-open" width="20" height="20"></i>
+                        Get Started
+                    </a>
+                    <a href="https://github.com/jscroot" class="btn btn-secondary">
+                        <i data-lucide="github" width="20" height="20"></i>
+                        View on GitHub
+                    </a>
+                </div>
             </div>
-            <div class="six columns">
-              <label for="exampleRecipientInput">Reason for contacting</label>
-              <select class="u-full-width" id="exampleRecipientInput">
-                <option value="Option 1">Questions</option>
-                <option value="Option 2">Admiration</option>
-                <option value="Option 3">Can I get your number?</option>
-              </select>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Why Choose JSCroot?</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in-up">
+                    <i data-lucide="zap" class="feature-icon"></i>
+                    <h3>Static Website Transformation</h3>
+                    <p>Effortlessly transform static websites into dynamic, interactive experiences with minimal code changes.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <i data-lucide="leaf" class="feature-icon green"></i>
+                    <h3>Low-emission Carbon Code</h3>
+                    <p>Designed for efficiency and eco-friendliness. Smaller codebase means less energy consumption and faster loading times.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <i data-lucide="shield-check" class="feature-icon"></i>
+                    <h3>Anti-deface Protection</h3>
+                    <p>Built-in security features to protect your website against unauthorized changes and malicious alterations.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <i data-lucide="feather" class="feature-icon"></i>
+                    <h3>Lightweight Application</h3>
+                    <p>Super lightweight with zero npm dependencies. Just pure vanilla JavaScript ES6+ modules.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <i data-lucide="layers" class="feature-icon"></i>
+                    <h3>Micro Front End (MFE) Support</h3>
+                    <p>Perfect for building modern micro front-end architectures with component-based development.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <i data-lucide="smartphone" class="feature-icon"></i>
+                    <h3>Single Page Application (SPA) Support</h3>
+                    <p>Create conventional single-page applications with seamless navigation and state management.</p>
+                </div>
             </div>
-          </div>
-          <label for="exampleMessage">Message</label>
-          <textarea class="u-full-width" placeholder="Hi Dave &hellip;" id="exampleMessage"></textarea>
-          <label class="example-send-yourself-copy">
-            <input type="checkbox">
-            <span class="label-body">Send a copy to yourself</span>
-          </label>
-          <input class="button-primary" type="submit" value="Submit">
-        </form>
-      </div>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><!-- The above form looks like this -->
-<form>
-  <div class="row">
-    <div class="six columns">
-      <label for="exampleEmailInput">Your email</label>
-      <input class="u-full-width" type="email" placeholder="test@mailbox.com" id="exampleEmailInput">
-    </div>
-    <div class="six columns">
-      <label for="exampleRecipientInput">Reason for contacting</label>
-      <select class="u-full-width" id="exampleRecipientInput">
-        <option value="Option 1">Questions</option>
-        <option value="Option 2">Admiration</option>
-        <option value="Option 3">Can I get your number?</option>
-      </select>
-    </div>
-  </div>
-  <label for="exampleMessage">Message</label>
-  <textarea class="u-full-width" placeholder="Hi Dave &hellip;" id="exampleMessage"></textarea>
-  <label class="example-send-yourself-copy">
-    <input type="checkbox">
-    <span class="label-body">Send a copy to yourself</span>
-  </label>
-  <input class="button-primary" type="submit" value="Submit">
-</form>
-
-<!-- Always wrap checkbox and radio inputs in a label and use a <span class="label-body"> inside of it -->
-
-<!-- Note: The class .u-full-width is just a utility class shorthand for width: 100% -->
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Lists -->
-    <div class="docs-section" id="lists">
-      <h6 class="docs-header">Lists</h6>
-      <div class="row docs-example">
-        <div class="six columns">
-          <ul>
-            <li>Unordered lists have basic styles</li>
-            <li>
-              They use the circle list style
-              <ul>
-                <li>Nested lists styled to feel right</li>
-                <li>Can nest either type of list into the other</li>
-              </ul>
-            </li>
-            <li>Just more list items mama san</li>
-          </ul>
         </div>
-        <div class="six columns">
-          <ol>
-            <li>Ordered lists also have basic styles</li>
-            <li>
-              They use the decimal list style
-              <ul>
-                <li>Ordered and unordered can be nested</li>
-                <li>Can nest either type of list into the other</li>
-              </ul>
-            </li>
-            <li>Last list item just for the fun</li>
-          </ol>
+    </section>
+
+    <!-- Code Examples Section -->
+    <section id="examples" class="code-examples">
+        <div class="container">
+            <h2>Quick Start Example</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 48px;">Get started with JSCroot in just a few lines of code. Import from CDN and start building dynamic websites immediately.</p>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">main.js</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre class="code-content"><code><span class="comment">// Import JSCroot functions from CDN</span>
+<span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">postJSON</span> } 
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/jscroot/<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c6aaafa486f6e8f6e8f5">[email&#160;protected]</a>/element.js"</span>;
+
+<span class="comment">// Configure backend URL</span>
+<span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
+
+<span class="comment">// Handle login button click</span>
+<span class="function">onClick</span>(<span class="string">"loginBtn"</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="comment">// Get form values</span>
+  <span class="keyword">const</span> email = <span class="function">getValue</span>(<span class="string">"email"</span>);
+  <span class="keyword">const</span> password = <span class="function">getValue</span>(<span class="string">"password"</span>);
+  
+  <span class="comment">// Send login request</span>
+  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">postJSON</span>(<span class="string">`${urlBackend}/login`</span>, { email, password });
+  
+  <span class="comment">// Handle response</span>
+  <span class="keyword">if</span> (response.success) {
+    <span class="function">setInner</span>(<span class="string">"demo"</span>, <span class="string">"Login successful!"</span>);
+  }
+});</code></pre>
+            </div>
+            
+            <div style="text-align: center; margin-top: 32px;">
+                <a href="https://cdn.jsdelivr.net/gh/jscroot/lib" class="btn btn-primary">
+                    <i data-lucide="download" width="20" height="20"></i>
+                    Explore CDN Library
+                </a>
+            </div>
         </div>
-      </div>
+    </section>
 
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><ul>
-  <li>Item 1</li>
-  <li>
-    Item 2
-    <ul>
-      <li>Item 2.1</li>
-      <li>Item 2.2</li>
-    </ul>
-  </li>
-  <li>Item 3</li>
-</ul>
-
-<!-- Easily substitute any <ul> or an <ol> to get number lists or sublists. Skeleton doesn't support lists nested deeper than 2 levels -->
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Code -->
-    <div class="docs-section" id="code">
-      <h6 class="docs-header">Code</h6>
-      <p>Code styling is kept basic – just wrap anything in a <code>&lt;code&gt;</code> and it will appear like <code>this</code>. For blocks of code, wrap a <code>&lt;code&gt;</code> with a <code>&lt;pre&gt;</code>.</p>
-      <div class="docs-example">
-<pre><code>.some-class {
-  background-color: red;
-}</code></pre>
-      </div>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><pre><code>.some-class {
-  background-color: red;
-}</code></pre>
-
-<!-- Remember every whitespace and break will be preserved in a <pre>, including indentation in your code -->
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Tables -->
-    <div class="docs-section" id="tables">
-      <h6 class="docs-header">Tables</h6>
-      <p>Be sure to use properly formed table markup with <code>&lt;thead&gt;</code> and <code>&lt;tbody&gt;</code> when building a <code>table</code>.</p>
-      <div class="docs-example">
-        <table class="u-full-width">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Sex</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Dave Gamache</td>
-              <td>26</td>
-              <td>Male</td>
-              <td>San Francisco</td>
-            </tr>
-            <tr>
-              <td>Dwayne Johnson</td>
-              <td>42</td>
-              <td>Male</td>
-              <td>Hayward</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint"><table class="u-full-width">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Sex</th>
-      <th>Location</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Dave Gamache</td>
-      <td>26</td>
-      <td>Male</td>
-      <td>San Francisco</td>
-    </tr>
-    <tr>
-      <td>Dwayne Johnson</td>
-      <td>42</td>
-      <td>Male</td>
-      <td>Hayward</td>
-    </tr>
-  </tbody>
-</table>
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Queries -->
-    <div class="docs-section" id="queries">
-      <h6 class="docs-header">Media queries</h6>
-      <p>Skeleton uses media queries to serve its scalable grid, but also has a list of queries for convenience of styling your site across devices. The queries are mobile-first, meaning they target <code>min-width</code>. Mobile-first queries are how Skeleton's grid is built and is the preferrable method of organizing CSS. It means all styles outside of a query apply to all devices, then larger devices are targeted for enhancement. This prevents small devices from having to parse tons of unused CSS. The sizes for the queries are:</p>
-      <div class="docs-example row">
-        <div class="six columns">
-          <ul>
-            <li><strong>Desktop HD</strong>: 1200px</li>
-            <li><strong>Desktop</strong>: 1000px</li>
-            <li><strong>Tablet</strong>: 750px</li>
-          </ul>
+    <!-- Hosting Section -->
+    <section id="hosting" class="hosting">
+        <div class="container">
+            <h2>Deploy Anywhere</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 48px;">JSCroot works with all major hosting providers. Choose your favorite platform and deploy instantly.</p>
+            
+            <div class="hosting-grid">
+                <div class="hosting-item">GitHub Pages</div>
+                <div class="hosting-item">Vercel</div>
+                <div class="hosting-item">Netlify</div>
+                <div class="hosting-item">Firebase</div>
+                <div class="hosting-item">AWS Amplify</div>
+                <div class="hosting-item">Cloudflare Pages</div>
+                <div class="hosting-item">Azure Static Web Apps</div>
+                <div class="hosting-item">Google Cloud Storage</div>
+                <div class="hosting-item">DigitalOcean App Platform</div>
+                <div class="hosting-item">Surge.sh</div>
+                <div class="hosting-item">Render</div>
+                <div class="hosting-item">GitLab Pages</div>
+            </div>
         </div>
-        <div class="six columns">
-          <ul>
-            <li><strong>Phablet</strong>: 550px</li>
-            <li><strong>Mobile</strong>: 400px</li>
-          </ul>
+    </section>
+
+    <!-- Examples Section -->
+    <section class="examples">
+        <div class="container">
+            <h2>See JSCroot in Action</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 48px;">Explore real-world examples and templates built with JSCroot. Fork them on GitHub to get started quickly.</p>
+            
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="folder" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">File Explorer</h3>
+                        <p class="example-description">A modern file explorer interface with drag-and-drop functionality, built with JSCroot.</p>
+                        <a href="https://jscroot.github.io/explorer/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="file-text" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">PDF Web Viewer</h3>
+                        <p class="example-description">A sleek PDF viewer that works directly in the browser with smooth navigation.</p>
+                        <a href="https://jscroot.github.io/view/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="book-open" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">API Documentation</h3>
+                        <p class="example-description">Beautiful API documentation interface with live Swagger integration.</p>
+                        <a href="https://jscroot.github.io/swagger/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="layout-dashboard" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">SPA Skeleton</h3>
+                        <p class="example-description">A complete Single Page Application starter template with routing and state management.</p>
+                        <a href="https://jscroot.github.io/skeleton/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="alert-triangle" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">404 Error Page</h3>
+                        <p class="example-description">An elegant 404 error page template with smooth animations and responsive design.</p>
+                        <a href="https://jscroot.github.io/404/404.html" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="cpu" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Performance Benchmark</h3>
+                        <p class="example-description">See how JSCroot compares to other frameworks in terms of performance and bundle size.</p>
+                        <a href="https://krausest.github.io/js-framework-benchmark/current.html" class="example-link">View Benchmark →</a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
 
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint">/* Mobile first queries */
-
-/* Larger than mobile */
-@media (min-width: 400px) {}
-
-/* Larger than phablet */
-@media (min-width: 550px) {}
-
-/* Larger than tablet */
-@media (min-width: 750px) {}
-
-/* Larger than desktop */
-@media (min-width: 1000px) {}
-
-/* Larger than Desktop HD */
-@media (min-width: 1200px) {}
-
-
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-
-    <!-- Utilities and Misc. -->
-    <div class="docs-section" id="utilities">
-      <h6 class="docs-header">Utilities</h6>
-      <p>Skeleton has a number of small utility classes that act as easy-to-use helpers. Sometimes it's better to use a utility class than create a whole new class just to float an element.</p>
-
-
-<!-- CODE EXAMPLE ———————————————————————————————————————— -->
-<pre class="code-example">
-<code class="code-example-body prettyprint">/* Utility Classes */
-
-/* Make element full width */
-.u-full-width {
-  width: 100%;
-  box-sizing: border-box; }
-
-/* Make sure elements don't run outside containers (great for images in columns) */
-.u-max-full-width {
-  max-width: 100%;
-  box-sizing: border-box; }
-
-/* Float either direction */
-.u-pull-right {
-  float: right; }
-.u-pull-left {
-  float: left; }
-
-/* Clear a float */
-.u-cf {
-  content: "";
-  display: table;
-  clear: both; }
-</code>
-</pre>
-<!-- ————————————————————————————————————————————————————— -->
-
-
-    </div>
-
-    <!-- Examples -->
-    <div class="docs-section examples" id="examples">
-      <h6 class="docs-header">Examples</h6>
-      <div class="row example">
-        <a class="example-screenshot-wrapper" target="_blank" href="examples/landing">
-          <img class="example-screenshot" src="images/landing.jpg">
-        </a>
-        <div class="one-half offset-by-one-half column">
-          <h6 class="example-header">Demo Landing Page</h6>
-          <p class="example-description">This template is an example of how easy it can be to create a landing page with just the Skeleton grid and a few custom styles. The entire demo is ~150 lines of CSS including comments (most of which is positioning the phones at the top).</p>
-          <a class="button" href="examples/landing" target="_blank">Demo</a>
-          <a class="button" href="https://github.com/dhg/Skeleton/tree/gh-pages/examples/landing" target="_blank">Source</a>
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Transform Your Website?</h2>
+            <p>Join thousands of developers who are already building amazing things with JSCroot</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/jscroot" class="btn btn-primary">
+                    <i data-lucide="github" width="20" height="20"></i>
+                    Star on GitHub
+                </a>
+                <a href="./lib" class="btn btn-secondary">
+                    <i data-lucide="book" width="20" height="20"></i>
+                    Read Documentation
+                </a>
+            </div>
         </div>
-      </div>
-      <div class="row example">
-        <div class="example-screenshot-wrapper">
-          <div class="example-screenshot coming-soon"></div>
-        </div>
-        <div class="one-half offset-by-one-half column">
-          <h6 class="example-header">More Coming Soon!</h6>
-          <p class="example-description">More examples will be added to help anyone get started or more familiar with how Skeleton works. The goal is education. If you're more interested in real, live examples of Skeleton sites, I'll be creating a "Built on Skeleton" list soon!</p>
-        </div>
-      </div>
-    </div>
+    </section>
 
-  </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i data-lucide="code-2" width="24" height="24"></i>
+                    <span>JSCroot by PT. Informatika Digital Bisnis</span>
+                </div>
+                <p>Pure Vanilla JavaScript ES6+ Modules Static Web Transformer</p>
+                <div class="footer-links">
+                    <a href="https://if.co.id/">Company</a>
+                    <a href="https://github.com/jscroot">GitHub</a>
+                    <a href="./lib">Documentation</a>
+                    <a href="https://aiteung.if.co.id/">AIteung</a>
+                    <a href="https://wa.my.id/">WhatsAuth</a>
+                    <a href="https://petapedia.if.co.id/">PetaPedia</a>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 PT. Informatika Digital Bisnis. All rights reserved.</p>
+                    <p>Bandung, Indonesia | AHU-052052.AH.01.30.Tahun 2024</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Copy code function
+        function copyCode(button) {
+            const codeBlock = button.parentElement.nextElementSibling;
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.backgroundColor = 'var(--accent-green)';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = 'transparent';
+                    button.style.color = 'var(--neutral-600)';
+                }, 2000);
+            });
+        }
+        
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+        
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+        
+        // Initialize tooltips and interactions
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.feature-card, .example-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
