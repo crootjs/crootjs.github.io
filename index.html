@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -552,7 +552,7 @@
                     <li><a href="#features">Features</a></li>
                     <li><a href="#examples">Examples</a></li>
                     <li><a href="#hosting">Hosting</a></li>
-                    <li><a href="/docs">Docs</a></li>
+                    <li><a href="https://github.com/crootjs/lib">Docs</a></li>
                 </ul>
             </div>
         </div>
@@ -568,7 +568,7 @@
                 <h1>Transform Static Websites into Dynamic Experiences. Instantly.</h1>
                 <p class="hero-tagline">CrootJS is a pure Vanilla JavaScript ES6+ Modules library that breathes life into your static HTML with zero dependencies.</p>
                 <div class="hero-buttons">
-                    <a href="/docs" class="btn btn-primary">
+                    <a href="https://github.com/crootjs/lib" class="btn btn-primary">
                         <i data-lucide="book-open" width="20" height="20"></i>
                         Get Started
                     </a>
@@ -632,25 +632,26 @@
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
-<span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">postJSON</span> } 
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.1/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.4/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.4/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
 
 <span class="comment">// Handle login button click</span>
-<span class="function">onClick</span>(<span class="string">"loginBtn"</span>, <span class="keyword">async</span> () =&gt; {
+<span class="function">onClick</span>(<span class="string">"loginBtn"</span>, () =&gt; {
   <span class="comment">// Get form values</span>
   <span class="keyword">const</span> email = <span class="function">getValue</span>(<span class="string">"email"</span>);
   <span class="keyword">const</span> password = <span class="function">getValue</span>(<span class="string">"password"</span>);
-  
+
   <span class="comment">// Send login request</span>
-  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">postJSON</span>(<span class="string">`${urlBackend}/login`</span>, { email, password });
-  
-  <span class="comment">// Handle response</span>
-  <span class="keyword">if</span> (response.success) {
-    <span class="function">setInner</span>(<span class="string">"demo"</span>, <span class="string">"Login successful!"</span>);
-  }
+  <span class="function">postJSON</span>(<span class="string">`${urlBackend}/login`</span>, { email, password }, (response) =&gt; {
+    <span class="comment">// Handle response</span>
+    <span class="keyword">if</span> (response.status === 200) {
+      <span class="function">setInner</span>(<span class="string">"demo"</span>, <span class="string">"Login successful!"</span>);
+    }
+  });
 });</code></pre>
             </div>
             
@@ -772,7 +773,7 @@
                     <i data-lucide="github" width="20" height="20"></i>
                     Star on GitHub
                 </a>
-                <a href="./lib" class="btn btn-secondary">
+                <a href="https://github.com/crootjs/lib" class="btn btn-secondary">
                     <i data-lucide="book" width="20" height="20"></i>
                     Read Documentation
                 </a>
@@ -792,7 +793,7 @@
                 <div class="footer-links">
                     <a href="https://if.co.id/">Company</a>
                     <a href="https://github.com/crootjs">GitHub</a>
-                    <a href="./lib">Documentation</a>
+                    <a href="https://github.com/crootjs/lib">Documentation</a>
                     <a href="https://aiteung.if.co.id/">AIteung</a>
                     <a href="https://wa.my.id/">WhatsAuth</a>
                     <a href="https://petapedia.if.co.id/">PetaPedia</a>
@@ -805,7 +806,7 @@
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Initialize Lucide icons
         lucide.createIcons();
         
