@@ -507,22 +507,6 @@
             }
         }
         
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-        
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
@@ -550,7 +534,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content fade-in-up">
+            <div class="hero-content">
                 <h1>Vanilla ES6+ JavaScript Modules — Straight From a CDN</h1>
                 <p class="hero-tagline">A set of small, dependency-free JS modules for static sites — DOM helpers, fetch wrappers, cookies, URL utilities, and a WhatsApp QR login flow. Import what you need directly from jsDelivr; no <code>npm install</code>, no bundler.</p>
                 <div class="hero-badges">
@@ -577,32 +561,32 @@
         <div class="container">
             <h2>What's Actually In It</h2>
             <div class="features-grid">
-                <div class="feature-card fade-in-up">
+                <div class="feature-card">
                     <i data-lucide="package" class="feature-icon"></i>
                     <h3>Zero Build, Zero Install</h3>
                     <p>Import modules straight from jsDelivr's CDN with a <code>&lt;script type="module"&gt;</code> tag. No <code>npm install</code>, no bundler config, no build step.</p>
                 </div>
-                <div class="feature-card fade-in-up">
+                <div class="feature-card">
                     <i data-lucide="network" class="feature-icon"></i>
                     <h3>Fetch Wrappers, Not a Framework</h3>
                     <p><code>getJSON</code>, <code>postJSON</code>, <code>putJSON</code>, <code>deleteJSON</code> — thin wrappers over the native Fetch API with a consistent <code>{status, data}</code> callback.</p>
                 </div>
-                <div class="feature-card fade-in-up">
+                <div class="feature-card">
                     <i data-lucide="mouse-pointer-click" class="feature-icon"></i>
                     <h3>DOM Helpers Without the Boilerplate</h3>
                     <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls.</p>
                 </div>
-                <div class="feature-card fade-in-up">
+                <div class="feature-card">
                     <i data-lucide="qr-code" class="feature-icon green"></i>
                     <h3>WhatsApp QR + OTP Login</h3>
                     <p><code>auth.js</code> and <code>stp.js</code> give you a ready-made WhatsAuth QR-code and OTP login flow, including Google Sign-In.</p>
                 </div>
-                <div class="feature-card fade-in-up">
+                <div class="feature-card">
                     <i data-lucide="cookie" class="feature-icon"></i>
                     <h3>Cookies, URLs & Input Validation</h3>
                     <p><code>cookie.js</code>, <code>url.js</code>, and <code>validate.js</code> cover session cookies, query strings, and input sanitization like phone numbers and currency formatting.</p>
                 </div>
-                <div class="feature-card fade-in-up">
+                <div class="feature-card">
                     <i data-lucide="puzzle" class="feature-icon"></i>
                     <h3>Import Only What You Use</h3>
                     <p>Every module is a separate CDN file — <code>.../lib@version/cookie.js</code> — so your page only loads the code it actually needs.</p>
@@ -811,48 +795,6 @@
             });
         }
         
-        // Fade in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-        
-        // Observe all fade-in elements
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            observer.observe(el);
-        });
-        
-        // Add loading animation
-        window.addEventListener('load', () => {
-            document.body.style.opacity = '1';
-        });
-        
-        // Initialize tooltips and interactions
-        document.addEventListener('DOMContentLoaded', () => {
-            // Add hover effects to cards
-            const cards = document.querySelectorAll('.feature-card, .example-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-8px)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-        });
     </script>
 </body>
 </html>
