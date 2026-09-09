@@ -1,0 +1,38 @@
+# CrootJS
+
+> CrootJS is a set of small, dependency-free vanilla JavaScript ES6+ modules meant to be imported directly from a CDN (jsDelivr, serving files straight from GitHub tags) — no npm install, no bundler, no build step. Each module is an independent file; import only the ones you need.
+
+Current release: see the `v*` tags at https://github.com/crootjs/lib/tags — import a specific module as
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.5/cookie.js`.
+Always pin an exact version tag; do not use `@latest` in production code.
+
+## Modules
+
+- `api.js` — fetch wrappers: `getJSON`, `postJSON`, `putJSON`, `deleteJSON` (signature: `fn(url, [data], responseFunction, [tokenkey], [tokenvalue])`, callback receives `{status, data}`), plus `insertHTML`, `getDomHTML`, and file-upload helpers (`postFile`, `postFileWithHeader`, `postFileJSON`, `getFileWithHeader`, `getFileBytesWithHeader`).
+- `element.js` — DOM helpers: `onClick`, `onChange`, `onInput` (and their `*s` plural variants for class selectors), `setInner`, `setInnerText`, `getValue`, `show`/`hide`, `addChild`, `renderHTML`, `replaceTag`, `addJS`/`addCSS`.
+- `cookie.js` — `setCookieWithExpireDay/Hour/Second`, `getCookie`, `deleteCookie`.
+- `url.js` — `getProtocol`, `getHost`, `fullPath`, `folderPath`, `getPath`, `getQueryString`, `setQueryString`, `getHash`, `setHash`, `redirect`, `onHashChange`. Browser-only (depends on `window.location`).
+- `validate.js` — input transformers bound to form elements: `validateUserName`, `validateHouseNumber`, `validatePhoneNumber`, `formatRupiah`.
+- `websocket.js` — `openWebSocketSetId(id, url_ws, onMessage?)` returns a Promise resolving to the connected `WebSocket`; falls back to a global `window.catcher(message)` if `onMessage` is omitted. Also `sendMessagetoWebSocket`, `closeWebSocket`.
+- `auth.js` — WhatsAuth QR-code + Google Sign-In login flow (`qrController`, `appendGoogleSignin`, `deleteCookie`, `IsMobile`, `getParamsfromURL`).
+- `config.js` — shared config objects (`wauthparam`, `autoinjector`) consumed by `auth.js`'s login flow.
+- `stp.js` — WhatsApp OTP flow: `sendSTP(phoneNumber, captchaToken)`, `verifySTP(phoneNumber, password)`, `resendSTP(phoneNumber)`. Phone numbers must be in `62...` format.
+- `useragent.js` — `isMobile()`, a regex check against `navigator.userAgent`.
+- `trace.js` — `tapClick(event)`, logs click/touch coordinates to the console; meant to be attached via `addEventListener`.
+- `image.js` — `getRandomColor()` (hex string), `getRandomColorName()` (Tailwind-style color name).
+- `loading.js` — exports `loading`, an inline animated SVG spinner string.
+- `template.js` — exports `refreshbutton` and `loginbutton`, inline SVG snippets used by `auth.js`.
+- `mongo.js` — browser-only MongoDB `ObjectId` helpers: `generateObjectId()`, `getDateFromObjectId(stringID)`. Does not open a database connection.
+
+## Docs
+
+- Full API reference (per-module): https://croot.js.org/docs/
+- Source: https://github.com/crootjs/lib
+- Working examples: https://github.com/crootjs/examples (live at https://croot.js.org/examples/)
+- README (rendered): https://croot.js.org/lib/
+
+## Notes for coding agents
+
+- Always import from a pinned version tag, never `@latest`.
+- `api.js` callbacks follow `(url, ..., responseFunction, tokenkey, tokenvalue)` — `responseFunction` is NOT the last argument for `getJSON`/`postJSON`/`putJSON`/`deleteJSON`; check the exact position per function above before generating calls.
+- `websocket.js`'s `openWebSocketSetId` is asynchronous (Promise-based) — it does not return a `WebSocket` synchronously.

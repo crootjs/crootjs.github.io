@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrootJS - Pure Vanilla JavaScript ES6+ Modules Static Web Transformer</title>
-    <meta name="description" content="Transform static websites into dynamic experiences effortlessly with CrootJS. Pure Vanilla JavaScript ES6+ Modules with anti-deface protection and low-cost deployment.">
-    
+    <title>CrootJS - Vanilla ES6+ JavaScript Modules via CDN</title>
+    <meta name="description" content="CrootJS is a zero-dependency, zero-build set of vanilla JavaScript ES6+ modules — DOM helpers, fetch wrappers, cookies, URL utilities, and a WhatsApp QR login flow — imported straight from jsDelivr. No npm install, no bundler.">
+
+    <meta property="og:title" content="CrootJS - Vanilla ES6+ JavaScript Modules via CDN">
+    <meta property="og:description" content="Zero-dependency, zero-build vanilla JS ES6+ modules imported straight from jsDelivr. No npm install, no bundler.">
+    <meta property="og:url" content="https://croot.js.org/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="CrootJS - Vanilla ES6+ JavaScript Modules via CDN">
+    <meta name="twitter:description" content="Zero-dependency, zero-build vanilla JS ES6+ modules imported straight from jsDelivr. No npm install, no bundler.">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
@@ -177,7 +185,8 @@
         .hero {
             padding: 120px 0 96px;
             text-align: center;
-            background: linear-gradient(135deg, var(--neutral-100) 0%, var(--primary-100) 100%);
+            background-color: var(--neutral-100);
+            border-bottom: 1px solid var(--neutral-200);
         }
         
         .hero-content {
@@ -197,6 +206,18 @@
             gap: 24px;
             flex-wrap: wrap;
             margin-top: 32px;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .hero-badges img {
+            height: 20px;
         }
         
         /* Features Section */
@@ -304,33 +325,6 @@
             color: #79B8FF;
         }
         
-        /* Hosting Section */
-        .hosting {
-            padding: 96px 0;
-        }
-        
-        .hosting-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 48px;
-        }
-        
-        .hosting-item {
-            background-color: var(--neutral-0);
-            padding: 16px 24px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 500;
-            color: var(--neutral-600);
-            transition: all 250ms ease;
-        }
-        
-        .hosting-item:hover {
-            color: var(--primary-500);
-            transform: translateY(-4px);
-        }
-        
         /* Examples Section */
         .examples {
             padding: 96px 0;
@@ -397,7 +391,7 @@
         .cta {
             padding: 96px 0;
             text-align: center;
-            background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+            background-color: var(--neutral-900);
             color: var(--neutral-0);
         }
         
@@ -500,10 +494,6 @@
                 grid-template-columns: 1fr;
             }
             
-            .hosting-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .hero-buttons,
             .cta-buttons {
                 flex-direction: column;
@@ -551,7 +541,6 @@
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#examples">Examples</a></li>
-                    <li><a href="#hosting">Hosting</a></li>
                     <li><a href="/docs">Docs</a></li>
                 </ul>
             </div>
@@ -562,11 +551,13 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content fade-in-up">
-                <div style="margin-bottom: 48px;">
-                    <i data-lucide="rocket" width="64" height="64" style="color: var(--primary-500);"></i>
+                <h1>Vanilla ES6+ JavaScript Modules — Straight From a CDN</h1>
+                <p class="hero-tagline">A set of small, dependency-free JS modules for static sites — DOM helpers, fetch wrappers, cookies, URL utilities, and a WhatsApp QR login flow. Import what you need directly from jsDelivr; no <code>npm install</code>, no bundler.</p>
+                <div class="hero-badges">
+                    <img src="https://img.shields.io/github/v/tag/crootjs/lib?label=version&color=007AFF" alt="latest version" loading="lazy">
+                    <img src="https://img.shields.io/jsdelivr/gh/hm/crootjs/lib?label=jsDelivr%20hits" alt="jsDelivr hits" loading="lazy">
+                    <img src="https://img.shields.io/github/license/crootjs/lib" alt="license" loading="lazy">
                 </div>
-                <h1>Transform Static Websites into Dynamic Experiences. Instantly.</h1>
-                <p class="hero-tagline">CrootJS is a pure Vanilla JavaScript ES6+ Modules library that breathes life into your static HTML with zero dependencies.</p>
                 <div class="hero-buttons">
                     <a href="/docs" class="btn btn-primary">
                         <i data-lucide="book-open" width="20" height="20"></i>
@@ -584,37 +575,37 @@
     <!-- Features Section -->
     <section id="features" class="features">
         <div class="container">
-            <h2>Why Choose CrootJS?</h2>
+            <h2>What's Actually In It</h2>
             <div class="features-grid">
                 <div class="feature-card fade-in-up">
-                    <i data-lucide="zap" class="feature-icon"></i>
-                    <h3>Static Website Transformation</h3>
-                    <p>Effortlessly transform static websites into dynamic, interactive experiences with minimal code changes.</p>
+                    <i data-lucide="package" class="feature-icon"></i>
+                    <h3>Zero Build, Zero Install</h3>
+                    <p>Import modules straight from jsDelivr's CDN with a <code>&lt;script type="module"&gt;</code> tag. No <code>npm install</code>, no bundler config, no build step.</p>
                 </div>
                 <div class="feature-card fade-in-up">
-                    <i data-lucide="leaf" class="feature-icon green"></i>
-                    <h3>Low-emission Carbon Code</h3>
-                    <p>Designed for efficiency and eco-friendliness. Smaller codebase means less energy consumption and faster loading times.</p>
+                    <i data-lucide="network" class="feature-icon"></i>
+                    <h3>Fetch Wrappers, Not a Framework</h3>
+                    <p><code>getJSON</code>, <code>postJSON</code>, <code>putJSON</code>, <code>deleteJSON</code> — thin wrappers over the native Fetch API with a consistent <code>{status, data}</code> callback.</p>
                 </div>
                 <div class="feature-card fade-in-up">
-                    <i data-lucide="shield-check" class="feature-icon"></i>
-                    <h3>Anti-deface Protection</h3>
-                    <p>Built-in security features to protect your website against unauthorized changes and malicious alterations.</p>
+                    <i data-lucide="mouse-pointer-click" class="feature-icon"></i>
+                    <h3>DOM Helpers Without the Boilerplate</h3>
+                    <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls.</p>
                 </div>
                 <div class="feature-card fade-in-up">
-                    <i data-lucide="feather" class="feature-icon"></i>
-                    <h3>Lightweight Application</h3>
-                    <p>Super lightweight with zero npm dependencies. Just pure vanilla JavaScript ES6+ modules.</p>
+                    <i data-lucide="qr-code" class="feature-icon green"></i>
+                    <h3>WhatsApp QR + OTP Login</h3>
+                    <p><code>auth.js</code> and <code>stp.js</code> give you a ready-made WhatsAuth QR-code and OTP login flow, including Google Sign-In.</p>
                 </div>
                 <div class="feature-card fade-in-up">
-                    <i data-lucide="layers" class="feature-icon"></i>
-                    <h3>Micro Front End (MFE) Support</h3>
-                    <p>Perfect for building modern micro front-end architectures with component-based development.</p>
+                    <i data-lucide="cookie" class="feature-icon"></i>
+                    <h3>Cookies, URLs & Input Validation</h3>
+                    <p><code>cookie.js</code>, <code>url.js</code>, and <code>validate.js</code> cover session cookies, query strings, and input sanitization like phone numbers and currency formatting.</p>
                 </div>
                 <div class="feature-card fade-in-up">
-                    <i data-lucide="smartphone" class="feature-icon"></i>
-                    <h3>Single Page Application (SPA) Support</h3>
-                    <p>Create conventional single-page applications with seamless navigation and state management.</p>
+                    <i data-lucide="puzzle" class="feature-icon"></i>
+                    <h3>Import Only What You Use</h3>
+                    <p>Every module is a separate CDN file — <code>.../lib@version/cookie.js</code> — so your page only loads the code it actually needs.</p>
                 </div>
             </div>
         </div>
@@ -633,8 +624,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.4/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.4/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.5/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.5/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -660,29 +651,6 @@
                     <i data-lucide="download" width="20" height="20"></i>
                     Explore CDN Library
                 </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hosting Section -->
-    <section id="hosting" class="hosting">
-        <div class="container">
-            <h2>Deploy Anywhere</h2>
-            <p style="text-align: center; max-width: 600px; margin: 0 auto 48px;">CrootJS works with all major hosting providers. Choose your favorite platform and deploy instantly.</p>
-            
-            <div class="hosting-grid">
-                <div class="hosting-item">GitHub Pages</div>
-                <div class="hosting-item">Vercel</div>
-                <div class="hosting-item">Netlify</div>
-                <div class="hosting-item">Firebase</div>
-                <div class="hosting-item">AWS Amplify</div>
-                <div class="hosting-item">Cloudflare Pages</div>
-                <div class="hosting-item">Azure Static Web Apps</div>
-                <div class="hosting-item">Google Cloud Storage</div>
-                <div class="hosting-item">DigitalOcean App Platform</div>
-                <div class="hosting-item">Surge.sh</div>
-                <div class="hosting-item">Render</div>
-                <div class="hosting-item">GitLab Pages</div>
             </div>
         </div>
     </section>
@@ -766,8 +734,8 @@
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
-            <h2>Ready to Transform Your Website?</h2>
-            <p>Join thousands of developers who are already building amazing things with CrootJS</p>
+            <h2>Start Using CrootJS</h2>
+            <p>Browse the per-module docs, check the source, or fork one of the working examples.</p>
             <div class="cta-buttons">
                 <a href="https://github.com/crootjs" class="btn btn-primary">
                     <i data-lucide="github" width="20" height="20"></i>
