@@ -19,499 +19,9 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    
-    <style>
-        /* CSS Reset & Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.7;
-            color: #111827;
-            background-color: #F8F9FA;
-            overflow-x: hidden;
-        }
-        
-        /* Color System Variables */
-        :root {
-            --primary-500: #007AFF;
-            --primary-700: #0059B8;
-            --primary-100: #E5F2FF;
-            --accent-green: #17A962;
-            --neutral-900: #111827;
-            --neutral-600: #4B5563;
-            --neutral-500: #6B7280;
-            --neutral-0: #FFFFFF;
-            --neutral-100: #F8F9FA;
-            --neutral-200: #E9ECEF;
-            --code-bg: #0A0A0A;
-            --code-text: #E4E4E7;
-        }
-        
-        /* Spacing System (8px scale) */
-        .space-xs { margin: 8px; }
-        .space-sm { margin: 16px; }
-        .space-md { margin: 24px; }
-        .space-lg { margin: 32px; }
-        .space-xl { margin: 48px; }
-        .space-xxl { margin: 64px; }
-        .space-xxxl { margin: 96px; }
-        
-        /* Container */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-        
-        /* Typography */
-        h1 {
-            font-size: clamp(36px, 5vw, 64px);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 24px;
-        }
-        
-        h2 {
-            font-size: clamp(32px, 4vw, 40px);
-            font-weight: 700;
-            line-height: 1.3;
-            margin-bottom: 32px;
-            text-align: center;
-        }
-        
-        h3 {
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 16px;
-        }
-        
-        p {
-            font-size: 18px;
-            font-weight: 400;
-            color: var(--neutral-600);
-            margin-bottom: 16px;
-        }
-        
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 32px;
-            font-size: 18px;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 250ms ease-out;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-500);
-            color: var(--neutral-0);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-700);
-            transform: scale(1.03);
-        }
-        
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-        
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--neutral-900);
-            border: 1px solid var(--neutral-200);
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--neutral-100);
-        }
-        
-        /* Navigation */
-        .nav {
-            background-color: var(--neutral-0);
-            padding: 16px 0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--neutral-900);
-            font-weight: 600;
-            font-size: 20px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--neutral-600);
-            font-weight: 500;
-            transition: color 250ms ease;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary-500);
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 120px 0 96px;
-            text-align: center;
-            background-color: var(--neutral-100);
-            border-bottom: 1px solid var(--neutral-200);
-        }
-        
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .hero-tagline {
-            color: var(--neutral-600);
-            font-size: 20px;
-            margin-bottom: 32px;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-top: 32px;
-        }
 
-        .hero-badges {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
+    <link rel="stylesheet" href="style.css">
 
-        .hero-badges img {
-            height: 20px;
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 96px 0;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 32px;
-            margin-top: 48px;
-        }
-        
-        .feature-card {
-            background-color: var(--neutral-0);
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: all 300ms ease-out;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 24px rgba(0, 122, 255, 0.15);
-        }
-        
-        .feature-icon {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 16px;
-        }
-        
-        .feature-icon.green {
-            color: var(--accent-green);
-        }
-        
-        /* Code Examples Section */
-        .code-examples {
-            padding: 96px 0;
-            background-color: var(--neutral-0);
-        }
-        
-        .code-block {
-            background-color: var(--code-bg);
-            border-radius: 16px;
-            padding: 32px;
-            margin: 32px 0;
-            position: relative;
-            overflow-x: auto;
-        }
-        
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .code-title {
-            color: var(--code-text);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-        }
-        
-        .copy-btn {
-            background-color: transparent;
-            border: 1px solid var(--neutral-200);
-            color: var(--neutral-600);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 250ms ease;
-        }
-        
-        .copy-btn:hover {
-            background-color: var(--neutral-100);
-        }
-        
-        .code-content {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            color: var(--code-text);
-            line-height: 1.6;
-        }
-        
-        .code-content .comment {
-            color: #6A737D;
-        }
-        
-        .code-content .keyword {
-            color: #F97583;
-        }
-        
-        .code-content .string {
-            color: #9ECBFF;
-        }
-        
-        .code-content .function {
-            color: #B392F0;
-        }
-        
-        .code-content .import {
-            color: #79B8FF;
-        }
-        
-        /* Examples Section */
-        .examples {
-            padding: 96px 0;
-            background-color: var(--neutral-0);
-        }
-        
-        .examples-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 32px;
-            margin-top: 48px;
-        }
-        
-        .example-card {
-            background-color: var(--neutral-100);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 300ms ease-out;
-        }
-        
-        .example-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 24px rgba(0, 122, 255, 0.15);
-        }
-        
-        .example-preview {
-            height: 200px;
-            background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-green) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--neutral-900);
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .example-content {
-            padding: 24px;
-        }
-        
-        .example-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--neutral-900);
-        }
-        
-        .example-description {
-            color: var(--neutral-600);
-            margin-bottom: 16px;
-        }
-        
-        .example-link {
-            color: var(--primary-500);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .example-link:hover {
-            text-decoration: underline;
-        }
-        
-        /* CTA Section */
-        .cta {
-            padding: 96px 0;
-            text-align: center;
-            background-color: var(--neutral-900);
-            color: var(--neutral-0);
-        }
-        
-        .cta h2 {
-            color: var(--neutral-0);
-            margin-bottom: 24px;
-        }
-        
-        .cta p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 32px;
-            font-size: 20px;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        
-        .cta .btn-primary {
-            background-color: var(--neutral-0);
-            color: var(--primary-500);
-        }
-        
-        .cta .btn-primary:hover {
-            background-color: var(--neutral-100);
-            transform: scale(1.03);
-        }
-        
-        .cta .btn-secondary {
-            border-color: rgba(255, 255, 255, 0.3);
-            color: var(--neutral-0);
-        }
-        
-        .cta .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Footer */
-        .footer {
-            background-color: var(--neutral-900);
-            color: var(--neutral-500);
-            padding: 48px 0;
-            text-align: center;
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-        }
-        
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--neutral-0);
-            font-weight: 600;
-            font-size: 20px;
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .footer-links a {
-            color: var(--neutral-500);
-            text-decoration: none;
-            transition: color 250ms ease;
-        }
-        
-        .footer-links a:hover {
-            color: var(--primary-500);
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid var(--neutral-600);
-            padding-top: 24px;
-            margin-top: 24px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero {
-                padding: 100px 0 64px;
-            }
-            
-            .features-grid,
-            .examples-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero-buttons,
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-        }
-        
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -525,6 +35,7 @@
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#examples">Examples</a></li>
+                    <li><a href="#ai-agents">AI Agents</a></li>
                     <li><a href="/docs">Docs</a></li>
                 </ul>
             </div>
@@ -599,12 +110,12 @@
     <section id="examples" class="code-examples">
         <div class="container">
             <h2>Quick Start Example</h2>
-            <p style="text-align: center; max-width: 600px; margin: 0 auto 48px;">Get started with CrootJS in just a few lines of code. Import from CDN and start building dynamic websites immediately.</p>
+            <p class="section-intro">Get started with CrootJS in just a few lines of code. Import from CDN and start building dynamic websites immediately.</p>
             
             <div class="code-block">
                 <div class="code-header">
                     <span class="code-title">main.js</span>
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <button class="copy-btn">Copy</button>
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
@@ -630,10 +141,33 @@
 });</code></pre>
             </div>
             
-            <div style="text-align: center; margin-top: 32px;">
+            <div class="center-mt">
                 <a href="https://www.jsdelivr.com/package/gh/crootjs/lib" class="btn btn-primary">
                     <i data-lucide="download" width="20" height="20"></i>
                     Explore CDN Library
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Agents Section -->
+    <section id="ai-agents" class="code-examples">
+        <div class="container">
+            <h2>Building With an AI Coding Agent?</h2>
+            <p class="section-intro">CrootJS requires separating HTML, CSS, and JS into their own files, with JS loaded as <code>type="module"</code> — no inline <code>&lt;script&gt;</code>/<code>&lt;style&gt;</code>, no <code>onclick</code>. Drop <code>CLAUDE.md</code> into your project root so Claude Code (or any agent that reads a root instructions file) follows this automatically.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-title">terminal</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre class="code-content"><code><span class="keyword">curl</span> -o CLAUDE.md https://raw.githubusercontent.com/crootjs/lib/main/CLAUDE.md</code></pre>
+            </div>
+
+            <div class="center-mt">
+                <a href="https://github.com/crootjs/lib/blob/main/CLAUDE.md" class="btn btn-secondary">
+                    <i data-lucide="file-text" width="20" height="20"></i>
+                    View CLAUDE.md on GitHub
                 </a>
             </div>
         </div>
@@ -643,7 +177,7 @@
     <section class="examples">
         <div class="container">
             <h2>See CrootJS in Action</h2>
-            <p style="text-align: center; max-width: 600px; margin: 0 auto 48px;">Explore real-world examples and templates built with CrootJS. Fork them on GitHub to get started quickly.</p>
+            <p class="section-intro">Explore real-world examples and templates built with CrootJS. Fork them on GitHub to get started quickly.</p>
             
             <div class="examples-grid">
                 <div class="example-card">
@@ -758,43 +292,6 @@
         </div>
     </footer>
 
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-        
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Copy code function
-        function copyCode(button) {
-            const codeBlock = button.parentElement.nextElementSibling;
-            const text = codeBlock.textContent;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.textContent;
-                button.textContent = 'Copied!';
-                button.style.backgroundColor = 'var(--accent-green)';
-                button.style.color = 'white';
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.backgroundColor = 'transparent';
-                    button.style.color = 'var(--neutral-600)';
-                }, 2000);
-            });
-        }
-        
-    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
