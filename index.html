@@ -85,7 +85,7 @@
                 <div class="feature-card">
                     <i data-lucide="mouse-pointer-click" class="feature-icon"></i>
                     <h3>DOM Helpers Without the Boilerplate</h3>
-                    <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls. Pair with <code>debounce.js</code> for search-as-you-type.</p>
+                    <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>serializeForm</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls. Pair with <code>debounce.js</code> for search-as-you-type.</p>
                 </div>
                 <div class="feature-card">
                     <i data-lucide="qr-code" class="feature-icon green"></i>
@@ -101,6 +101,11 @@
                     <i data-lucide="puzzle" class="feature-icon"></i>
                     <h3>Import Only What You Use</h3>
                     <p>Every module is a separate CDN file — <code>.../lib@version/cookie.js</code> — so your page only loads the code it actually needs.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="bell" class="feature-icon"></i>
+                    <h3>Notifications, No Dependency</h3>
+                    <p><code>toast.js</code> shows dismissable notifications with zero external libraries — an alternative to pulling in SweetAlert2 just for a message.</p>
                 </div>
             </div>
         </div>
@@ -119,8 +124,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.7/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.7/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.8/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.8/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;

@@ -3,12 +3,12 @@
 > CrootJS is a set of small, dependency-free vanilla JavaScript ES6+ modules meant to be imported directly from a CDN (jsDelivr, serving files straight from GitHub tags) — no npm install, no bundler, no build step. Each module is an independent file; import only the ones you need.
 
 Current release: see the `v*` tags at https://github.com/crootjs/lib/tags — import a specific module as
-`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.7/cookie.js`.
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.8/cookie.js`.
 Always pin an exact version tag; do not use `@latest` in production code.
 
 For production, import the `.min.js` variant instead — jsDelivr auto-minifies any file on
 request (via Terser), even though no `.min.js` is committed to the repo, e.g.
-`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.7/cookie.min.js`. Use the unminified `.js` only
+`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.8/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
 ## Mandatory coding convention
@@ -24,10 +24,11 @@ Claude Code picks it up automatically on later runs).
 ## Modules
 
 - `api.js` — fetch wrappers: `getJSON`, `postJSON`, `putJSON`, `deleteJSON` (signature: `fn(url, [data], responseFunction, [tokenkey], [tokenvalue])`, callback receives `{status, data}`), plus `insertHTML`, `getDomHTML`, and file-upload helpers (`postFile`, `postFileWithHeader`, `postFileJSON`, `getFileWithHeader`, `getFileBytesWithHeader`).
-- `element.js` — DOM helpers: `onClick`, `onChange`, `onInput` (and their `*s` plural variants for class selectors), `setInner`, `setInnerText`, `getValue`, `show`/`hide`, `addChild`, `renderHTML`, `replaceTag`, `addJS`/`addCSS`.
+- `element.js` — DOM helpers: `onClick`, `onChange`, `onInput` (and their `*s` plural variants for class selectors), `setInner`, `setInnerText`, `getValue`, `serializeForm` (all named fields of a form as one `{name: value}` object, skips disabled fields and file inputs), `show`/`hide`, `addChild`, `renderHTML`, `replaceTag`, `addJS`/`addCSS`.
 - `cookie.js` — `setCookieWithExpireDay/Hour/Second`, `getCookie`, `deleteCookie`.
 - `storage.js` — `localStorage`/`sessionStorage` helpers with automatic JSON serialization: `setLocal`, `setLocalWithExpireDay/Hour/Second`, `getLocal`, `deleteLocal`, `setSession`, `getSession`, `deleteSession`.
 - `debounce.js` — `debounce(fn, delay)` and `throttle(fn, delay)`. Call once outside the event handler to get the wrapped function; don't call it inside the handler itself.
+- `toast.js` — dependency-free notifications: `toast(message, type?, duration?)` and shortcuts `toastSuccess`/`toastError`/`toastWarning`/`toastInfo`. Returns a `dismiss()` function; `duration: 0` disables auto-dismiss. Injects its own `<style>` once — no separate CSS import needed.
 - `url.js` — `getProtocol`, `getHost`, `fullPath`, `folderPath`, `getPath`, `getQueryString`, `setQueryString`, `getHash`, `setHash`, `redirect`, `onHashChange`. Browser-only (depends on `window.location`).
 - `validate.js` — input transformers bound to form elements: `validateUserName`, `validateHouseNumber`, `validatePhoneNumber`, `formatRupiah`.
 - `websocket.js` — `openWebSocketSetId(id, url_ws, onMessage?)` returns a Promise resolving to the connected `WebSocket`; falls back to a global `window.catcher(message)` if `onMessage` is omitted. Also `sendMessagetoWebSocket`, `closeWebSocket`.
