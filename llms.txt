@@ -3,12 +3,12 @@
 > CrootJS is a set of small, dependency-free vanilla JavaScript ES6+ modules meant to be imported directly from a CDN (jsDelivr, serving files straight from GitHub tags) — no npm install, no bundler, no build step. Each module is an independent file; import only the ones you need.
 
 Current release: see the `v*` tags at https://github.com/crootjs/lib/tags — import a specific module as
-`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.11/cookie.js`.
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.12/cookie.js`.
 Always pin an exact version tag; do not use `@latest` in production code.
 
 For production, import the `.min.js` variant instead — jsDelivr auto-minifies any file on
 request (via Terser), even though no `.min.js` is committed to the repo, e.g.
-`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.11/cookie.min.js`. Use the unminified `.js` only
+`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.12/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
 ## Mandatory coding convention
