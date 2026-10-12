@@ -107,6 +107,11 @@
                     <h3>Notifications, No Dependency</h3>
                     <p><code>toast.js</code> shows dismissable notifications with zero external libraries — an alternative to pulling in SweetAlert2 just for a message.</p>
                 </div>
+                <div class="feature-card">
+                    <i data-lucide="map" class="feature-icon"></i>
+                    <h3>Read GeoJSON</h3>
+                    <p><code>geo.js</code> loads GeoJSON from a URL or a local file, validates it, and always hands back a <code>FeatureCollection</code> — plus <code>getBBox</code>, <code>getCenter</code>, and <code>getPropertyKeys</code> for feeding a map or a table.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -124,8 +129,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.12/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.12/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.13/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.13/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -226,6 +231,17 @@
                         <h3 class="example-title">SweetAlert Dialogs</h3>
                         <p class="example-description">Alerts, delete confirmation, a validated form inside a dialog, and a loading state around getJSON.</p>
                         <a href="https://crootjs.github.io/examples/element/sweetalert/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="map-pinned" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">GeoJSON on a Map</h3>
+                        <p class="example-description">Load GeoJSON from a URL or a local file with geo.js, draw it on a Leaflet map, and list its properties in a table.</p>
+                        <a href="https://crootjs.github.io/examples/geo/geojson/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
