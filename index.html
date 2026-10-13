@@ -112,6 +112,11 @@
                     <h3>Read GeoJSON</h3>
                     <p><code>geo.js</code> loads GeoJSON from a URL or a local file, validates it, and always hands back a <code>FeatureCollection</code> — plus <code>getBBox</code>, <code>getCenter</code>, and <code>getPropertyKeys</code> for feeding a map or a table.</p>
                 </div>
+                <div class="feature-card">
+                    <i data-lucide="map-pinned" class="feature-icon"></i>
+                    <h3>Maps Without a Map Library</h3>
+                    <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates — in about 10 KB gzipped, with no Leaflet and no CSS file to link.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -129,8 +134,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.13/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.13/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.14/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.14/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -240,7 +245,7 @@
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">GeoJSON on a Map</h3>
-                        <p class="example-description">Load GeoJSON from a URL or a local file with geo.js, draw it on a Leaflet map, and list its properties in a table.</p>
+                        <p class="example-description">Load GeoJSON from a URL or a local file with geo.js, draw it with map.js — no map library — and list its properties in a table.</p>
                         <a href="https://crootjs.github.io/examples/geo/geojson/" class="example-link">View Demo →</a>
                     </div>
                 </div>
