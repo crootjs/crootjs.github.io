@@ -115,7 +115,12 @@
                 <div class="feature-card">
                     <i data-lucide="map-pinned" class="feature-icon"></i>
                     <h3>Maps Without a Map Library</h3>
-                    <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates — in about 10 KB gzipped, with no Leaflet and no CSS file to link.</p>
+                    <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates — in about 11 KB gzipped, with no Leaflet and no CSS file to link.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="route" class="feature-icon"></i>
+                    <h3>Markers, Routes &amp; Measurements</h3>
+                    <p>Optional add-ons of 1–2 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar and locate-me button (<code>mapcontrol.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
                 </div>
             </div>
         </div>
@@ -134,8 +139,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.14/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.14/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.15/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.15/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -247,6 +252,17 @@
                         <h3 class="example-title">GeoJSON on a Map</h3>
                         <p class="example-description">Load GeoJSON from a URL or a local file with geo.js, draw it with map.js — no map library — and list its properties in a table.</p>
                         <a href="https://crootjs.github.io/examples/geo/geojson/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="route" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Routes From GeoJSON</h3>
+                        <p class="example-description">Drag two pins and get the shortest route along real street data, computed in the browser — no routing service.</p>
+                        <a href="https://crootjs.github.io/examples/geo/route/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
