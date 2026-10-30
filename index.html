@@ -115,12 +115,12 @@
                 <div class="feature-card">
                     <i data-lucide="map-pinned" class="feature-icon"></i>
                     <h3>Maps Without a Map Library</h3>
-                    <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates, named layers, feature labels, hover tooltips, dashed lines, and satellite/hybrid basemaps you can switch without redrawing — in about 11 KB gzipped, with no Leaflet and no CSS file to link.</p>
+                    <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates, named layers, feature labels, hover tooltips, dashed lines, satellite/hybrid basemaps you can switch without redrawing, and a canvas renderer for thousands of lines — in about 13 KB gzipped, with no Leaflet and no CSS file to link.</p>
                 </div>
                 <div class="feature-card">
                     <i data-lucide="route" class="feature-icon"></i>
                     <h3>Markers, Routes &amp; Measurements</h3>
-                    <p>Optional add-ons of 1–3 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, and basemap/layer switchers (<code>mapcontrol.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
+                    <p>Optional add-ons of 1–5 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, basemap/layer switchers, cursor coordinates and fullscreen (<code>mapcontrol.js</code>), distance/area measuring, rotated image overlays and PNG export (<code>maptools.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
                 </div>
             </div>
         </div>
@@ -139,8 +139,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.17/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.17/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.18/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.18/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -285,6 +285,17 @@
                         <h3 class="example-title">Layers &amp; Basemaps</h3>
                         <p class="example-description">A technical map with zones, dashed planned routes, labeled contours, and zoom-dependent block plans — switch between street, satellite, and hybrid without redrawing.</p>
                         <a href="https://crootjs.github.io/examples/geo/layers/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="ruler" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Survey Tools</h3>
+                        <p class="example-description">Measure distance and area, read coordinates in a local project grid, overlay a rotated master plan over 5,600 canvas-drawn lines, and download the view as PNG.</p>
+                        <a href="https://crootjs.github.io/examples/geo/survey/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
