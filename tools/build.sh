@@ -31,8 +31,22 @@ url() {
     done
     for file in "$DOCS"/*/README.md; do
         name=$(basename "$(dirname "$file")")
+        [ "$name" = en ] && continue
         url "$BASE/docs/$name/" "$(lastmod "$file")" 0.80
     done
+    # Docs bahasa Inggris (docs/en/), kalau ada
+    if [ -d "$DOCS/en" ]; then
+        url "$BASE/docs/en/" "$(lastmod "$DOCS/en/README.md")" 0.90
+        for file in "$DOCS"/en/*.md; do
+            name=$(basename "$file" .md)
+            [ "$name" = README ] && continue
+            url "$BASE/docs/en/$name" "$(lastmod "$file")" 0.80
+        done
+        for file in "$DOCS"/en/*/README.md; do
+            [ -f "$file" ] || continue
+            url "$BASE/docs/en/$(basename "$(dirname "$file")")/" "$(lastmod "$file")" 0.80
+        done
+    fi
     url "$BASE/lib/" "$(lastmod "$SITE/index.html")" 0.60
     url "$BASE/examples/" "$(lastmod "$EXAMPLES/README.md")" 0.70
     find "$EXAMPLES" -name index.html -not -path '*/.git/*' | sort | while read -r file; do
@@ -44,12 +58,15 @@ url() {
 } > "$SITE/sitemap.xml"
 
 # llms-full.txt: ringkasan llms.txt, lalu isi lengkap setiap halaman docs, urut seperti
-# daftar di docs/README.md.
+# daftar di docs/README.md - versi bahasa Inggris (docs/en/) kalau ada, selain itu Indonesia.
 {
     cat "$SITE/llms.txt"
-    printf '\n\n# Full module documentation\n\nEvery page below is also served as Markdown at %s/docs/<module>.md.\n' "$BASE"
+    printf '\n\n# Full module documentation\n\nEvery page below is also served as Markdown at %s/docs/en/<module>.md (English) and %s/docs/<module>.md (Indonesian).\n' "$BASE" "$BASE"
     grep -o '](\([a-z0-9]*\)/\{0,1\})' "$DOCS/README.md" | sed 's/](\([a-z0-9]*\).*/\1/' | awk '!seen[$0]++' | while read -r name; do
-        if [ -f "$DOCS/$name.md" ]; then file="$DOCS/$name.md" page=$name; else file="$DOCS/$name/README.md" page=$name/; fi
+        if [ -f "$DOCS/en/$name.md" ]; then file="$DOCS/en/$name.md" page=en/$name
+        elif [ -f "$DOCS/en/$name/README.md" ]; then file="$DOCS/en/$name/README.md" page=en/$name/
+        elif [ -f "$DOCS/$name.md" ]; then file="$DOCS/$name.md" page=$name
+        else file="$DOCS/$name/README.md" page=$name/; fi
         [ -f "$file" ] || continue
         printf '\n\n---\n\nSource: %s/docs/%s\n\n' "$BASE" "$page"
         cat "$file"

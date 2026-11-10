@@ -42,12 +42,12 @@
   </url>
   <url>
     <loc>https://croot.js.org/docs/image</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://croot.js.org/docs/loading</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -77,6 +77,21 @@
   </url>
   <url>
     <loc>https://croot.js.org/docs/mapmarker</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/mapmodel</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/mapoffline</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/mapsearch</loc>
     <lastmod>2026-11-11</lastmod>
     <priority>0.80</priority>
   </url>
@@ -117,7 +132,7 @@
   </url>
   <url>
     <loc>https://croot.js.org/docs/url</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -142,6 +157,156 @@
   </url>
   <url>
     <loc>https://croot.js.org/docs/element/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/cookie</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/debounce</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/geo</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/geomeasure</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/georoute</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/image</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/loading</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/map</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapcluster</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapcontrol</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapdraw</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapheat</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapmarker</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapmodel</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapoffline</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/mapsearch</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/maptools</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/model3d</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/model3dtools</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/storage</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/stp</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/toast</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/trace</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/url</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/useragent</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/validate</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/websocket</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/api/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/element/</loc>
     <lastmod>2026-11-11</lastmod>
     <priority>0.80</priority>
   </url>
@@ -221,6 +386,11 @@
     <priority>0.60</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/examples/geo/bts3d/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/examples/geo/cluster/</loc>
     <lastmod>2026-10-13</lastmod>
     <priority>0.60</priority>
@@ -246,8 +416,18 @@
     <priority>0.60</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/examples/geo/offline/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/examples/geo/route/</loc>
     <lastmod>2026-10-13</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/geo/search/</loc>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.60</priority>
   </url>
   <url>
