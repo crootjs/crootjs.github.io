@@ -125,7 +125,7 @@
                 <div class="feature-card">
                     <i data-lucide="box" class="feature-icon"></i>
                     <h3>3D Models Without Three.js</h3>
-                    <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code — in about 13 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, and re-export to a new <code>.glb</code>.</p>
+                    <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code — in about 14 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, glTF animation playback, exploded views, cross-sections for interactive learning material, and re-export to a new <code>.glb</code>.</p>
                 </div>
             </div>
         </div>
@@ -144,8 +144,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.24/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.24/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -323,6 +323,17 @@
                         <h3 class="example-title">3D Model Viewer</h3>
                         <p class="example-description">Orbit and zoom a GLB model, click a part to see where it sits in the tree, or open your own .glb — no Three.js.</p>
                         <a href="https://crootjs.github.io/examples/3d/viewer/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="graduation-cap" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">3D Learning Material</h3>
+                        <p class="example-description">Click a part to learn what it does, scrub an assembly animation, pull the parts apart, slice the model, and take a quick "find the part" quiz.</p>
+                        <a href="https://crootjs.github.io/examples/3d/belajar/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
