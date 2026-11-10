@@ -122,6 +122,11 @@
                     <h3>Markers, Routes &amp; Measurements</h3>
                     <p>Optional add-ons of 1–8 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, basemap switchers (radio list or Google-Maps-style picture cards), layer switchers, cursor coordinates, a right-click / long-press context menu for GIS actions, and fullscreen (<code>mapcontrol.js</code>), distance/area measuring, rotated image overlays and PNG export (<code>maptools.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), density heatmaps and nPerf-style square/hex coverage grids (<code>mapheat.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
                 </div>
+                <div class="feature-card">
+                    <i data-lucide="box" class="feature-icon"></i>
+                    <h3>3D Models Without Three.js</h3>
+                    <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code — in about 13 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, and re-export to a new <code>.glb</code>.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -139,8 +144,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.23/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.23/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.24/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.24/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -307,6 +312,28 @@
                         <h3 class="example-title">Heatmap &amp; Coverage</h3>
                         <p class="example-description">12,000 drive-test points as a density heatmap, or as hexagon and square cells colored by average RSRP like a signal coverage map — click a cell for its value.</p>
                         <a href="https://crootjs.github.io/examples/geo/heatmap/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="box" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">3D Model Viewer</h3>
+                        <p class="example-description">Orbit and zoom a GLB model, click a part to see where it sits in the tree, or open your own .glb — no Three.js.</p>
+                        <a href="https://crootjs.github.io/examples/3d/viewer/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <i data-lucide="radio-tower" width="48" height="48"></i>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">BTS Antenna Editor</h3>
+                        <p class="example-description">Set each sector's azimuth and downtilt, recolor or move parts with a gizmo, see live 3D labels, then download the edited model as .glb.</p>
+                        <a href="https://crootjs.github.io/examples/3d/editor/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
