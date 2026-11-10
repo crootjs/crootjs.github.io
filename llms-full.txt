@@ -2,13 +2,13 @@
 
 > CrootJS is a set of small, dependency-free vanilla JavaScript ES6+ modules meant to be imported directly from a CDN (jsDelivr, serving files straight from GitHub tags) — no npm install, no bundler, no build step. Each module is an independent file; import only the ones you need.
 
-Current release: see the `v*` tags at https://github.com/crootjs/lib/tags — import a specific module as
-`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js`.
+Current release: see the `v*` tags at https://github.com/crootjs/lib/tags (changes per version: https://github.com/crootjs/lib/blob/main/CHANGELOG.md) — import a specific module as
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js`.
 Always pin an exact version tag; do not use `@latest` in production code.
 
 For production, import the `.min.js` variant instead — jsDelivr auto-minifies any file on
 request (via Terser), even though no `.min.js` is committed to the repo, e.g.
-`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.min.js`. Use the unminified `.js` only
+`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
 ## Mandatory coding convention
@@ -23,7 +23,7 @@ Claude Code picks it up automatically on later runs).
 
 ## Modules
 
-- `api.js` — fetch wrappers: `getJSON`, `postJSON`, `putJSON`, `deleteJSON` (signature: `fn(url, [data], responseFunction, [tokenkey], [tokenvalue])`, callback receives `{status, data}`). `responseFunction` is always called, even on network failure or a 15s timeout (server never responds) — in that case it receives `{status: 0, data: null}`; check `status === 0` to distinguish "request never completed" from a real HTTP error status. Also `insertHTML`, `getDomHTML`, and file-upload/download helpers: `postFile`/`postFileWithHeader` call back with the parsed JSON body, or `null` on network failure/timeout/non-JSON reply; `postFileJSON` calls back with `{status, data}` (`{status: 0, data: null}` on failure); `getFileWithHeader` downloads on 200, `getFileBytesWithHeader` calls back with an `ArrayBuffer` on 200 — both call back with the parsed error body (or `null`) on non-200 and `{status: 0}` on network failure/timeout. Every request in `api.js` (and `element.js`'s `renderHTML`/`replaceTag`) aborts after 15s. `insertHTML(url, id, runFunction, errorFunction?)` and `element.js`'s `renderHTML(id, url, callback?, errorCallback?)` take an optional error callback, called with an `Error` if the element doesn't exist, the reply is non-2xx, the network fails, or the request times out; on failure the element is left unchanged and the success callback is not called.
+- `api.js` — fetch wrappers: `getJSON`, `postJSON`, `putJSON`, `deleteJSON` (signature: `fn(url, [data], responseFunction, [tokenkey], [tokenvalue])`, callback receives `{status, data}`). `responseFunction` is always called, even on network failure or a 15s timeout (server never responds) — in that case it receives `{status: 0, data: null}`; check `status === 0` to distinguish "request never completed" from a real HTTP error status. These four also return a Promise of the same `{status, data}` that never rejects, so `const { status, data } = await getJSON(url)` works; pass `null` as `responseFunction` when awaiting (e.g. `await postJSON(url, body, null, "login", token)`). Also `insertHTML`, `getDomHTML`, and file-upload/download helpers: `postFile`/`postFileWithHeader` call back with the parsed JSON body, or `null` on network failure/timeout/non-JSON reply; `postFileJSON` calls back with `{status, data}` (`{status: 0, data: null}` on failure); `getFileWithHeader` downloads on 200, `getFileBytesWithHeader` calls back with an `ArrayBuffer` on 200 — both call back with the parsed error body (or `null`) on non-200 and `{status: 0}` on network failure/timeout. Every request in `api.js` (and `element.js`'s `renderHTML`/`replaceTag`) aborts after 15s. `insertHTML(url, id, runFunction, errorFunction?)` and `element.js`'s `renderHTML(id, url, callback?, errorCallback?)` take an optional error callback, called with an `Error` if the element doesn't exist, the reply is non-2xx, the network fails, or the request times out; on failure the element is left unchanged and the success callback is not called.
 - `element.js` — DOM helpers: `onClick`, `onChange`, `onInput` (and their `*s` plural variants for class selectors), `setInner`, `setInnerText`, `getValue`, `serializeForm` (all named fields of a form as one `{name: value}` object, skips disabled fields and file inputs), `show`/`hide`, `addChild`, `renderHTML`, `replaceTag`, `addJS`/`addCSS`.
 - `cookie.js` — `setCookieWithExpireDay/Hour/Second`, `getCookie`, `deleteCookie`.
 - `storage.js` — `localStorage`/`sessionStorage` helpers with automatic JSON serialization: `setLocal`, `setLocalWithExpireDay/Hour/Second`, `getLocal`, `deleteLocal`, `setSession`, `getSession`, `deleteSession`.
@@ -34,6 +34,7 @@ Claude Code picks it up automatically on later runs).
 - `mapmarker.js` — add-on for `map.js` (create the map first): `addMarker(id, position, options?)` puts a pin (default), an image (`icon` + `size`), or your own DOM node (`element`) at `[lng, lat]`. Other options: `color`, `anchor` (`"bottom"` default, `"center"`, `"top"`, `"left"`, `"right"`, `"top-left"`, `"top-right"`, `"bottom-left"`, `"bottom-right"`), `offset` (`[dx, dy]` pixels, positive dy = down), `label` (always-visible text), `title`, `popup` (string or DOM node, shown on click), `onClick(position)`, `draggable`, `onDragEnd(position)`. Returns `{ getPosition(), setPosition(position), remove() }`. A click on a marker does not fire the map's `onMapClick`; dragging a non-draggable marker pans the map. `clearMap` does not remove markers.
 - `mapcontrol.js` — add-on for `map.js`: `addScaleBar(id, corner = "bottom-left")` (returns `remove()`), `locateUser(id, responseFunction?)` (browser geolocation once; draws a dot + accuracy circle, centers the map, zooming in to at least 16; calls back with `{ position: [lng, lat], accuracy }` in meters, or `null` when denied/unavailable/after 15s; HTTPS or localhost only), `addLocateButton(id, responseFunction?, corner = "top-left")` (button that runs `locateUser`; returns `remove()`). Live tracking: `trackUser(id, responseFunction?, options?)` watches the position continuously and returns `stop()`; the callback gets `{ position, accuracy, speed, heading, timestamp }` on every fix (`speed` m/s and `heading` degrees may be `null`), or `null` once if permission is denied (tracking then stops by itself). The map follows the position (`options.follow`, default `true`) until the user pans it manually; the marker keeps updating. `addTrackButton(id, responseFunction?, options?, corner = "top-left")` is a toggle button for it (returns `remove()`, which also stops tracking). `addBasemapControl(id, basemaps, options?)` — basemap picker; `basemaps` = `[{ name, tiles, labels, maxNativeZoom, subdomains, errorTiles, attribution, minZoom, maxZoom, thumbnail }]` (no `tiles` = OpenStreetMap), choosing one calls `setTiles`; options `style` (`"list"` radio panel, default, or `"cards"`: one picture card of the active basemap that opens a grid of cards, active one outlined in `--crootjs-map-accent`; card width `--crootjs-map-card-width`, default 92px), `selected` (index or name, default 0, applied immediately), `title`, `corner` (default `"top-right"`), `onChange(basemap)` (also fired by `setBasemap`), list-only `collapsed` (panel behind a toggle button), cards-only `trigger` (`"hover"`/`"click"`; default hover on `(hover: hover)` devices, click on touch; closes on outside click, Esc, after choosing), `columns` (default 3, max 2 at ≤ 640 px), `thumbnailCenter` `[lng, lat]` and `thumbnailZoom` (default: map center/zoom when the control is added). Card image = `thumbnail` URL, else the basemap's own tile containing `thumbnailCenter` at `thumbnailZoom` (same URL patterns, `maxNativeZoom` respected) with its `labels` tiles stacked on top. Cards are `<button aria-pressed>`, the opener has `aria-haspopup`/`aria-expanded`; dark mode via `prefers-color-scheme`; classes `.crootjs-map-cards`, `-cards-toggle`, `-cards-grid`, `.crootjs-map-card`, `-card-thumb`, `-card-name` are overridable by page CSS. `setBasemap(id, nameOrIndex)` switches through the last picker on that map so the radio/cards stay in sync; returns `true`/`false`. `addLayerControl(id, layers?, options?)` — checkboxes for named `addGeoJSON` layers; `layers` = names or `[{ name, label }]` (omitted/`null` = all named layers present at call time); options `title`, `corner`, `collapsed`, `onChange(name, visible)`; only toggles visibility, no redraw; checkbox state is read once, so a later `hideLayer` is not reflected. Both return `remove()`. `addCoordinateControl(id, options?)` shows the coordinate under the mouse; a click/tap pins it and shows a copy button (Clipboard API on HTTPS/localhost, otherwise the text is selected); options `format(position) => text` (hook for local grids/CRS; default `"lat, lng"` with `precision` 6 — note lat first), `corner` (default `"bottom-left"`), `onClick(position, text)`; returns `remove()`. `addContextMenu(id, items, options?)` right-click / long-press / Menu-key menu: `items` = array or `(position, feature) => array` called on every open (`feature` = GeoJSON feature under the pointer or `null`; empty array = no menu); an item is `{ label, onClick(position, feature), icon (text, `<svg>` string, or Node), disabled, danger, title, items (submenu) }`, `"-"` = separator (leading/trailing/double ones dropped), falsy entries skipped (`feature && {...}`), and built-in strings `"coordinates"` (shows `lat, lng`, copies on select; options `precision` 6 / `format(position)`), `"center"`, `"zoom-in"`, `"zoom-out"`; `options.onOpen(position, feature)`; closes on select, Esc/Tab, outside click, or map move; arrow keys/Home/End/Enter, ArrowRight/Left for submenus; flips at viewport edges; one menu per page (the last handler wins), appended to `<body>`; classes `.crootjs-map-menu`, `-menu-item`, `-menu-danger`, `-menu-icon`, `-menu-label`, `-menu-arrow`, `-menu-separator`; returns `{ close(), remove() }`. `addFullscreenButton(id, corner = "top-left")` toggles fullscreen on the map container (Fullscreen API, or a fixed full-window fallback on iPhone Safari; Esc exits); returns `remove()`.
 - `mapcluster.js` — add-on for `map.js`: `addCluster(id, geojson, options?)` draws the Point/MultiPoint features of very large datasets as count bubbles that split as the map zooms in (grid clustering per zoom level; only clusters in view have DOM elements, so 100,000 points stay fluid). Options: `radius` (px, default 60), `color`, `popup` (`(feature) => string | DOM node | null`, or `false`; default lists the feature's `properties`), `onClick(feature)` for single points. Clicking a bubble zooms just far enough to split it; a bubble whose points share one position lists its members in a popup instead. Returns `remove()`; `clearMap` does not remove clusters. Non-point features are ignored (draw them with `addGeoJSON`).
+- `mapdraw.js` — add-on for `map.js` (imports `geo.js`): create and edit geometry. `addDrawControl(id, { data?, tools? = ["point","line","polygon","edit","delete"], properties? (object or `(type) => object`), corner? = "top-left", onChange?(featureCollection) })` adds tool buttons plus a hint panel with Selesai/Hapus titik/Batal (touch has no double-click) and manages its own FeatureCollection; returns `{ getData(), setData(geojson), clear(), remove() }`. `startDrawing(id, "point" | "line" | "polygon" (or Point/LineString/Polygon), responseFunction(feature | null), { properties?, onChange?(featureOrNull) })` draws one geometry: click adds a vertex, clicking the first vertex closes a polygon, double-click/Enter finishes, Backspace undoes, Esc cancels (null); borrows map clicks like the measure tool (no popups/onMapClick while drawing); coordinates rounded to 7 decimals, polygons closed; returns `{ finish(), undo(), stop() }`. `editFeature(id, featureOrGeometry, { onChange?(feature) })` shows drag handles: vertices move, midpoints insert a vertex, double-click (or 0.5 s touch long-press) deletes a vertex (min 2 for lines, 3 per ring); supports Point/LineString/Polygon and Multi*, holes included; the input is not mutated; dragging a handle never pans the map; returns `{ getFeature(), stop() }`, one editor per map. Classes `svg.crootjs-draw`, `.crootjs-draw-shape`, `-line`, `-preview`, `-editing`, `circle.crootjs-draw-point`, `-vertex`, `-vertex-first`, `-midpoint`, `.crootjs-map-draw`, `-draw-tool`, `-draw-panel`, `-draw-actions`. Not included in exportMapImage.
 - `mapheat.js` — add-on for `map.js` (imports `geo.js`): heatmaps and coverage grids from point data, drawn on one canvas above the basemap and below `addGeoJSON` layers (included in `exportMapImage`). Data = GeoJSON (Point/MultiPoint only) or arrays `[lng, lat]` / `[lng, lat, value]`. `addHeatmap(id, data, options?)` — smooth density (quartic kernel, computed in Float32 on a coarse grid, then colored and upscaled); options `weight` (property name or `(feature) => number`; array: 3rd element; default 1; <= 0 skipped), `radius` (px, default 30) or `radiusMeters`, `max` (density = hottest; default: the highest density in view, like Google Maps), `scale` (`"linear"` default, `"sqrt"`, `"log"`), `gradient` (`{ 0..1: color }`, default blue→cyan→lime→yellow→red), `opacity` (0.8), `legend` (`true` or `{ title, corner, low, high }`, default corner `"bottom-right"`). `addGridMap(id, data, options?)` — points binned into `shape` `"square"` (default) or `"hex"` cells, each colored by its aggregated value (nPerf-style coverage); options `value` (property name or function; array: 3rd element; without it cells count points), `aggregate` (`"mean"` default with value, `"max"`, `"min"`, `"sum"`, `"count"`), `cellSize` (px on screen, default 32, re-binned per zoom level) or `cellMeters` (fixed on the ground, min 2), `breaks` (`[{ value, color, label? }]` ascending; a cell uses the last break with value <= its value, below the first uses the first color; default: equal intervals of the cell value range over `colors`, default 5 red→yellow→green, recomputed per zoom level with `cellSize`), `opacity` (0.7), `stroke`, `popup` (`(cell) => text | node`, or `false`; default value + count), `onClick(cell)`, `legend` (`true` or `{ title, corner }`). `cell` = `{ value, count, mean, min, max, sum, center: [lng, lat], color, label }`; clicks on `addGeoJSON` features win over cells. Both return `{ setData(data), setOptions(options), show(), hide(), remove() }` (`addGridMap` also `cellAt([lng, lat])` → the `cell` there at the shown zoom, or `null` — e.g. for `addContextMenu`, since grid cells are not GeoJSON features); while panning/zooming the old canvas is just translated/scaled and redrawn ~0.1 s after the map stops. Legend classes `.crootjs-heat-legend`, `-legend-title`, `-legend-row`, `-legend-swatch`, `-legend-bar`, `-legend-ends`. Use `addGridMap` with `value` for signal strength; a heatmap shows where measurements are dense, not where the signal is strong.
 - `maptools.js` — add-on for `map.js` (imports `geomeasure.js`): measuring, georeferenced images, PNG export. `addMeasureControl(id, options?)` adds distance and area buttons with a result box (Selesai/Hapus titik/Tutup buttons; `corner` default `"top-left"`, `onResult(result)`); returns `remove()`. `measure(id, "distance" | "area", responseFunction?, options?)` — click points on the map (clicks are captured: no popups, no onMapClick, no double-click zoom); finish with double-click, Enter or `finish()`, Backspace/`undo()` removes the last point, Esc/`stop()` cancels; calls back once with `{ type, feature, length, area, text }` (`feature` = LineString or Polygon Feature, `length` meters (perimeter for area), `area` m², `text` e.g. `"1,25 km"` / `"2,45 ha · keliling 640 m"`) or `null` when cancelled; `options.onChange(result)` on every point; returns `{ finish, undo, stop }`; the drawing stays until `stop()` or a new measurement. `formatLength(m)`, `formatArea(m2)` (Indonesian decimal comma; m/km, m²/ha/km²). `addImageOverlay(id, url, options)` places an image above the basemap and below the data: `corners` = `[topLeft, topRight, bottomLeft]` as `[lng, lat]` (rotation/scale/skew), or `bounds` `[minLng, minLat, maxLng, maxLat]` + `rotation` (degrees clockwise around the center); `opacity`, `crossOrigin`, `alt`; returns `{ setCorners, setBounds(bounds, rotation), setOpacity, remove }`. PDFs must be converted to an image first. `exportMapImage(id, responseFunction, options?)` renders the current view to PNG: callback `(blob | null, { width, height, missingImages })`; includes basemap tiles (re-fetched with CORS; tiles from servers without CORS are skipped and counted — OSM and Esri allow it), image overlays, SVG and canvas layers, mapheat heatmaps and grids, feature labels, markers and their labels, mapcluster bubbles, the location dot, measurement drawings, scale bar, attribution; excludes popups and controls. Labels and HTML elements are drawn from their computed CSS: background-color, border, border-radius, padding, multi-line text, opacity, ::before/::after content, and text-shadow as a halo (replaced by a contrasting halo when the shadow color is too close to the text color); box-shadow, gradients/background images and rotated transforms are not drawn. Options `scale` (default devicePixelRatio), `attribution` (default true; required for OSM). `downloadMapImage(id, filename = "peta.png", responseFunction?, options?)` does the same and downloads the file.
 - `model3d.js` — 3D model viewer written from scratch (no Three.js; own GLB/glTF parser, mat4 math, GLSL shaders; WebGL2 with automatic WebGL1 fallback, no WebGPU; injects its own `<style>`). `createViewer(id, options?)` builds the viewer inside a container that must have a CSS height (options `background` CSS value, `autoRotate` deg/s that stops on touch, `fov` 45, `controls` false to lock the camera, `webgl` 1 to force WebGL1). `loadModel(id, source, responseFunction?)` — `source` = URL, File/Blob, or ArrayBuffer of `.glb`/`.gltf` (external `.bin`/images resolved relative to the URL); calls `responseFunction(info, error)` and also returns a Promise of `info = { parts: [names], triangles, bounds: { min, max, center, size } }` or `null` (error string, also console.warn); camera auto-fits. Parts = glTF nodes, found by node name (or mesh name); changes apply to the subtree and to every node with that name: `getParts(id)` → `[{ name, mesh, parent, depth, visible }]` in tree order, `setPartColor(id, name, cssColor | [r,g,b,a] | null)` (replaces texture; alpha < 1 = transparent; null resets), `setPartVisible(id, name, bool)`, `highlightPart(id, name | null)` (blue tint), `getPartTransform(id, name)` → `{ position, rotation: [x,y,z] degrees Euler XYZ, quaternion, scale }` relative to the parent, `setPartTransform(id, name, { position?, rotation? (3 = Euler degrees, 4 = quaternion), scale? (number or [x,y,z]) })`. `onModelClick(id, (hit) => ...)` — `hit = { part, mesh, path: [root..part names], position: [x,y,z], distance }` or `null` for background; drags don't count; returns `stop()`. Camera: `fitView(id, name? | [names])` (animated), `setCameraView(id, { yaw, pitch, distance, target }, animate = true)` (degrees; yaw 0 = from +Z, pitch -89..89), `getCameraView(id)`, `setAutoRotate(id, degPerSec)`. `clearModel(id)`, `removeViewer(id)`. Gestures: drag = rotate, right-drag/Shift-drag/two fingers = pan, wheel/pinch = zoom, double-click = focus point, arrows and +/- when focused. Supports node hierarchy (matrix or TRS), base color factor + texture (PNG/JPEG), COLOR_0, metallic/roughness/emissive factors, BLEND/MASK, double-sided, all accessor component types, interleaved and sparse accessors, KHR_materials_unlit, KHR_materials_emissive_strength, KHR_mesh_quantization; NOT Draco/meshopt (load fails with a clear error), skinning (bind pose; node animations play via model3dtools.js `playAnimation`), normal/occlusion/metal-rough textures, morph targets, KHR_texture_transform. Simple lighting (hemisphere ambient + camera-following directional + Blinn specular), not full PBR. Classes `.crootjs-3d` (background lives here), `.crootjs-3d-loading`, `.crootjs-3d-dragging`, `canvas.crootjs-3d-canvas`, `.crootjs-3d-overlay`. Add-ons reach the viewer via `element.crootjs3d` (`root`, `canvas`, `overlay`, `requestRender`, `onRender`, `onModel`, `camera()`, `toScreen`, `rayAt`, `raycast`, `findParts`, `isShown`, `boundsOf`, `getTransform`, `setTransform`, `getModel`, `readAccessor`, `update`, `setClip(plane, cap)`, `parseColor`) instead of importing model3d.js.
@@ -66,6 +67,9 @@ Claude Code picks it up automatically on later runs).
 - Put HTML, CSS, and JS in separate files; load JS as `<script type="module">`. See the convention above — this is not optional.
 - `api.js` callbacks follow `(url, ..., responseFunction, tokenkey, tokenvalue)` — `responseFunction` is NOT the last argument for `getJSON`/`postJSON`/`putJSON`/`deleteJSON`; check the exact position per function above before generating calls.
 - `websocket.js`'s `openWebSocketSetId` is asynchronous (Promise-based) — it does not return a `WebSocket` synchronously.
+- No AI slop (mandatory, https://croot.js.org/docs/conventions#4-no-ai-slop): never invent a function, option, or parameter order — check it here first; use CrootJS instead of re-implementing it or adding Leaflet/Three.js/axios/jQuery; no unused code, `TODO` stubs, or narrating comments; no fake content; handle only errors that can happen; stay in scope; real `<button>`/`<label>` HTML; verify in a browser (console clean, phone width) before saying it's done.
+- Type declarations for editor autocomplete on CDN imports: https://github.com/crootjs/lib/blob/main/crootjs.d.ts (copy next to `jsconfig.json`; declares every module for any version, `.js` and `.min.js`).
+- Every module is covered by browser tests in https://github.com/crootjs/lib/tree/main/tests (run at https://croot.js.org/lib/tests/).
 
 
 # Full module documentation
@@ -79,7 +83,7 @@ Source: https://croot.js.org/docs/api/
 
 ## 1. API (`api.js`)
 
-Modul `api.js` menyediakan fungsi-fungsi *wrapper* di atas **Fetch API** bawaan browser untuk mempermudah komunikasi HTTP dengan backend. Setiap fungsi menggunakan pola **callback** — Anda menyediakan sebuah fungsi yang akan dipanggil saat respons diterima dari server, beserta informasi HTTP status code.
+Modul `api.js` menyediakan fungsi-fungsi *wrapper* di atas **Fetch API** bawaan browser untuk mempermudah komunikasi HTTP dengan backend. Setiap fungsi menggunakan pola **callback** — Anda menyediakan sebuah fungsi yang akan dipanggil saat respons diterima dari server, beserta informasi HTTP status code. Fungsi JSON-nya juga bisa di-`await` (lihat [Gaya `await`](#gaya-await)).
 
 ### Pola Umum Response
 
@@ -114,6 +118,23 @@ getJSON("https://api.example.com/data", (res) => {
 });
 ```
 
+### Gaya `await`
+
+Sejak versi 0.0.26, `getJSON`, `postJSON`, `putJSON`, dan `deleteJSON` juga **mengembalikan Promise** berisi objek `{ status, data }` yang sama. Callback tetap jalan seperti biasa; kalau memakai `await`, isi `responseFunction` dengan `null`:
+
+```javascript
+import { getJSON, postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js";
+import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js";
+
+const { status, data } = await getJSON("https://api.example.com/produk");
+if (status === 200) console.log(data);
+
+// token tetap di dua argumen terakhir
+const hasil = await postJSON("https://api.example.com/pesanan", { id: 7 }, null, "login", getCookie("login"));
+```
+
+Promise-nya tidak pernah *reject*, jadi tidak perlu `try/catch`: cek `status` seperti biasa (`0` = jaringan gagal atau timeout).
+
 ### 1.1 `getJSON()`
 
 Melakukan **HTTP GET** request ke URL yang ditentukan dan mengembalikan respons dalam format JSON ke callback function.
@@ -135,14 +156,14 @@ getJSON(target_url, responseFunction, tokenkey?, tokenvalue?)
 
 #### Return Value
 
-`void` — Hasil dikirim melalui `responseFunction` secara asinkron.
+`Promise<{ status, data }>` — hasil yang sama dengan yang dikirim ke `responseFunction`. Promise ini tidak pernah *reject*; kegagalan jaringan juga berupa `{ status: 0, data: null }`. `responseFunction` boleh `null` kalau Anda memakai `await` (lihat [Gaya `await`](#gaya-await)).
 
 #### Contoh Penggunaan
 
 **Tanpa Token (Public API):**
 
 ```javascript
-import { getJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { getJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 // Ambil data dari API publik
 getJSON(
@@ -164,8 +185,8 @@ getJSON(
 **Dengan Token Autentikasi:**
 
 ```javascript
-import { getJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
-import { getCookie } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js';
+import { getJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
+import { getCookie } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js';
 
 // Ambil token dari cookie
 const token = getCookie('user_token');
@@ -210,14 +231,14 @@ postJSON(target_url, datajson, responseFunction, tokenkey?, tokenvalue?)
 
 #### Return Value
 
-`void` — Hasil dikirim melalui `responseFunction` secara asinkron.
+`Promise<{ status, data }>` — hasil yang sama dengan yang dikirim ke `responseFunction`. Promise ini tidak pernah *reject*; kegagalan jaringan juga berupa `{ status: 0, data: null }`. `responseFunction` boleh `null` kalau Anda memakai `await` (lihat [Gaya `await`](#gaya-await)).
 
 #### Contoh Penggunaan
 
 **Membuat Data Baru (Tanpa Token):**
 
 ```javascript
-import { postJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { postJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 // Data yang akan dikirim ke server
 const dataMahasiswa = {
@@ -243,8 +264,8 @@ postJSON(
 **Dengan Token Autentikasi:**
 
 ```javascript
-import { postJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
-import { getCookie } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js';
+import { postJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
+import { getCookie } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js';
 
 const token = getCookie('user_token');
 
@@ -295,15 +316,15 @@ deleteJSON(target_url, datajson, responseFunction, tokenkey?, tokenvalue?)
 
 #### Return Value
 
-`void` — Hasil dikirim melalui `responseFunction` secara asinkron.
+`Promise<{ status, data }>` — hasil yang sama dengan yang dikirim ke `responseFunction`. Promise ini tidak pernah *reject*; kegagalan jaringan juga berupa `{ status: 0, data: null }`. `responseFunction` boleh `null` kalau Anda memakai `await` (lihat [Gaya `await`](#gaya-await)).
 
 #### Contoh Penggunaan
 
 **Menghapus Data dengan Konfirmasi:**
 
 ```javascript
-import { deleteJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
-import { getCookie } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js';
+import { deleteJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
+import { getCookie } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js';
 
 const token = getCookie('user_token');
 
@@ -363,7 +384,7 @@ responseFunction({ status: number, data: object })
 **Example**
 
 ```javascript
-import { putJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { putJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 const payload = { name: "Alice", age: 30 };
 
@@ -401,7 +422,7 @@ insertHTML(target_url, id, runFunction, errorFunction?)
 **Example**
 
 ```javascript
-import { insertHTML } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { insertHTML } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 insertHTML(
   "https://example.com/partials/navbar.html",
@@ -432,7 +453,7 @@ getDomHTML(target_url, domFunction)
 **Example**
 
 ```javascript
-import { getDomHTML } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { getDomHTML } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 getDomHTML(
   "https://example.com/partials/card.html",
@@ -454,7 +475,7 @@ getDomHTML(
 ### Updating a resource with authentication
 
 ```javascript
-import { putJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { putJSON } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 putJSON(
   "/api/products/42",
@@ -474,7 +495,7 @@ putJSON(
 ### Loading a page section dynamically
 
 ```javascript
-import { insertHTML } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js';
+import { insertHTML } from 'https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   insertHTML("/components/footer.html", "footer", () => {
@@ -963,8 +984,8 @@ Mengambil semua field yang punya atribut `name` di dalam form (text, email, chec
 ```
 
 ```javascript
-import { serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js";
+import { serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js";
 
 const data = serializeForm("formDaftar");
 // { nama: "...", email: "...", setuju: true/false }
@@ -1002,7 +1023,7 @@ Import langsung dari jsDelivr:
 
 ```javascript
 import { setCookieWithExpireHour } 
-from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js";
+from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js";
 
 ```
 
@@ -1026,7 +1047,7 @@ Menyimpan Session Selama 2 Jam
 
 ```javascript
 import { setCookieWithExpireHour } 
-from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js";
+from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js";
 function login() {
   let username = "Zahra";
 setCookieWithExpireHour("loginUser", "user_714240003", 2);
@@ -1054,7 +1075,7 @@ Source: https://croot.js.org/docs/storage
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { setLocal, getLocal, deleteLocal } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/storage.js";
+import { setLocal, getLocal, deleteLocal } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/storage.js";
 ```
 
 ## localStorage
@@ -1114,7 +1135,7 @@ Source: https://croot.js.org/docs/debounce
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { debounce, throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/debounce.js";
+import { debounce, throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/debounce.js";
 ```
 
 ## `debounce(fn, delay)`
@@ -1124,9 +1145,9 @@ Menunda eksekusi `fn` sampai user **berhenti** memicu selama `delay` milidetik. 
 **Kegunaan paling umum**: search-as-you-type — supaya tidak kirim request ke server di setiap ketikan, cuma setelah user berhenti mengetik.
 
 ```javascript
-import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/debounce.js";
-import { onInput, getValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js";
+import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/debounce.js";
+import { onInput, getValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js";
 
 const cariProduk = debounce(() => {
     const kata = getValue("kotakPencarian");
@@ -1145,7 +1166,7 @@ Membatasi `fn` supaya berjalan **maksimal sekali** setiap `delay` milidetik, wal
 **Kegunaan paling umum**: event `scroll`/`resize`/`mousemove` yang bisa terpicu puluhan kali per detik.
 
 ```javascript
-import { throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/debounce.js";
+import { throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/debounce.js";
 
 window.addEventListener("scroll", throttle(() => {
     console.log("posisi scroll:", window.scrollY);
@@ -1169,7 +1190,7 @@ Source: https://croot.js.org/docs/toast
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { toast, toastSuccess, toastError, toastWarning, toastInfo } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/toast.js";
+import { toast, toastSuccess, toastError, toastWarning, toastInfo } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/toast.js";
 ```
 
 ## `toast(message, type = "info", duration = 3000)`
@@ -1198,8 +1219,8 @@ toastInfo("Memuat data...");
 ## Toast yang di-dismiss manual (misal loading state)
 
 ```javascript
-import { toastInfo } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/toast.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js";
+import { toastInfo } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/toast.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js";
 
 const tutupLoading = toastInfo("Mengunggah...", 0); // duration 0 = tidak hilang sendiri
 
@@ -1232,7 +1253,7 @@ Apa pun sumber dan bentuk datanya, hasil yang kamu terima selalu sama: sebuah `F
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { getGeoJSON, getBBox, getPropertyKeys } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geo.js";
+import { getGeoJSON, getBBox, getPropertyKeys } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geo.js";
 ```
 
 ## Mengambil dari URL
@@ -1248,7 +1269,7 @@ Mengambil GeoJSON dari `target_url`. Urutan parameternya sama dengan `getJSON` d
 | Jaringan gagal, CORS ditolak, atau lewat 15 detik | `0` | `null` |
 
 ```javascript
-import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geo.js";
+import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geo.js";
 
 getGeoJSON("https://github.com/petapedia/geojson/blob/main/contoh.geojson", (response) => {
     if (response.status === 0) {
@@ -1275,8 +1296,8 @@ getGeoJSON("https://github.com/petapedia/geojson/blob/main/contoh.geojson", (res
 Dengan token (untuk backend milikmu sendiri):
 
 ```javascript
-import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geo.js";
-import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/cookie.js";
+import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geo.js";
+import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/cookie.js";
 
 getGeoJSON("https://api.example.com/lokasi", tampilkan, "login", getCookie("login"));
 
@@ -1299,8 +1320,8 @@ Membaca file yang dipilih user di `<input type="file" id="...">`. File dibaca la
 
 ```javascript
 // index.js
-import { readGeoJSONFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geo.js";
-import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
+import { readGeoJSONFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geo.js";
+import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
 
 onChange("berkas", () => {
     readGeoJSONFile("berkas", (data) => {
@@ -1329,7 +1350,7 @@ Bentuk masukan yang diterima:
 | Array berisi `Feature`/geometri (bentuk yang biasa dibalas backend dari query MongoDB) | `FeatureCollection` berisi semuanya |
 
 ```javascript
-import { parseGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geo.js";
+import { parseGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geo.js";
 
 parseGeoJSON('{"type":"Point","coordinates":[107.575914,-6.8732098]}');
 // { type: "FeatureCollection", features: [
@@ -1398,7 +1419,7 @@ toLatLng([107.575914, -6.8732098]); // [-6.8732098, 107.575914]
 Untuk menggambar datanya di peta, pakai [`map.js`](map) — modul peta CrootJS sendiri, tanpa library eksternal. Semua fungsi `geo.js` ikut diekspor dari `map.js`, jadi cukup satu import:
 
 ```javascript
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
 
 createMap("peta"); // elemen <div id="peta"> harus punya tinggi dari CSS
 
@@ -1431,12 +1452,12 @@ Source: https://croot.js.org/docs/map
 
 CSS-nya di-*inject* otomatis oleh modul ini sendiri (seperti [`toast.js`](toast)), jadi tidak ada file CSS yang perlu ditautkan. Yang diunduh browser sekitar 13 KB (gzip): `map.min.js` beserta [`geo.js`](geo) yang dipakainya. Sebagai pembanding, Leaflet sekitar 46 KB (gzip) untuk JS dan CSS-nya.
 
-Marker ikon, skala, "lokasi saya", live tracking, koordinat, menu klik kanan, layar penuh, alat ukur, gambar overlay, ekspor PNG, pengelompokan titik, heatmap, dan rute ada di [modul tambahan](#modul-tambahan) yang terpisah, masing-masing 1–8 KB, supaya halaman hanya mengunduh yang dipakainya.
+Marker ikon, skala, "lokasi saya", live tracking, koordinat, menu klik kanan, layar penuh, menggambar dan mengubah geometri, alat ukur, gambar overlay, ekspor PNG, pengelompokan titik, heatmap, dan rute ada di [modul tambahan](#modul-tambahan) yang terpisah, masing-masing 1–8 KB, supaya halaman hanya mengunduh yang dipakainya.
 
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
 ```
 
 Semua fungsi [`geo.js`](geo) (`getGeoJSON`, `readGeoJSONFile`, `parseGeoJSON`, `getBBox`, dan lainnya) ikut diekspor dari `map.js`. Halaman yang menampilkan peta cukup mengimpor dari `map.js` saja.
@@ -1461,7 +1482,7 @@ Elemen tempat peta **wajib punya tinggi** dari CSS. Peta mengisi elemen itu sepe
 
 ```javascript
 // index.js
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
 
 createMap("peta");
 
@@ -1736,8 +1757,8 @@ Nilai `center` yang dikembalikan bisa berbeda di digit-digit terakhir dari yang 
 Kegunaan paling umum: memilih lokasi untuk sebuah form.
 
 ```javascript
-import { createMap, addGeoJSON, onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
+import { createMap, addGeoJSON, onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 17 });
 
@@ -1765,7 +1786,7 @@ Selama ada pendengar, menu bawaan browser tidak muncul di peta, kecuali di dalam
 Untuk menu siap pakai lengkap dengan submenu, keyboard, dan tema gelap, pakai [`addContextMenu`](mapcontrol#addcontextmenuid-items-options) dari `mapcontrol.js`. `onMapContextMenu` untuk tampilan buatan sendiri:
 
 ```javascript
-import { createMap, onMapContextMenu, showPopup } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
+import { createMap, onMapContextMenu, showPopup } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
 
 createMap("peta", { center: [107.6, -6.9], zoom: 14 });
 onMapContextMenu("peta", (position) => {
@@ -1782,8 +1803,8 @@ onMapContextMenu("peta", (position) => {
 Keduanya biasa dipakai bersama untuk meminta ke backend **hanya data di area yang tampak**. Karena `onMapMove` terpanggil sangat sering, bungkus dengan [`debounce`](debounce) supaya request baru dikirim setelah peta berhenti bergerak:
 
 ```javascript
-import { createMap, addGeoJSON, clearMap, onMapMove, getMapBounds, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/debounce.js";
+import { createMap, addGeoJSON, clearMap, onMapMove, getMapBounds, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/debounce.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 16 });
 
@@ -1915,14 +1936,15 @@ Fitur yang tidak dibutuhkan semua peta dipisahkan ke modul sendiri. Impor hanya 
 | [`mapcontrol.js`](mapcontrol) | Garis skala, "lokasi saya", live tracking, pilihan peta dasar (daftar atau kartu bergambar), daftar centang lapisan, koordinat kursor, menu klik kanan, dan layar penuh (`addScaleBar`, `addLocateButton`, `locateUser`, `addTrackButton`, `trackUser`, `addBasemapControl`, `setBasemap`, `addLayerControl`, `addCoordinateControl`, `addContextMenu`, `addFullscreenButton`) |
 | [`maptools.js`](maptools) | Alat ukur jarak dan luas, gambar bergeoreferensi dengan rotasi, ekspor tampilan ke PNG (`addMeasureControl`, `measure`, `addImageOverlay`, `exportMapImage`, `downloadMapImage`) |
 | [`mapcluster.js`](mapcluster) | Pengelompokan titik untuk data titik yang sangat banyak (`addCluster`) |
+| [`mapdraw.js`](mapdraw) | Menggambar dan mengubah titik, garis, dan poligon; hasilnya GeoJSON (`addDrawControl`, `startDrawing`, `editFeature`) |
 | [`mapheat.js`](mapheat) | Heatmap kepadatan titik, dan peta petak persegi/heksagon berwarna menurut nilai seperti peta cakupan sinyal (`addHeatmap`, `addGridMap`) |
 | [`geomeasure.js`](geomeasure) | Jarak, panjang, luas, titik-di-dalam-area, titik terdekat, lingkaran radius |
 | [`georoute.js`](georoute) | Rute terpendek di sepanjang garis-garis di dalam data GeoJSON (`findRoute`) |
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapmarker.js";
-import { addScaleBar, addLocateButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcontrol.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapmarker.js";
+import { addScaleBar, addLocateButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcontrol.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 17 });
 addMarker("peta", [107.575914, -6.8732098], { label: "ULBI", popup: "Kampus ULBI" });
@@ -2008,8 +2030,8 @@ Titik di dalam data GeoJSON sudah digambar `addGeoJSON` sebagai lingkaran kecil.
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapmarker.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapmarker.js";
 ```
 
 Petanya harus sudah dibuat dengan `createMap` sebelum `addMarker` dipanggil.
@@ -2081,9 +2103,9 @@ Popup marker tetap muncul di atas tepi atas marker, di mana pun anchor-nya.
 Kegunaan paling umum: user menggeser pin ke lokasi yang tepat, lalu koordinatnya masuk ke form.
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapmarker.js";
-import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapmarker.js";
+import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 17 });
 
@@ -2100,7 +2122,7 @@ addMarker("peta", [107.5759, -6.8736], {
 Untuk memindahkan marker dari kode — misalnya ke titik yang diklik di peta — pakai `setPosition`:
 
 ```javascript
-import { onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
+import { onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
 
 const pin = addMarker("peta", [107.5759, -6.8736]);
 onMapClick("peta", (position) => pin.setPosition(position));
@@ -2132,8 +2154,8 @@ Source: https://croot.js.org/docs/mapcontrol
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addScaleBar, addLocateButton, locateUser, addTrackButton, trackUser, addBasemapControl, setBasemap, addLayerControl, addCoordinateControl, addContextMenu, addFullscreenButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcontrol.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addScaleBar, addLocateButton, locateUser, addTrackButton, trackUser, addBasemapControl, setBasemap, addLayerControl, addCoordinateControl, addContextMenu, addFullscreenButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcontrol.js";
 ```
 
 Petanya harus sudah dibuat dengan `createMap` lebih dulu.
@@ -2175,8 +2197,8 @@ Menanyakan lokasi perangkat ke browser (sekali), lalu:
 | Izin ditolak, perangkat tidak mendukung, atau lewat 15 detik | `null` |
 
 ```javascript
-import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcontrol.js";
-import { getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geomeasure.js";
+import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcontrol.js";
+import { getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geomeasure.js";
 
 const kampus = [107.575914, -6.8732098];
 
@@ -2213,8 +2235,8 @@ Mengembalikan function `stop()` untuk menghentikan pelacakan.
 Kalau izin lokasi ditolak atau perangkat tidak mendukung, `responseFunction` dipanggil **sekali** dengan `null` dan pelacakan berhenti sendiri. Gangguan sementara seperti sinyal hilang tidak menghentikan pelacakan; browser mencoba lagi.
 
 ```javascript
-import { createMap, addGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { trackUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcontrol.js";
+import { createMap, addGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { trackUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcontrol.js";
 
 createMap("peta");
 
@@ -2392,7 +2414,7 @@ Tombol salin memakai Clipboard API, yang hanya tersedia di halaman HTTPS (atau `
 **Grid lokal (CAD).** Dengan [`createAffineTransform`](geomeasure#createaffinetransformfrom-to) dari `geomeasure.js`, koordinat bisa ditampilkan dalam grid proyek. Contohnya, tiga titik patok yang diketahui koordinat grid dan lng/lat-nya:
 
 ```javascript
-import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geomeasure.js";
+import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geomeasure.js";
 
 const grid = [[1000, 2000], [1500, 2000], [1000, 2400]];                  // meter, grid CAD
 const wgs84 = [[107.57520, -6.87410], [107.57974, -6.87407], [107.57517, -6.87048]];
@@ -2457,8 +2479,8 @@ Selain object, item juga boleh berupa:
 Mengembalikan `{ close(), remove() }`. `remove()` menghapus menu konteksnya, dan menu bawaan browser kembali muncul.
 
 ```javascript
-import { createMap, addGeoJSON, setMapView } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addContextMenu } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcontrol.js";
+import { createMap, addGeoJSON, setMapView } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addContextMenu } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcontrol.js";
 
 createMap("peta", { center: [107.6, -6.9], zoom: 14 });
 addGeoJSON("peta", dataBTS, { name: "bts" });
@@ -2544,8 +2566,8 @@ Source: https://croot.js.org/docs/maptools
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addMeasureControl, measure, addImageOverlay, exportMapImage, downloadMapImage } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/maptools.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addMeasureControl, measure, addImageOverlay, exportMapImage, downloadMapImage } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/maptools.js";
 ```
 
 Petanya harus sudah dibuat dengan `createMap` lebih dulu.
@@ -2628,7 +2650,7 @@ masterPlan.setOpacity(0.4);
 **Dari titik kontrol.** Kalau yang diketahui adalah beberapa titik di gambar (piksel) beserta lng/lat-nya, buat transformasinya dengan [`createAffineTransform`](geomeasure#createaffinetransformfrom-to) lalu hitung ketiga sudutnya:
 
 ```javascript
-import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geomeasure.js";
+import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geomeasure.js";
 
 // Gambar 2400 x 1600 piksel; tiga titik yang dikenali di gambar dan di peta.
 const piksel = [[310, 220], [2105, 260], [400, 1390]];
@@ -2692,8 +2714,8 @@ Tanpa pengelompokan, 20.000 titik berarti 20.000 elemen di halaman dan peta yang
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcluster.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcluster.js";
 ```
 
 Petanya harus sudah dibuat dengan `createMap` lebih dulu.
@@ -2705,8 +2727,8 @@ Menggambar fitur-fitur titik (`Point` dan `MultiPoint`) di dalam `geojson` sebag
 Mengembalikan function `remove()` untuk menghapus semuanya dari peta.
 
 ```javascript
-import { createMap, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcluster.js";
+import { createMap, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcluster.js";
 
 createMap("peta");
 
@@ -2765,6 +2787,151 @@ Contoh lengkap dengan 1.000 sampai 100.000 titik: [demo](https://croot.js.org/ex
 
 ---
 
+Source: https://croot.js.org/docs/mapdraw
+
+# Dokumentasi Modul `mapdraw.js`
+
+`mapdraw.js` adalah modul tambahan untuk [`map.js`](map) untuk **membuat data** di peta, bukan hanya menampilkannya: menggambar titik, garis, dan poligon dengan klik atau tap, lalu mengubah bentuknya — geser simpul, tambah simpul di tengah ruas, hapus simpul. Hasilnya GeoJSON biasa, siap dikirim ke server dengan [`postJSON`](api/) atau diukur dengan [`geomeasure.js`](geomeasure).
+
+Cocok untuk survei lapangan, menandai area cakupan, menggambar rute, atau batas kavling. Bekerja dengan mouse dan layar sentuh.
+
+## Cara Penggunaan (Import)
+
+```javascript
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addDrawControl, startDrawing, editFeature } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapdraw.js";
+```
+
+Petanya harus sudah dibuat dengan `createMap` lebih dulu.
+
+## `addDrawControl(id, options)`
+
+Cara paling cepat: tombol-tombol siap pakai di pojok peta, beserta lapisan yang menampilkan hasilnya.
+
+| Tombol | Fungsi |
+|---|---|
+| Titik | Klik peta untuk menaruh titik. Alatnya tetap aktif untuk titik berikutnya |
+| Garis | Klik titik-titik garis; klik ganda atau **Selesai** untuk mengakhiri |
+| Area | Klik titik-titik batas; klik titik pertama, klik ganda, atau **Selesai** untuk menutup |
+| Ubah | Klik sebuah fitur, lalu geser pegangannya (lihat [`editFeature`](#editfeatureid-feature-options)) |
+| Hapus | Klik sebuah fitur untuk menghapusnya |
+
+Panel di bawah tombol menampilkan petunjuk dan tombol **Selesai**, **Hapus titik**, dan **Batal** — wajib untuk layar sentuh yang tidak punya klik ganda. Esc membatalkan.
+
+`options` (semuanya opsional):
+
+| Opsi | Bawaan | Keterangan |
+|---|---|---|
+| `data` | — | GeoJSON awal yang bisa diubah dan dihapus |
+| `tools` | semua | Daftar tombol: `["point", "line", "polygon", "edit", "delete"]` |
+| `properties` | `{}` | Properties untuk fitur baru: object, atau `function (type) => object` |
+| `corner` | `"top-left"` | Pojok peta |
+| `onChange` | — | `function (featureCollection)` setiap data berubah: ditambah, diubah, atau dihapus |
+
+Mengembalikan `{ getData(), setData(geojson), clear(), remove() }`. `getData()` memberi salinan FeatureCollection-nya.
+
+```javascript
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addDrawControl } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapdraw.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js";
+import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
+
+createMap("peta", { center: [107.6, -6.9], zoom: 16 });
+const gambar = addDrawControl("peta", {
+    properties: (type) => ({ jenis: type, dibuat: new Date().toISOString() }),
+});
+
+onClick("simpan", async () => {
+    const { status } = await postJSON("https://api.example.com/survei", gambar.getData(), null);
+    console.log(status === 200 ? "Tersimpan" : "Gagal: " + status);
+});
+```
+
+## `startDrawing(id, type, responseFunction, options)`
+
+Menggambar **satu** geometri, untuk antarmuka buatan sendiri. `type`: `"point"`, `"line"`, atau `"polygon"` (atau nama GeoJSON-nya: `"Point"`, `"LineString"`, `"Polygon"`).
+
+| Aksi | Hasil |
+|---|---|
+| Klik / tap peta | Menambah titik. Titik (`"point"`) langsung selesai |
+| Klik titik pertama poligon | Menutup poligon |
+| Klik ganda, atau Enter | Selesai |
+| Backspace | Menghapus titik terakhir |
+| Esc | Batal |
+
+Selama menggambar, klik peta tidak membuka popup dan tidak diteruskan ke `onMapClick`; menggeser peta tetap bisa.
+
+`responseFunction(feature)` dipanggil sekali: Feature GeoJSON hasilnya, atau `null` kalau dibatalkan. Koordinat dibulatkan ke 7 angka di belakang koma (sekitar 1 cm), dan poligon selalu ditutup (titik terakhir = titik pertama).
+
+`options` (semuanya opsional):
+
+| Opsi | Keterangan |
+|---|---|
+| `properties` | Properties Feature hasilnya: object, atau `function (type) => object` |
+| `onChange` | `function (feature)` setiap titik ditambah atau dihapus — `null` selama titiknya belum cukup |
+
+Mengembalikan `{ finish(), undo(), stop() }` untuk tombol Selesai, Hapus titik, dan Batal buatan sendiri.
+
+```javascript
+import { getArea } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geomeasure.js";
+
+onClick("gambar-kavling", () => {
+    startDrawing("peta", "polygon", (feature) => {
+        if (!feature) return; // dibatalkan
+        setInnerText("luas", Math.round(getArea(feature)) + " m²");
+    });
+});
+```
+
+## `editFeature(id, feature, options)`
+
+Menampilkan pegangan untuk mengubah sebuah geometri:
+
+| Pegangan | Aksi |
+|---|---|
+| Bulat putih di setiap simpul | Geser untuk memindahkan simpul |
+| Bulat kecil oranye di tengah ruas | Geser untuk menambah simpul di situ |
+| Klik ganda simpul (mouse), atau tekan lama 0,5 detik (layar sentuh) | Menghapus simpul — garis paling sedikit 2 simpul, area 3 |
+
+`feature` boleh Feature atau geometri saja: `Point`, `LineString`, `Polygon`, atau versi `Multi`-nya, termasuk poligon berlubang. Data aslinya tidak diubah. Menggeser pegangan tidak ikut menggeser peta.
+
+`options.onChange(feature)` dipanggil setiap selesai menggeser, menambah, atau menghapus simpul, dengan bentuk yang sama seperti masukannya (Feature tetap Feature, properties ikut).
+
+Mengembalikan `{ getFeature(), stop() }`. Hanya satu `editFeature` aktif per peta; memanggil lagi menghentikan yang lama.
+
+```javascript
+const editor = editFeature("peta", batasKavling, {
+    onChange: (feature) => postJSON("https://api.example.com/kavling/7", feature, null),
+});
+onClick("selesai", () => editor.stop());
+```
+
+## Tampilan
+
+Semua bisa ditimpa dari CSS halaman tanpa `!important`.
+
+| Kelas | Elemen |
+|---|---|
+| `svg.crootjs-draw` | Lapisan gambar (satu untuk gambar yang sedang dibuat, satu untuk hasil `addDrawControl`, satu untuk pegangan ubah) |
+| `.crootjs-draw-shape`, `.crootjs-draw-line` | Area/garis; garis tanpa isian |
+| `.crootjs-draw-preview` | Garis bantu putus-putus ke posisi kursor |
+| `.crootjs-draw-editing` | Bentuk yang sedang diubah |
+| `circle.crootjs-draw-point` | Titik hasil `addDrawControl` |
+| `circle.crootjs-draw-vertex`, `-vertex-first` | Simpul; simpul pertama poligon (klik untuk menutup) |
+| `circle.crootjs-draw-midpoint` | Titik tengah ruas |
+| `.crootjs-map-draw`, `.crootjs-map-draw-tool`, `.crootjs-map-draw-panel`, `.crootjs-map-draw-actions` | Kotak kontrol, tombol alat (`aria-pressed="true"` yang aktif), panel petunjuk, dan tombol aksinya |
+
+Di layar sentuh pegangannya otomatis lebih besar.
+
+## Catatan
+
+- Gambar ikut bergeser dan di-zoom bersama peta. Lapisannya SVG di atas data `addGeoJSON`, sehingga belum ikut terekspor oleh `exportMapImage`.
+- Untuk menampilkan data yang sudah final dengan gaya, popup, dan label, kirim hasilnya ke [`addGeoJSON`](map#addgeojsonid-geojson-options). `mapdraw.js` untuk membuat dan mengubah data.
+- Alat ukur [`maptools.js`](maptools) dan `startDrawing` sama-sama "meminjam" klik peta; hanya satu yang aktif pada satu waktu.
+
+
+---
+
 Source: https://croot.js.org/docs/mapheat
 
 # Dokumentasi Modul `mapheat.js`
@@ -2776,8 +2943,8 @@ Terpisah dari `map.js` supaya halaman yang tidak memakainya tidak ikut mengunduh
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { addHeatmap, addGridMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapheat.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { addHeatmap, addGridMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapheat.js";
 ```
 
 Petanya harus sudah dibuat dengan `createMap` lebih dulu.
@@ -2913,7 +3080,7 @@ Merender dengan **WebGL2**, dan otomatis turun ke **WebGL1** di browser lama. Gi
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/model3d.js";
+import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/model3d.js";
 ```
 
 ## Contoh Minimal
@@ -2933,8 +3100,8 @@ import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib
 
 ```javascript
 // index.js
-import { createViewer, loadModel, onModelClick, highlightPart } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/model3d.js";
-import { setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
+import { createViewer, loadModel, onModelClick, highlightPart } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/model3d.js";
+import { setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
 
 createViewer("model");
 loadModel("model", "models/bts.glb", (info, error) => {
@@ -2981,7 +3148,7 @@ Kalau gagal, `info` = `null` dan `error` berisi alasannya (juga dicetak di conso
 
 ```javascript
 // Membuka file dari komputer pengguna
-import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
+import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
 
 onChange("file", () => {
     loadModel("model", document.getElementById("file").files[0], (info, error) => {
@@ -3160,8 +3327,8 @@ Tiga di tengah itu cocok untuk materi pembelajaran: anatomi, mesin, bangunan, al
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/model3d.js";
-import { addHotspot, enableTransform, getAnimations, playAnimation, explodeModel, addSection, exportGLB, downloadGLB } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/model3dtools.js";
+import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/model3d.js";
+import { addHotspot, enableTransform, getAnimations, playAnimation, explodeModel, addSection, exportGLB, downloadGLB } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/model3dtools.js";
 ```
 
 Penampilnya harus sudah dibuat dengan `createViewer` lebih dulu. Hotspot dan gizmo yang menyebut nama bagian butuh modelnya sudah dimuat, jadi panggil di dalam `responseFunction` `loadModel`.
@@ -3367,7 +3534,7 @@ Posisi selalu `[lng, lat]` seperti di GeoJSON, dan hasil selalu dalam **meter** 
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { getDistance, getArea, isInside, createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geomeasure.js";
+import { getDistance, getArea, isInside, createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geomeasure.js";
 ```
 
 Fungsi yang menerima `geojson` sama fleksibelnya dengan [`parseGeoJSON`](geo): `FeatureCollection`, satu `Feature`, satu geometri polos, array-nya, atau teks JSON. Contoh-contoh di bawah memakai `data` dari [contoh.geojson](https://github.com/petapedia/geojson/blob/main/contoh.geojson).
@@ -3461,9 +3628,9 @@ Affine pada `[lng, lat]` cukup teliti untuk area seukuran kawasan (beberapa kilo
 Gabungan yang paling sering dipakai: gambar radiusnya, ambil lokasi user, lalu periksa apakah ia di dalamnya.
 
 ```javascript
-import { createMap, addGeoJSON, fitMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/mapcontrol.js";
-import { createCircle, isInside, getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/geomeasure.js";
+import { createMap, addGeoJSON, fitMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/mapcontrol.js";
+import { createCircle, isInside, getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/geomeasure.js";
 
 const kampus = [107.575914, -6.8732098];
 const area = createCircle(kampus, 100);
@@ -3508,7 +3675,7 @@ Modul ini murni perhitungan. Ia tidak butuh peta; hasilnya GeoJSON biasa yang bi
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/georoute.js";
+import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/georoute.js";
 ```
 
 Semua fungsi [`geomeasure.js`](geomeasure) (`getDistance`, `getLength`, `isInside`, dan lainnya) ikut diekspor dari `georoute.js`, jadi halaman yang menghitung rute cukup mengimpor dari sini.
@@ -3541,8 +3708,8 @@ Di contoh itu kedua titik tidak berada tepat di atas jalan. **`from` dan `to` bo
 Karena hasilnya Feature biasa, `addGeoJSON` langsung bisa menggambarnya:
 
 ```javascript
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/map.js";
-import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/georoute.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/map.js";
+import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/georoute.js";
 
 createMap("peta");
 
@@ -3956,7 +4123,7 @@ Source: https://croot.js.org/docs/validate
 import fungsi dari CDN jsDelivr ke dalam file JavaScript kamu yang bertipe `module`.
 
 ```javascript
-import { validateUserName, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/validate.js";
+import { validateUserName, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/validate.js";
 ```
 
 # Daftar Fungsi
@@ -3990,7 +4157,7 @@ Berikut adalah cara menerapkannya pada elemen HTML menggunakan Event Listener:
 ### JavaScript
 
 ```javascript
-import { validateUserName, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/validate.js";
+import { validateUserName, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/validate.js";
 ```
 
 # Kesimpulan
@@ -4017,7 +4184,7 @@ import {
   connectws,
   sendMessagetoWebSocket, 
   closeWebSocket 
-} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/websocket.js";
+} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/websocket.js";
 ```
 ## 2. Membuka Koneksi & Menangkap Pesan
 
@@ -4129,7 +4296,7 @@ Modul ini mengekspor tiga fungsi utama untuk berinteraksi dengan API otentikasi.
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { sendSTP, verifySTP, resendSTP } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/stp.js";
+import { sendSTP, verifySTP, resendSTP } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/stp.js";
 ```
 
 ## Fungsi Internal
@@ -4195,7 +4362,7 @@ Source: https://croot.js.org/docs/useragent
 ## Cara Penggunaan (Import)
 
 ```javascript
-import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/useragent.js";
+import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/useragent.js";
 ```
 
 ## Daftar Fungsi
@@ -4211,7 +4378,7 @@ Mengembalikan `true` jika `navigator.userAgent` cocok dengan pola perangkat mobi
 **Contoh Penggunaan:**
 
 ```javascript
-import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/useragent.js";
+import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/useragent.js";
 
 if (isMobile()) {
     console.log("Diakses dari perangkat mobile");
@@ -4223,8 +4390,8 @@ if (isMobile()) {
 **Contoh: menampilkan tombol berbeda untuk mobile**
 
 ```javascript
-import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/useragent.js";
-import { show, hide } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/element.js";
+import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/useragent.js";
+import { show, hide } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/element.js";
 
 if (isMobile()) {
     show("tombol-buka-app");
@@ -4248,7 +4415,7 @@ Modul `trace.js` pada library croot.js berfungsi untuk melakukan pelacakan atau 
 Import fungsi dari `trace.js` melalui CDN jsDelivr. Pastikan dipanggil di dalam *script* HTML kamu yang bertipe `module`.
 
 ```javascript
-import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/trace.js";
+import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/trace.js";
 ```
 
 ## Daftar Fungsi
@@ -4262,7 +4429,7 @@ Fungsi ini berfungsi untuk mendeteksi interaksi mouse berupa klik atau *touch* u
 Untuk menggunakan fungsi `tapClick`, pasangkan pada `EventListener` untuk *event* yang ingin dilacak, seperti `click`, `touchstart`, atau `touchmove`.
 
 ```javascript
-import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/trace.js";
+import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/trace.js";
 
 // Melacak interaksi klik (Mouse)
 document.addEventListener('click', tapClick);
@@ -4405,11 +4572,28 @@ Never as a plain classic script. This matches how CrootJS itself is distributed 
 ## 3. Import CrootJS from a pinned CDN version
 
 ```js
-import { getJSON, postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.25/api.js";
+import { getJSON, postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.26/api.js";
 ```
 
 - Always pin an exact version tag (`@0.0.5`), never `@latest`, in committed code — `@latest` can silently change behavior under you.
 - Import only the specific module files you actually use (`cookie.js`, `url.js`, ...), not the whole library, so the page only loads what it needs.
+
+## 4. No AI slop
+
+Code generated by an AI agent must be as deliberate as hand-written code. These rules are checked in review; breaking one is a reason to reject the change.
+
+1. **Never invent an API.** Before calling any CrootJS function, check its name, parameter order, and options against [llms.txt](https://croot.js.org/llms.txt) or the module's docs page for the pinned version. If what you need does not exist, write it explicitly in your own code — don't guess an option and hope.
+2. **Use what CrootJS already has.** `api.js` for requests, `element.js` for DOM by ID, `map.js` for maps, `model3d.js` for 3D, `toast.js` for notifications. Don't re-implement them, and don't add a library that duplicates them (Leaflet, Three.js, axios, jQuery).
+3. **No dead weight.** No unused imports, variables, or functions; no commented-out code; no `TODO`/placeholder stubs; no "example" functions nobody calls; no files that aren't needed.
+4. **Comments explain why, not what.** Don't narrate each line (`// get the value`, `// import CrootJS`). Comment the reason behind a non-obvious choice, in the same language as the rest of the project.
+5. **No fake content.** No lorem ipsum in finished pages, no invented statistics, testimonials, or claims ("trusted by thousands of developers"). Sample data is labelled as sample data.
+6. **Handle errors that can actually happen.** Follow each function's contract (e.g. `api.js` reports network failure as `status: 0`); don't wrap everything in `try/catch` that swallows errors, and don't add checks for states that cannot occur.
+7. **Stay in scope.** Change only what the task needs. Don't rename, reformat, or restyle unrelated code; don't "improve" things nobody asked about.
+8. **Real HTML, not div soup.** Buttons are `<button>`, inputs have `<label>`s, everything works with the keyboard and at phone width. No decoration that wasn't asked for (gradients, emoji, animations).
+9. **Verify before saying "done".** Open the page through a local server, check the browser console has no errors, and try the feature — including at phone width and with touch if it's interactive. Say plainly what you did not test.
+10. **Pin and minimise dependencies.** Exact version tags only (never `@latest`), and only the modules the page uses.
+
+Quick check before handing work back: *Does every CrootJS call exist as written? Is every line used? Did I run it? Did I change anything I wasn't asked to?*
 
 ## Why
 

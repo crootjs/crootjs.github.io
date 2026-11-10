@@ -66,6 +66,11 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/docs/mapdraw</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/docs/mapheat</loc>
     <lastmod>2026-11-11</lastmod>
     <priority>0.80</priority>
@@ -218,6 +223,11 @@
   <url>
     <loc>https://croot.js.org/examples/geo/cluster/</loc>
     <lastmod>2026-10-13</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/geo/draw/</loc>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.60</priority>
   </url>
   <url>
