@@ -3,63 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrootJS - Vanilla ES6+ JavaScript Modules via CDN</title>
-    <meta name="description" content="CrootJS is a zero-dependency, zero-build set of vanilla JavaScript ES6+ modules — DOM helpers, fetch wrappers, cookies, URL utilities, and a WhatsApp QR login flow — imported straight from jsDelivr. No npm install, no bundler.">
+    <title>CrootJS — Vanilla JS Modules: Maps, 3D Models &amp; DOM Helpers via CDN</title>
+    <meta name="description" content="CrootJS: zero-dependency, zero-build vanilla JavaScript ES6+ modules imported straight from jsDelivr — DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map without Leaflet, heatmaps and coverage grids, and a glTF/GLB 3D viewer without Three.js.">
+    <link rel="canonical" href="https://croot.js.org/">
+    <meta name="theme-color" content="#007AFF">
+    <link rel="icon" href="/favicon.ico">
 
-    <meta property="og:title" content="CrootJS - Vanilla ES6+ JavaScript Modules via CDN">
-    <meta property="og:description" content="Zero-dependency, zero-build vanilla JS ES6+ modules imported straight from jsDelivr. No npm install, no bundler.">
-    <meta property="og:url" content="https://croot.js.org/">
     <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="CrootJS - Vanilla ES6+ JavaScript Modules via CDN">
-    <meta name="twitter:description" content="Zero-dependency, zero-build vanilla JS ES6+ modules imported straight from jsDelivr. No npm install, no bundler.">
+    <meta property="og:site_name" content="CrootJS">
+    <meta property="og:url" content="https://croot.js.org/">
+    <meta property="og:title" content="CrootJS — Vanilla JS Modules: Maps, 3D Models &amp; DOM Helpers via CDN">
+    <meta property="og:description" content="Zero-dependency vanilla JS ES6+ modules imported straight from jsDelivr: DOM and fetch helpers, maps without Leaflet, 3D models without Three.js. No npm install, no bundler.">
+    <meta property="og:image" content="https://croot.js.org/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="CrootJS — vanilla JavaScript modules straight from a CDN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CrootJS — Vanilla JS Modules: Maps, 3D Models &amp; DOM Helpers via CDN">
+    <meta name="twitter:description" content="Zero-dependency vanilla JS ES6+ modules imported straight from jsDelivr: DOM and fetch helpers, maps without Leaflet, 3D models without Three.js.">
+    <meta name="twitter:image" content="https://croot.js.org/og.png">
 
-    <!-- Google Fonts -->
+    <!-- Ringkasan untuk agen AI: https://llmstxt.org -->
+    <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
+    <link rel="alternate" type="text/plain" title="llms-full.txt" href="/llms-full.txt">
+
+    <!-- Data terstruktur untuk mesin pencari (data, bukan kode) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://croot.js.org/#website",
+                "url": "https://croot.js.org/",
+                "name": "CrootJS",
+                "publisher": { "@id": "https://croot.js.org/#organization" }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://croot.js.org/#organization",
+                "name": "PT. Informatika Digital Bisnis",
+                "url": "https://if.co.id/",
+                "sameAs": ["https://github.com/crootjs"]
+            },
+            {
+                "@type": "SoftwareSourceCode",
+                "name": "CrootJS",
+                "description": "Zero-dependency, zero-build vanilla JavaScript ES6+ modules imported straight from jsDelivr: DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map, heatmaps, and a glTF/GLB 3D viewer.",
+                "url": "https://croot.js.org/",
+                "codeRepository": "https://github.com/crootjs/lib",
+                "programmingLanguage": "JavaScript",
+                "runtimePlatform": "Web browser",
+                "license": "https://github.com/crootjs/lib/blob/main/LICENSE",
+                "author": { "@id": "https://croot.js.org/#organization" }
+            }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
     <link rel="stylesheet" href="style.css">
-
+    <script type="module" src="script.js"></script>
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <!-- Ikon: Lucide v0.469.0 (ISC), disalin sebagai sprite supaya tidak perlu library ikon 700 KB. -->
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+        <symbol id="i-alert-triangle" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/> <path d="M12 9v4"/> <path d="M12 17h.01"/></symbol>
+        <symbol id="i-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/> <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></symbol>
+        <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></symbol>
+        <symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 7v14"/> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol>
+        <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/> <path d="m3.3 7 8.7 5 8.7-5"/> <path d="M12 22V12"/></symbol>
+        <symbol id="i-circle-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <circle cx="12" cy="12" r="1"/></symbol>
+        <symbol id="i-code-2" viewBox="0 0 24 24"><path d="m18 16 4-4-4-4"/> <path d="m6 8-4 4 4 4"/> <path d="m14.5 4-5 16"/></symbol>
+        <symbol id="i-cookie" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/> <path d="M8.5 8.5v.01"/> <path d="M16 15.5v.01"/> <path d="M12 12v.01"/> <path d="M11 17v.01"/> <path d="M7 14v.01"/></symbol>
+        <symbol id="i-cpu" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/> <rect width="6" height="6" x="9" y="9" rx="1"/> <path d="M15 2v2"/> <path d="M15 20v2"/> <path d="M2 15h2"/> <path d="M2 9h2"/> <path d="M20 15h2"/> <path d="M20 9h2"/> <path d="M9 2v2"/> <path d="M9 20v2"/></symbol>
+        <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <polyline points="7 10 12 15 17 10"/> <line x1="12" x2="12" y1="15" y2="3"/></symbol>
+        <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M10 9H8"/> <path d="M16 13H8"/> <path d="M16 17H8"/></symbol>
+        <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+        <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/> <path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+        <symbol id="i-graduation-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
+        <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></symbol>
+        <symbol id="i-log-in" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/> <polyline points="10 17 15 12 10 7"/> <line x1="15" x2="3" y1="12" y2="12"/></symbol>
+        <symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/> <path d="M15 5.764v15"/> <path d="M9 3.236v15"/></symbol>
+        <symbol id="i-map-pinned" viewBox="0 0 24 24"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"/> <circle cx="12" cy="8" r="2"/> <path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"/></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" x2="20" y1="12" y2="12"/> <line x1="4" x2="20" y1="6" y2="6"/> <line x1="4" x2="20" y1="18" y2="18"/></symbol>
+        <symbol id="i-message-square-warning" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/> <path d="M12 7v2"/> <path d="M12 13h.01"/></symbol>
+        <symbol id="i-mouse-pointer-click" viewBox="0 0 24 24"><path d="M14 4.1 12 6"/> <path d="m5.1 8-2.9-.8"/> <path d="m6 12-1.9 2"/> <path d="M7.2 2.2 8 5.1"/> <path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></symbol>
+        <symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/> <rect x="2" y="16" width="6" height="6" rx="1"/> <rect x="9" y="2" width="6" height="6" rx="1"/> <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/> <path d="M12 12V8"/></symbol>
+        <symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/> <path d="M12 22V12"/> <path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/> <path d="m7.5 4.27 9 5.15"/></symbol>
+        <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/> <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></symbol>
+        <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></symbol>
+        <symbol id="i-qr-code" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1"/> <rect width="5" height="5" x="16" y="3" rx="1"/> <rect width="5" height="5" x="3" y="16" rx="1"/> <path d="M21 16h-3a2 2 0 0 0-2 2v3"/> <path d="M21 21v.01"/> <path d="M12 7v3a2 2 0 0 1-2 2H7"/> <path d="M3 12h.01"/> <path d="M12 3h.01"/> <path d="M12 16v.01"/> <path d="M16 12h1"/> <path d="M21 12v.01"/> <path d="M12 21v-1"/></symbol>
+        <symbol id="i-radio-tower" viewBox="0 0 24 24"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/> <path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/> <circle cx="12" cy="9" r="2"/> <path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/> <path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/> <path d="M9.5 18h5"/> <path d="m8 22 4-11 4 11"/></symbol>
+        <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/> <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/> <circle cx="18" cy="5" r="3"/></symbol>
+        <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/> <path d="m14.5 12.5 2-2"/> <path d="m11.5 9.5 2-2"/> <path d="m8.5 6.5 2-2"/> <path d="m17.5 15.5 2-2"/></symbol>
+        <symbol id="i-type" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/> <line x1="9" x2="15" y1="20" y2="20"/> <line x1="12" x2="12" y1="4" y2="20"/></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol>
+    </svg>
     <!-- Navigation -->
     <nav class="nav">
         <div class="container">
             <div class="nav-content">
-                <a href="#" class="logo">
-                    <i data-lucide="code-2" width="32" height="32"></i>
+                <a href="/" class="logo" aria-label="CrootJS home">
+                    <svg class="icon" width="32" height="32" aria-hidden="true" focusable="false"><use href="#i-code-2"/></svg>
                     <span>CrootJS</span>
                 </a>
-                <ul class="nav-links">
+                <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+                    <svg class="icon icon-open" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg>
+                    <svg class="icon icon-close" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-x"/></svg>
+                </button>
+                <ul class="nav-links" id="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#examples">Examples</a></li>
                     <li><a href="#ai-agents">AI Agents</a></li>
-                    <li><a href="/docs">Docs</a></li>
+                    <li><a href="/docs/">Docs</a></li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <main id="main">
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
                 <h1>Vanilla ES6+ JavaScript Modules — Straight From a CDN</h1>
-                <p class="hero-tagline">A set of small, dependency-free JS modules for static sites — DOM helpers, fetch wrappers, cookies, URL utilities, and a WhatsApp QR login flow. Import what you need directly from jsDelivr; no <code>npm install</code>, no bundler.</p>
+                <p class="hero-tagline">Small, dependency-free JS modules for static sites — DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map without Leaflet, heatmaps and coverage grids, and a glTF/GLB 3D viewer without Three.js. Import what you need directly from jsDelivr; no <code>npm install</code>, no bundler.</p>
                 <div class="hero-badges">
-                    <img src="https://img.shields.io/github/v/tag/crootjs/lib?label=version&color=007AFF" alt="latest version" loading="lazy">
-                    <img src="https://img.shields.io/jsdelivr/gh/hm/crootjs/lib?label=jsDelivr%20hits" alt="jsDelivr hits" loading="lazy">
-                    <img src="https://img.shields.io/github/license/crootjs/lib" alt="license" loading="lazy">
+                    <img src="https://img.shields.io/github/v/tag/crootjs/lib?label=version&color=007AFF" alt="latest version" width="102" height="20">
+                    <img src="https://img.shields.io/jsdelivr/gh/hm/crootjs/lib?label=jsDelivr%20hits" alt="jsDelivr hits per month" width="140" height="20">
+                    <img src="https://img.shields.io/github/license/crootjs/lib" alt="license" width="102" height="20">
                 </div>
                 <div class="hero-buttons">
-                    <a href="/docs" class="btn btn-primary">
-                        <i data-lucide="book-open" width="20" height="20"></i>
+                    <a href="/docs/" class="btn btn-primary">
+                        <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-book-open"/></svg>
                         Get Started
                     </a>
                     <a href="https://github.com/crootjs" class="btn btn-secondary">
-                        <i data-lucide="github" width="20" height="20"></i>
+                        <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-github"/></svg>
                         View on GitHub
                     </a>
                 </div>
@@ -73,57 +158,57 @@
             <h2>What's Actually In It</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <i data-lucide="package" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg>
                     <h3>Zero Build, Zero Install</h3>
                     <p>Import modules straight from jsDelivr's CDN with a <code>&lt;script type="module"&gt;</code> tag. No <code>npm install</code>, no bundler config, no build step.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="network" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-network"/></svg>
                     <h3>Fetch Wrappers, Not a Framework</h3>
                     <p><code>getJSON</code>, <code>postJSON</code>, <code>putJSON</code>, <code>deleteJSON</code> — thin wrappers over the native Fetch API with a consistent <code>{status, data}</code> callback.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="mouse-pointer-click" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-mouse-pointer-click"/></svg>
                     <h3>DOM Helpers Without the Boilerplate</h3>
                     <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>serializeForm</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls. Pair with <code>debounce.js</code> for search-as-you-type.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="qr-code" class="feature-icon green"></i>
+                    <svg class="icon feature-icon green" aria-hidden="true" focusable="false"><use href="#i-qr-code"/></svg>
                     <h3>WhatsApp QR + OTP Login</h3>
                     <p><code>auth.js</code> and <code>stp.js</code> give you a ready-made WhatsAuth QR-code and OTP login flow, including Google Sign-In.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="cookie" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-cookie"/></svg>
                     <h3>Cookies, Storage, URLs & Validation</h3>
                     <p><code>cookie.js</code>, <code>storage.js</code>, <code>url.js</code>, and <code>validate.js</code> cover session cookies, localStorage/sessionStorage (with optional expiry), query strings, and input sanitization.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="puzzle" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-puzzle"/></svg>
                     <h3>Import Only What You Use</h3>
                     <p>Every module is a separate CDN file — <code>.../lib@version/cookie.js</code> — so your page only loads the code it actually needs.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="bell" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-bell"/></svg>
                     <h3>Notifications, No Dependency</h3>
                     <p><code>toast.js</code> shows dismissable notifications with zero external libraries — an alternative to pulling in SweetAlert2 just for a message.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="map" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>
                     <h3>Read GeoJSON</h3>
                     <p><code>geo.js</code> loads GeoJSON from a URL or a local file, validates it, and always hands back a <code>FeatureCollection</code> — plus <code>getBBox</code>, <code>getCenter</code>, and <code>getPropertyKeys</code> for feeding a map or a table.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="map-pinned" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-map-pinned"/></svg>
                     <h3>Maps Without a Map Library</h3>
                     <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates, named layers, feature labels, hover tooltips, dashed lines, satellite/hybrid basemaps you can switch without redrawing, and a canvas renderer for thousands of lines — in about 13 KB gzipped, with no Leaflet and no CSS file to link.</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="route" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
                     <h3>Markers, Routes &amp; Measurements</h3>
                     <p>Optional add-ons of 1–8 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, basemap switchers (radio list or Google-Maps-style picture cards), layer switchers, cursor coordinates, a right-click / long-press context menu for GIS actions, and fullscreen (<code>mapcontrol.js</code>), distance/area measuring, rotated image overlays and PNG export (<code>maptools.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), density heatmaps and nPerf-style square/hex coverage grids (<code>mapheat.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
                 </div>
                 <div class="feature-card">
-                    <i data-lucide="box" class="feature-icon"></i>
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-box"/></svg>
                     <h3>3D Models Without Three.js</h3>
                     <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code — in about 14 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, glTF animation playback, exploded views, cross-sections for interactive learning material, and re-export to a new <code>.glb</code>.</p>
                 </div>
@@ -168,7 +253,7 @@
             
             <div class="center-mt">
                 <a href="https://www.jsdelivr.com/package/gh/crootjs/lib" class="btn btn-primary">
-                    <i data-lucide="download" width="20" height="20"></i>
+                    <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>
                     Explore CDN Library
                 </a>
             </div>
@@ -189,9 +274,11 @@
                 <pre class="code-content"><code><span class="keyword">curl</span> -o CLAUDE.md https://raw.githubusercontent.com/crootjs/lib/main/CLAUDE.md</code></pre>
             </div>
 
+            <p class="section-intro">Agents that read docs instead of guessing can start from <a href="/llms.txt">llms.txt</a> (one-page summary of every module and signature), <a href="/llms-full.txt">llms-full.txt</a> (all module docs in one file), or any doc page as plain Markdown — e.g. <a href="/docs/map.md">/docs/map.md</a>, <a href="/docs/model3d.md">/docs/model3d.md</a>.</p>
+
             <div class="center-mt">
-                <a href="https://croot.js.org/lib/CLAUDE" class="btn btn-secondary">
-                    <i data-lucide="file-text" width="20" height="20"></i>
+                <a href="/lib/CLAUDE" class="btn btn-secondary">
+                    <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-file-text"/></svg>
                     Read CLAUDE.md
                 </a>
             </div>
@@ -207,172 +294,172 @@
             <div class="examples-grid">
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="log-in" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-log-in"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Form Login</h3>
                         <p class="example-description">A cookie-based login form example — checks the session cookie and redirects automatically.</p>
-                        <a href="https://crootjs.github.io/examples/core/login/" class="example-link">View Demo →</a>
+                        <a href="/examples/core/login/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="type" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-type"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Set Inner Element</h3>
                         <p class="example-description">A minimal example showing how to set element text content with CrootJS's setInner helper.</p>
-                        <a href="https://crootjs.github.io/examples/element/set/" class="example-link">View Demo →</a>
+                        <a href="/examples/element/set/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="palette" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-palette"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">SVG Canvas Demo</h3>
                         <p class="example-description">Render dynamic text onto an HTML canvas with auto-fitting font size, powered by CrootJS.</p>
-                        <a href="https://crootjs.github.io/examples/element/svg/" class="example-link">View Demo →</a>
+                        <a href="/examples/element/svg/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="message-square-warning" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-message-square-warning"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">SweetAlert Dialogs</h3>
                         <p class="example-description">Alerts, delete confirmation, a validated form inside a dialog, and a loading state around getJSON.</p>
-                        <a href="https://crootjs.github.io/examples/element/sweetalert/" class="example-link">View Demo →</a>
+                        <a href="/examples/element/sweetalert/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="map-pinned" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-map-pinned"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">GeoJSON on a Map</h3>
                         <p class="example-description">Load GeoJSON from a URL or a local file with geo.js, draw it with map.js — no map library — and list its properties in a table.</p>
-                        <a href="https://crootjs.github.io/examples/geo/geojson/" class="example-link">View Demo →</a>
+                        <a href="/examples/geo/geojson/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="route" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Routes From GeoJSON</h3>
                         <p class="example-description">Drag two pins and get the shortest route along real street data, computed in the browser — no routing service.</p>
-                        <a href="https://crootjs.github.io/examples/geo/route/" class="example-link">View Demo →</a>
+                        <a href="/examples/geo/route/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="circle-dot" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-circle-dot"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">100,000 Points, Clustered</h3>
                         <p class="example-description">Nearby points merge into count bubbles that split as you zoom, so even 100,000 points pan smoothly.</p>
-                        <a href="https://crootjs.github.io/examples/geo/cluster/" class="example-link">View Demo →</a>
+                        <a href="/examples/geo/cluster/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="layers" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-layers"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Layers &amp; Basemaps</h3>
                         <p class="example-description">A technical map with zones, dashed planned routes, labeled contours, and zoom-dependent block plans — switch between street, satellite, and hybrid from picture cards without redrawing.</p>
-                        <a href="https://crootjs.github.io/examples/geo/layers/" class="example-link">View Demo →</a>
+                        <a href="/examples/geo/layers/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="ruler" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-ruler"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Survey Tools</h3>
                         <p class="example-description">Measure distance and area, read coordinates in a local project grid, overlay a rotated master plan over 5,600 canvas-drawn lines, and download the view as PNG.</p>
-                        <a href="https://crootjs.github.io/examples/geo/survey/" class="example-link">View Demo →</a>
+                        <a href="/examples/geo/survey/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="flame" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-flame"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Heatmap &amp; Coverage</h3>
                         <p class="example-description">12,000 drive-test points as a density heatmap, or as hexagon and square cells colored by average RSRP like a signal coverage map — click a cell for its value.</p>
-                        <a href="https://crootjs.github.io/examples/geo/heatmap/" class="example-link">View Demo →</a>
+                        <a href="/examples/geo/heatmap/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="box" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-box"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">3D Model Viewer</h3>
                         <p class="example-description">Orbit and zoom a GLB model, click a part to see where it sits in the tree, or open your own .glb — no Three.js.</p>
-                        <a href="https://crootjs.github.io/examples/3d/viewer/" class="example-link">View Demo →</a>
+                        <a href="/examples/3d/viewer/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="graduation-cap" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-graduation-cap"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">3D Learning Material</h3>
                         <p class="example-description">Click a part to learn what it does, scrub an assembly animation, pull the parts apart, slice the model, and take a quick "find the part" quiz.</p>
-                        <a href="https://crootjs.github.io/examples/3d/belajar/" class="example-link">View Demo →</a>
+                        <a href="/examples/3d/belajar/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="radio-tower" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-radio-tower"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">BTS Antenna Editor</h3>
                         <p class="example-description">Set each sector's azimuth and downtilt, recolor or move parts with a gizmo, see live 3D labels, then download the edited model as .glb.</p>
-                        <a href="https://crootjs.github.io/examples/3d/editor/" class="example-link">View Demo →</a>
+                        <a href="/examples/3d/editor/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="book-open" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-book-open"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">API Documentation</h3>
                         <p class="example-description">Interactive API documentation powered by Swagger UI.</p>
-                        <a href="https://crootjs.github.io/examples/api/swagger/" class="example-link">View Demo →</a>
+                        <a href="/examples/api/swagger/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="alert-triangle" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-alert-triangle"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">404 Error Page</h3>
                         <p class="example-description">A playful, animated 404 error page example.</p>
-                        <a href="https://crootjs.github.io/examples/404.html" class="example-link">View Demo →</a>
+                        <a href="/examples/404.html" class="example-link">View Demo →</a>
                     </div>
                 </div>
                 
                 <div class="example-card">
                     <div class="example-preview">
-                        <i data-lucide="cpu" width="48" height="48"></i>
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-cpu"/></svg>
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Performance Benchmark</h3>
@@ -391,42 +478,45 @@
             <p>Browse the per-module docs, check the source, or fork one of the working examples.</p>
             <div class="cta-buttons">
                 <a href="https://github.com/crootjs" class="btn btn-primary">
-                    <i data-lucide="github" width="20" height="20"></i>
+                    <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-github"/></svg>
                     Star on GitHub
                 </a>
-                <a href="./lib" class="btn btn-secondary">
-                    <i data-lucide="book" width="20" height="20"></i>
+                <a href="/docs/" class="btn btn-secondary">
+                    <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-book"/></svg>
                     Read Documentation
                 </a>
             </div>
         </div>
     </section>
 
+    </main>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <i data-lucide="code-2" width="24" height="24"></i>
+                    <svg class="icon" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-code-2"/></svg>
                     <span>CrootJS by PT. Informatika Digital Bisnis</span>
                 </div>
                 <p>Pure Vanilla JavaScript ES6+ Modules Static Web Transformer</p>
                 <div class="footer-links">
                     <a href="https://if.co.id/">Company</a>
                     <a href="https://github.com/crootjs">GitHub</a>
-                    <a href="./lib">Documentation</a>
+                    <a href="/docs/">Documentation</a>
+                    <a href="/examples/">Examples</a>
+                    <a href="/llms.txt">llms.txt</a>
                     <a href="https://aiteung.if.co.id/">AIteung</a>
                     <a href="https://wa.my.id/">WhatsAuth</a>
                     <a href="https://petapedia.if.co.id/">PetaPedia</a>
                 </div>
                 <div class="footer-bottom">
-                    <p>&copy; 2024 PT. Informatika Digital Bisnis. All rights reserved.</p>
+                    <p>&copy; 2024–2026 PT. Informatika Digital Bisnis. All rights reserved.</p>
                     <p>Bandung, Indonesia | AHU-052052.AH.01.30.Tahun 2024</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script type="module" src="script.js"></script>
 </body>
 </html>
