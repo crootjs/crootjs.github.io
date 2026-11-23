@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CrootJS — Vanilla JS Modules: Maps, 3D Models &amp; DOM Helpers via CDN</title>
-    <meta name="description" content="CrootJS: zero-dependency, zero-build vanilla JavaScript ES6+ modules imported straight from jsDelivr — DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map without Leaflet, heatmaps and coverage grids, and a glTF/GLB 3D viewer without Three.js.">
+    <meta name="description" content="CrootJS (formerly JSCroot): zero-dependency, zero-build vanilla JavaScript ES6+ modules imported straight from jsDelivr — DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map without Leaflet, heatmaps and coverage grids, and a glTF/GLB 3D viewer without Three.js.">
     <link rel="canonical" href="https://croot.js.org/">
     <meta name="theme-color" content="#007AFF">
     <link rel="icon" href="/favicon.ico">
@@ -49,6 +49,7 @@
             {
                 "@type": "SoftwareSourceCode",
                 "name": "CrootJS",
+                "alternateName": "JSCroot",
                 "description": "Zero-dependency, zero-build vanilla JavaScript ES6+ modules imported straight from jsDelivr: DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map, heatmaps, and a glTF/GLB 3D viewer.",
                 "url": "https://croot.js.org/",
                 "codeRepository": "https://github.com/crootjs/lib",
@@ -61,9 +62,7 @@
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.32/croot.min.css">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="script.js"></script>
 </head>
@@ -107,28 +106,30 @@
         <symbol id="i-clipboard-check" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/> <path d="m9 14 2 2 4-4"/></symbol>
         <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/> <path d="M3 5V19A9 3 0 0 0 21 19V5"/> <path d="M3 12A9 3 0 0 0 21 12"/></symbol>
         <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/> <path d="M8.5 16.429a5 5 0 0 1 7 0"/> <path d="M5 12.859a10 10 0 0 1 5.17-2.69"/> <path d="M19 12.859a10 10 0 0 0-2.007-1.523"/> <path d="M2 8.82a15 15 0 0 1 4.177-2.643"/> <path d="M22 8.82a15 15 0 0 0-11.288-3.764"/> <path d="m2 2 20 20"/></symbol>
+        <symbol id="i-layout-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /></symbol>
+        <symbol id="i-table" viewBox="0 0 24 24"><path d="M12 3v18" /> <rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M3 9h18" /> <path d="M3 15h18" /></symbol>
+        <symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol>
+        <symbol id="i-smartphone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></symbol>
     </svg>
     <!-- Navigation -->
-    <nav class="nav">
-        <div class="container">
-            <div class="nav-content">
-                <a href="/" class="logo" aria-label="CrootJS home">
-                    <svg class="icon" width="32" height="32" aria-hidden="true" focusable="false"><use href="#i-code-2"/></svg>
-                    <span>CrootJS</span>
-                </a>
-                <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
-                    <svg class="icon icon-open" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg>
-                    <svg class="icon icon-close" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-x"/></svg>
-                </button>
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#examples">Examples</a></li>
-                    <li><a href="#ai-agents">AI Agents</a></li>
-                    <li><a href="/docs/en/">Docs</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <header class="site-header">
+        <nav class="nav container" aria-label="Main">
+            <a href="/" class="logo" aria-label="CrootJS home">
+                <svg class="icon" width="32" height="32" aria-hidden="true" focusable="false"><use href="#i-code-2"/></svg>
+                <span>CrootJS</span>
+            </a>
+            <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+                <svg class="icon icon-open" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg>
+                <svg class="icon icon-close" width="24" height="24" aria-hidden="true" focusable="false"><use href="#i-x"/></svg>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#ai-agents">AI Agents</a></li>
+                <li><a href="/docs/en/">Docs</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <main id="main">
 
@@ -138,20 +139,38 @@
             <div class="hero-content">
                 <h1>Vanilla ES6+ JavaScript Modules — Straight From a CDN</h1>
                 <p class="hero-tagline">Small, dependency-free JS modules for static sites — DOM and fetch helpers, cookies, WhatsApp QR login, a slippy map without Leaflet, heatmaps and coverage grids, and a glTF/GLB 3D viewer without Three.js. Import what you need directly from jsDelivr; no <code>npm install</code>, no bundler.</p>
-                <div class="hero-badges">
+                <div class="cluster hero-badges">
                     <img src="https://img.shields.io/github/v/tag/crootjs/lib?label=version&color=007AFF" alt="latest version" width="102" height="20">
                     <img src="https://img.shields.io/jsdelivr/gh/hm/crootjs/lib?label=jsDelivr%20hits" alt="jsDelivr hits per month" width="140" height="20">
                     <img src="https://img.shields.io/github/license/crootjs/lib" alt="license" width="102" height="20">
                 </div>
-                <div class="hero-buttons">
-                    <a href="/docs/en/" class="btn btn-primary">
+                <div class="cluster hero-buttons">
+                    <a href="/docs/en/" class="button">
                         <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-book-open"/></svg>
                         Get Started
                     </a>
-                    <a href="https://github.com/crootjs" class="btn btn-secondary">
+                    <a href="https://github.com/crootjs" class="button secondary">
                         <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-github"/></svg>
                         View on GitHub
                     </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Untuk pengunjung dari nama lama -->
+    <section id="jscroot" class="formerly">
+        <div class="container">
+            <div class="card formerly-card">
+                <h2>Formerly JSCroot</h2>
+                <p>CrootJS is the successor of JSCroot: the same modules, continued in <code>crootjs/lib</code>. The old site jscroot.github.io and the jscroot repos now redirect here. Pages that still load <code>jscroot/lib</code> from jsDelivr keep working, but get no more fixes.</p>
+                <p lang="id">Dulu bernama JSCroot. Panduan migrasi menjelaskan cara memindahkan proyek lama ke CrootJS.</p>
+                <div class="cluster">
+                    <a href="/docs/en/migrasi" class="button secondary">
+                        <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
+                        Migration guide
+                    </a>
+                    <a href="/docs/migrasi" class="button secondary" hreflang="id" lang="id">Panduan migrasi</a>
                 </div>
             </div>
         </div>
@@ -161,63 +180,73 @@
     <section id="features" class="features">
         <div class="container">
             <h2>What's Actually In It</h2>
-            <div class="features-grid">
-                <div class="feature-card">
+            <div class="grid features-grid">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-package"/></svg>
                     <h3>Zero Build, Zero Install</h3>
                     <p>Import modules straight from jsDelivr's CDN with a <code>&lt;script type="module"&gt;</code> tag. No <code>npm install</code>, no bundler config, no build step.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-network"/></svg>
                     <h3>Fetch Wrappers, Not a Framework</h3>
                     <p><code>getJSON</code>, <code>postJSON</code>, <code>putJSON</code>, <code>deleteJSON</code> — thin wrappers over the native Fetch API with a consistent <code>{status, data}</code> result, by callback or <code>await</code>, with optional headers, timeout, cancellation, and an ETag-aware localStorage cache. <code>uploadFile</code> reports upload progress; <code>downloadFile</code> returns a Blob or saves the file.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-mouse-pointer-click"/></svg>
                     <h3>DOM Helpers Without the Boilerplate</h3>
                     <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>serializeForm</code>, <code>fillForm</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls. <code>form.js</code> validates forms with messages under each field that screen readers announce. Pair with <code>debounce.js</code> for search-as-you-type.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-palette"/></svg>
                     <h3>A 2 KB CSS Framework</h3>
                     <p><code>croot.css</code> makes plain HTML look finished with no classes — forms, buttons, tables, dialogs — plus a few layout classes and components, dark mode, and theming with CSS variables. No web fonts, no images, no JavaScript, and it sits in a CSS layer so your own styles always win.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon green" aria-hidden="true" focusable="false"><use href="#i-qr-code"/></svg>
                     <h3>WhatsApp QR + OTP Login</h3>
-                    <p><code>auth.js</code> and <code>stp.js</code> give you a ready-made WhatsAuth QR-code and OTP login flow, including Google Sign-In.</p>
+                    <p><code>auth.js</code> and <code>stp.js</code> give you a ready-made WhatsAuth QR-code and OTP login flow, including Google Sign-In, with no third-party scripts: the QR code comes from <code>qr.js</code>, our own encoder.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-layout-dashboard"/></svg>
+                    <h3>Dashboard Building Blocks</h3>
+                    <p>What campus dashboards used jQuery, DataTables, Chart.js and icon fonts for: a single-page router with hash or history URLs (<code>router.js</code>), data tables with sorting, search, pagination and a server mode (<code>table.js</code>), SVG bar, line and donut charts (<code>chart.js</code>), and 49 hand-drawn icons (<code>icons.css</code>). All written from scratch, keyboard- and screen-reader-friendly.</p>
+                </div>
+                <div class="card feature-card">
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-wifi-off"/></svg>
+                    <h3>Markdown, QR Codes &amp; Offline Apps</h3>
+                    <p><code>markdown.js</code> turns Markdown into HTML that is safe by design (raw HTML escaped, <code>javascript:</code> links refused). <code>qr.js</code> draws QR codes as SVG. <code>pwa.js</code> and <code>serviceworker.js</code> make your app installable and keep it opening without internet.</p>
+                </div>
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-cookie"/></svg>
                     <h3>Cookies, Storage, URLs & Validation</h3>
                     <p><code>cookie.js</code>, <code>storage.js</code>, <code>url.js</code>, and <code>validate.js</code> cover session cookies, localStorage/sessionStorage (with optional expiry), query strings, and input sanitization.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-puzzle"/></svg>
                     <h3>Import Only What You Use</h3>
                     <p>Every module is a separate CDN file — <code>.../lib@version/cookie.js</code> — so your page only loads the code it actually needs.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-bell"/></svg>
                     <h3>Notifications, No Dependency</h3>
                     <p><code>toast.js</code> shows dismissable notifications with zero external libraries — an alternative to pulling in SweetAlert2 just for a message.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-map"/></svg>
                     <h3>Read GeoJSON</h3>
                     <p><code>geo.js</code> loads GeoJSON from a URL or a local file, validates it, and always hands back a <code>FeatureCollection</code> — plus <code>getBBox</code>, <code>getCenter</code>, and <code>getPropertyKeys</code> for feeding a map or a table.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-map-pinned"/></svg>
                     <h3>Maps Without a Map Library</h3>
                     <p><code>map.js</code> is a slippy map written from scratch — tile basemap, GeoJSON drawn as SVG, pan, pinch-zoom, popups, click-to-pick coordinates, named layers, feature labels, hover tooltips, dashed lines, satellite/hybrid basemaps you can switch without redrawing, and a canvas renderer for thousands of lines — in about 13 KB gzipped, with no Leaflet and no CSS file to link.</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
                     <h3>Markers, Routes &amp; Measurements</h3>
                     <p>Optional add-ons of 1–8 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, basemap switchers (radio list or Google-Maps-style picture cards), layer switchers, cursor coordinates, a right-click / long-press context menu for GIS actions, and fullscreen (<code>mapcontrol.js</code>), drawing and editing points, lines and polygons as GeoJSON, also from the keyboard (<code>mapdraw.js</code>), address search and reverse geocoding (<code>mapsearch.js</code>), offline basemaps from a single raster or vector PMTiles file (<code>mapoffline.js</code>, <code>mapvector.js</code>), viewed tiles kept for offline use (<code>mapcache.js</code>), true-to-scale 3D models placed on the map (<code>mapmodel.js</code>), distance/area measuring, rotated image overlays and PNG export (<code>maptools.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), density heatmaps and nPerf-style square/hex coverage grids (<code>mapheat.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
                 </div>
-                <div class="feature-card">
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-box"/></svg>
                     <h3>3D Models Without Three.js</h3>
                     <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code, with skinned characters and Draco-compressed models — in about 16 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, glTF animation playback, exploded views, cross-sections and distance/angle measuring for interactive learning material, AR inside the page with WebXR or a “View in AR” button (Android Scene Viewer, iOS Quick Look), and re-export to a new <code>.glb</code>.</p>
@@ -262,7 +291,7 @@
             </div>
             
             <div class="center-mt">
-                <a href="https://www.jsdelivr.com/package/gh/crootjs/lib" class="btn btn-primary">
+                <a href="https://www.jsdelivr.com/package/gh/crootjs/lib" class="button">
                     <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>
                     Explore CDN Library
                 </a>
@@ -287,7 +316,7 @@
             <p class="section-intro">Agents that read docs instead of guessing can start from <a href="/llms.txt">llms.txt</a> (one-page summary of every module and signature), <a href="/llms-full.txt">llms-full.txt</a> (all module docs in one file), or any doc page as plain Markdown — e.g. <a href="/docs/map.md">/docs/map.md</a>, <a href="/docs/model3d.md">/docs/model3d.md</a>.</p>
 
             <div class="center-mt">
-                <a href="/lib/CLAUDE" class="btn btn-secondary">
+                <a href="/lib/CLAUDE" class="button secondary">
                     <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-file-text"/></svg>
                     Read CLAUDE.md
                 </a>
@@ -301,8 +330,8 @@
             <h2>See CrootJS in Action</h2>
             <p class="section-intro">Explore real-world examples and templates built with CrootJS. Fork the <a href="https://github.com/crootjs/examples">examples repo</a> on GitHub to get started quickly.</p>
             
-            <div class="examples-grid">
-                <div class="example-card">
+            <div class="grid examples-grid">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-log-in"/></svg>
                     </div>
@@ -313,7 +342,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-type"/></svg>
                     </div>
@@ -324,7 +353,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-palette"/></svg>
                     </div>
@@ -335,7 +364,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-message-square-warning"/></svg>
                     </div>
@@ -346,7 +375,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-palette"/></svg>
                     </div>
@@ -357,7 +386,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-layers"/></svg>
                     </div>
@@ -368,7 +397,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-file-text"/></svg>
                     </div>
@@ -379,7 +408,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-clipboard-check"/></svg>
                     </div>
@@ -390,7 +419,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-upload"/></svg>
                     </div>
@@ -401,7 +430,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-database"/></svg>
                     </div>
@@ -412,7 +441,73 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-layout-dashboard"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Dashboard With a Router</h3>
+                        <p class="example-description">A single-page dashboard with home, a searchable list, detail pages with parameters and a 404 page, using router.js in hash mode.</p>
+                        <a href="/examples/element/router/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="card example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-table"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Data Table</h3>
+                        <p class="example-description">Sort, search and paginate sample project data loaded with getJSON, plus a simulated server mode — without DataTables or jQuery.</p>
+                        <a href="/examples/element/table/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="card example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-chart-column"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">SVG Charts</h3>
+                        <p class="example-description">Bar, line and donut charts from chart.js with sample data, stacked bars, dark mode and keyboard tooltips.</p>
+                        <a href="/examples/element/chart/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="card example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-file-text"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Markdown Editor</h3>
+                        <p class="example-description">Live preview as you type, loading a .md file, and proof that HTML and javascript: links in the input stay harmless.</p>
+                        <a href="/examples/element/markdown/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="card example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-qr-code"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">QR Code Generator</h3>
+                        <p class="example-description">Type any text or address and the QR code updates instantly; download it as SVG.</p>
+                        <a href="/examples/element/qr/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="card example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-smartphone"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Offline Notes (PWA)</h3>
+                        <p class="example-description">A small notes app that opens without internet and can be installed, with pwa.js and serviceworker.js.</p>
+                        <a href="/examples/pwa/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-map-pinned"/></svg>
                     </div>
@@ -423,7 +518,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
                     </div>
@@ -434,7 +529,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-circle-dot"/></svg>
                     </div>
@@ -445,7 +540,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-layers"/></svg>
                     </div>
@@ -456,7 +551,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-ruler"/></svg>
                     </div>
@@ -467,7 +562,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
                     </div>
@@ -478,7 +573,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-wifi-off"/></svg>
                     </div>
@@ -489,7 +584,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-wifi-off"/></svg>
                     </div>
@@ -500,7 +595,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-radio-tower"/></svg>
                     </div>
@@ -511,7 +606,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
                     </div>
@@ -522,7 +617,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-flame"/></svg>
                     </div>
@@ -533,7 +628,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-box"/></svg>
                     </div>
@@ -544,7 +639,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-graduation-cap"/></svg>
                     </div>
@@ -555,7 +650,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-radio-tower"/></svg>
                     </div>
@@ -566,7 +661,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-book-open"/></svg>
                     </div>
@@ -577,7 +672,7 @@
                     </div>
                 </div>
 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-alert-triangle"/></svg>
                     </div>
@@ -588,7 +683,7 @@
                     </div>
                 </div>
                 
-                <div class="example-card">
+                <div class="card example-card">
                     <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-cpu"/></svg>
                     </div>
@@ -607,12 +702,12 @@
         <div class="container">
             <h2>Start Using CrootJS</h2>
             <p>Browse the per-module docs, check the source, or fork one of the working examples.</p>
-            <div class="cta-buttons">
-                <a href="https://github.com/crootjs" class="btn btn-primary">
+            <div class="cluster cta-buttons">
+                <a href="https://github.com/crootjs" class="button">
                     <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-github"/></svg>
                     Star on GitHub
                 </a>
-                <a href="/docs/en/" class="btn btn-secondary">
+                <a href="/docs/en/" class="button secondary">
                     <svg class="icon" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-book"/></svg>
                     Read Documentation
                 </a>

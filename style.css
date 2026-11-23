@@ -1,42 +1,41 @@
-/* CSS Reset & Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Landing page di atas croot.css (reset, tipografi, tombol .button, .card, .grid, .cluster,
+   mode gelap). File ini hanya berisi warna merek dan bagian khas halaman ini. */
+
+/* Warna merek: biru. Ditulis untuk terang dan gelap sekaligus, karena aturan tanpa layer
+   di sini mengalahkan nilai mode gelap bawaan croot.css. */
+:root {
+    --croot-accent: #007aff;
+    --croot-accent-text: #ffffff;
+    --croot-focus: #007aff;
+    --brand-green: #17a962;
+    --code-bg: #0a0a0a;
+    --code-text: #e4e4e7;
+    --footer-bg: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --croot-accent: #60a5fa;
+        --croot-accent-text: #0f172a;
+        --croot-focus: #93c5fd;
+        --brand-green: #4ade80;
+    }
+}
+
+:root[data-theme="dark"] {
+    --croot-accent: #60a5fa;
+    --croot-accent-text: #0f172a;
+    --croot-focus: #93c5fd;
+    --brand-green: #4ade80;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
     line-height: 1.7;
-    color: #111827;
-    background-color: #F8F9FA;
-    overflow-x: hidden;
 }
-
-/* Color System Variables */
-:root {
-    --primary-500: #007AFF;
-    --primary-700: #0059B8;
-    --primary-100: #E5F2FF;
-    --accent-green: #17A962;
-    --neutral-900: #111827;
-    --neutral-600: #4B5563;
-    --neutral-500: #6B7280;
-    --neutral-0: #FFFFFF;
-    --neutral-100: #F8F9FA;
-    --neutral-200: #E9ECEF;
-    --code-bg: #0A0A0A;
-    --code-text: #E4E4E7;
-}
-
-/* Spacing System (8px scale) */
-.space-xs { margin: 8px; }
-.space-sm { margin: 16px; }
-.space-md { margin: 24px; }
-.space-lg { margin: 32px; }
-.space-xl { margin: 48px; }
-.space-xxl { margin: 64px; }
-.space-xxxl { margin: 96px; }
 
 /* Ikon: sprite SVG di awal <body>; tiap ikon <svg class="icon"><use href="#i-..."/></svg> */
 .icon-sprite {
@@ -62,9 +61,9 @@ svg.icon {
     top: -100px;
     z-index: 2000;
     padding: 12px 16px;
-    border-radius: 8px;
-    background-color: var(--primary-500);
-    color: var(--neutral-0);
+    border-radius: var(--croot-radius);
+    background-color: var(--croot-accent);
+    color: var(--croot-accent-text);
     font-weight: 600;
     text-decoration: none;
 }
@@ -73,31 +72,21 @@ svg.icon {
     top: 16px;
 }
 
-:focus-visible {
-    outline: 3px solid var(--primary-500);
-    outline-offset: 2px;
-}
-
-/* Container */
 .container {
     max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
+    padding-inline: 24px;
 }
 
-/* Typography */
 h1 {
     font-size: clamp(36px, 5vw, 64px);
-    font-weight: 700;
     line-height: 1.2;
     margin-bottom: 24px;
 }
 
 h2 {
     font-size: clamp(32px, 4vw, 40px);
-    font-weight: 700;
     line-height: 1.3;
-    margin-bottom: 32px;
+    margin: 0 0 32px;
     text-align: center;
 }
 
@@ -105,17 +94,14 @@ h3 {
     font-size: 24px;
     font-weight: 600;
     line-height: 1.4;
-    margin-bottom: 16px;
+    margin: 0 0 16px;
 }
 
-p {
+main p {
     font-size: 18px;
-    font-weight: 400;
-    color: var(--neutral-600);
-    margin-bottom: 16px;
+    color: var(--croot-muted);
 }
 
-/* Layout utilities */
 .section-intro {
     text-align: center;
     max-width: 600px;
@@ -127,60 +113,36 @@ p {
     margin-top: 32px;
 }
 
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 16px 32px;
+/* Tombol croot.css, sedikit lebih besar untuk halaman muka */
+.button {
+    padding: 14px 30px;
     font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
     border-radius: 12px;
-    transition: all 250ms ease-out;
-    cursor: pointer;
-    border: none;
+    transition: transform 250ms ease-out;
 }
 
-.btn-primary {
-    background-color: var(--primary-500);
-    color: var(--neutral-0);
-}
-
-.btn-primary:hover {
-    background-color: var(--primary-700);
+.button:not(.secondary):hover {
     transform: scale(1.03);
 }
 
-.btn-primary:active {
-    transform: scale(0.98);
+.button.secondary:hover {
+    background-color: color-mix(in srgb, var(--croot-text) 6%, transparent);
 }
 
-.btn-secondary {
-    background-color: transparent;
-    color: var(--neutral-900);
-    border: 1px solid var(--neutral-200);
-}
-
-.btn-secondary:hover {
-    background-color: var(--neutral-100);
-}
-
-/* Navigation */
-.nav {
-    background-color: var(--neutral-0);
-    padding: 16px 0;
+/* Navigation: bilah .nav croot.css yang menempel di atas */
+.site-header {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
+    background-color: var(--croot-surface);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-.nav-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.site-header .nav {
+    position: relative;
+    padding-block: 16px;
+    border-bottom: 0;
 }
 
 .logo {
@@ -188,42 +150,36 @@ p {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: var(--neutral-900);
+    color: var(--croot-text);
     font-weight: 600;
     font-size: 20px;
 }
 
-.nav-links {
-    display: flex;
+.nav .nav-links {
     gap: 32px;
-    list-style: none;
 }
 
 .nav-links a {
     display: inline-block;
     padding: 8px 0;
-    text-decoration: none;
-    color: var(--neutral-600);
+    color: var(--croot-muted);
     font-weight: 500;
-    transition: color 250ms ease;
 }
 
 .nav-links a:hover {
-    color: var(--primary-500);
+    color: var(--croot-accent);
 }
 
 /* Tombol menu: hanya tampil di layar sempit */
 .nav-toggle {
     display: none;
-    align-items: center;
-    justify-content: center;
     width: 44px;
     height: 44px;
-    border: 1px solid var(--neutral-200);
+    padding: 0;
+    border: 1px solid var(--croot-border);
     border-radius: 10px;
-    background-color: var(--neutral-0);
-    color: var(--neutral-900);
-    cursor: pointer;
+    background-color: var(--croot-surface);
+    color: var(--croot-text);
 }
 
 .nav-toggle .icon-close,
@@ -239,8 +195,7 @@ p {
 .hero {
     padding: 120px 0 96px;
     text-align: center;
-    background-color: var(--neutral-100);
-    border-bottom: 1px solid var(--neutral-200);
+    border-bottom: 1px solid var(--croot-border);
 }
 
 .hero-content {
@@ -248,26 +203,23 @@ p {
     margin: 0 auto;
 }
 
-.hero-tagline {
-    color: var(--neutral-600);
+.hero .hero-tagline {
     font-size: 20px;
     margin-bottom: 32px;
 }
 
-.hero-buttons {
-    display: flex;
+.hero-buttons,
+.cta-buttons {
     justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
+    --croot-gap: 24px;
+}
+
+.hero-buttons {
     margin-top: 32px;
 }
 
 .hero-badges {
-    display: flex;
     justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 8px;
 }
 
 .hero-badges img {
@@ -275,31 +227,59 @@ p {
     height: 20px;
 }
 
+/* Dulu bernama JSCroot */
+.formerly {
+    padding: 64px 0 0;
+}
+
+.formerly-card {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 32px;
+    border-left: 4px solid var(--croot-accent);
+}
+
+.formerly-card h2 {
+    font-size: 28px;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
 /* Features Section */
 .features {
     padding: 96px 0;
 }
 
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
-    gap: 32px;
+.grid.features-grid,
+.grid.examples-grid {
+    --croot-gap: 32px;
     margin-top: 48px;
 }
 
-.feature-card {
-    min-width: 0;
-    overflow-wrap: break-word;
-    background-color: var(--neutral-0);
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 300ms ease-out;
+.grid.features-grid {
+    --croot-min: 350px;
 }
 
-.feature-card:hover {
+.grid.examples-grid {
+    --croot-min: 300px;
+}
+
+.card.feature-card,
+.card.example-card {
+    min-width: 0;
+    border-radius: 16px;
+    transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+}
+
+.card:is(.feature-card, .example-card):hover {
     transform: translateY(-8px);
-    box-shadow: 0 10px 24px rgba(0, 122, 255, 0.15);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--croot-accent) 15%, transparent);
+}
+
+.card.feature-card {
+    padding: 32px;
+    overflow-wrap: break-word;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .feature-icon {
@@ -309,13 +289,14 @@ p {
 }
 
 .feature-icon.green {
-    color: var(--accent-green);
+    color: var(--brand-green);
 }
 
 /* Code Examples Section */
-.code-examples {
+.code-examples,
+.examples {
     padding: 96px 0;
-    background-color: var(--neutral-0);
+    background-color: var(--croot-surface);
 }
 
 .code-block {
@@ -323,7 +304,6 @@ p {
     border-radius: 16px;
     padding: 32px;
     margin: 32px 0;
-    position: relative;
     overflow-x: auto;
 }
 
@@ -336,92 +316,58 @@ p {
 
 .code-title {
     color: var(--code-text);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--croot-mono);
     font-size: 14px;
 }
 
 .copy-btn {
-    background-color: transparent;
-    border: 1px solid var(--neutral-200);
-    color: var(--neutral-600);
+    min-height: 0;
     padding: 8px 16px;
+    border: 1px solid #4b5563;
     border-radius: 8px;
+    background-color: transparent;
+    color: var(--code-text);
     font-size: 14px;
-    cursor: pointer;
-    transition: all 250ms ease;
-}
-
-.copy-btn:hover {
-    background-color: var(--neutral-100);
+    font-weight: 400;
 }
 
 .copy-btn.copied {
-    background-color: var(--accent-green);
-    border-color: var(--accent-green);
-    color: var(--neutral-0);
+    background-color: #17a962;
+    border-color: #17a962;
+    color: #ffffff;
 }
 
-.code-content {
-    font-family: 'JetBrains Mono', monospace;
+/* pre bawaan croot.css berbingkai; di sini bingkainya .code-block */
+pre.code-content {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
     font-size: 16px;
     color: var(--code-text);
     line-height: 1.6;
 }
 
-.code-content .comment {
-    color: #6A737D;
-}
-
-.code-content .keyword {
-    color: #F97583;
-}
-
-.code-content .string {
-    color: #9ECBFF;
-}
-
-.code-content .function {
-    color: #B392F0;
-}
-
-.code-content .import {
-    color: #79B8FF;
-}
+.code-content .comment { color: #6a737d; }
+.code-content .keyword { color: #f97583; }
+.code-content .string { color: #9ecbff; }
+.code-content .function { color: #b392f0; }
+.code-content .import { color: #79b8ff; }
 
 /* Examples Section */
-.examples {
-    padding: 96px 0;
-    background-color: var(--neutral-0);
-}
-
-.examples-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-    gap: 32px;
-    margin-top: 48px;
-}
-
-.example-card {
-    background-color: var(--neutral-100);
-    border-radius: 16px;
+.card.example-card {
+    padding: 0;
     overflow: hidden;
-    transition: all 300ms ease-out;
-}
-
-.example-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 24px rgba(0, 122, 255, 0.15);
+    background-color: var(--croot-bg);
 }
 
 .example-preview {
     height: 200px;
-    background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-green) 100%);
+    background: linear-gradient(135deg, #e5f2ff 0%, #17a962 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--neutral-900);
-    font-size: 18px;
-    font-weight: 600;
+    color: #111827;
 }
 
 .example-content {
@@ -430,38 +376,29 @@ p {
 
 .example-title {
     font-size: 20px;
-    font-weight: 600;
     margin-bottom: 12px;
-    color: var(--neutral-900);
-}
-
-.example-description {
-    color: var(--neutral-600);
-    margin-bottom: 16px;
 }
 
 .example-link {
     display: inline-block;
     padding: 6px 0;
-    color: var(--primary-500);
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
 }
 
 .example-link:hover {
     text-decoration: underline;
 }
 
-/* CTA Section */
+/* CTA Section dan footer: selalu gelap */
 .cta {
     padding: 96px 0;
     text-align: center;
-    background-color: var(--neutral-900);
-    color: var(--neutral-0);
+    background-color: var(--footer-bg);
+    color: #ffffff;
 }
 
 .cta h2 {
-    color: var(--neutral-0);
     margin-bottom: 24px;
 }
 
@@ -471,38 +408,29 @@ p {
     font-size: 20px;
 }
 
-.cta-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
+.cta .button:not(.secondary) {
+    background-color: #ffffff;
+    color: #007aff;
 }
 
-.cta .btn-primary {
-    background-color: var(--neutral-0);
-    color: var(--primary-500);
-}
-
-.cta .btn-primary:hover {
-    background-color: var(--neutral-100);
-    transform: scale(1.03);
-}
-
-.cta .btn-secondary {
+.cta .button.secondary {
     border-color: rgba(255, 255, 255, 0.3);
-    color: var(--neutral-0);
+    color: #ffffff;
 }
 
-.cta .btn-secondary:hover {
+.cta .button.secondary:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Footer */
 .footer {
-    background-color: var(--neutral-900);
-    color: var(--neutral-500);
+    background-color: var(--footer-bg);
+    color: #9ca3af;
     padding: 48px 0;
     text-align: center;
+}
+
+.footer p {
+    color: inherit;
 }
 
 .footer-content {
@@ -516,7 +444,7 @@ p {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: var(--neutral-0);
+    color: #ffffff;
     font-weight: 600;
     font-size: 20px;
 }
@@ -529,19 +457,17 @@ p {
 }
 
 .footer-links a {
-    color: var(--neutral-500);
+    color: inherit;
     text-decoration: none;
-    transition: color 250ms ease;
 }
 
 .footer-links a:hover {
-    color: var(--primary-500);
+    color: #60a5fa;
 }
 
 .footer-bottom {
-    border-top: 1px solid var(--neutral-600);
+    border-top: 1px solid #4b5563;
     padding-top: 24px;
-    margin-top: 24px;
 }
 
 /* Responsive Design */
@@ -551,7 +477,7 @@ p {
     }
 
     /* Menu turun di bawah bilah navigasi, dibuka dengan .nav-toggle */
-    .nav-links {
+    .nav .nav-links {
         display: none;
         position: absolute;
         top: 100%;
@@ -560,25 +486,29 @@ p {
         flex-direction: column;
         gap: 0;
         padding: 8px 24px 16px;
-        background-color: var(--neutral-0);
+        background-color: var(--croot-surface);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
     }
 
-    .nav-links.open {
+    .nav .nav-links.open {
         display: flex;
     }
 
     .nav-links a {
         display: block;
         padding: 12px 0;
-        border-bottom: 1px solid var(--neutral-200);
+        border-bottom: 1px solid var(--croot-border);
     }
 
     .nav-links li:last-child a {
         border-bottom: 0;
     }
 
-    .hero-tagline {
+    .hero {
+        padding: 100px 0 64px;
+    }
+
+    .hero .hero-tagline {
         font-size: 17px;
     }
 
@@ -586,39 +516,25 @@ p {
         padding: 20px;
     }
 
-    .code-content {
+    pre.code-content {
         font-size: 14px;
     }
 
-    .feature-card {
+    .card.feature-card,
+    .formerly-card {
         padding: 24px;
-    }
-
-    .hero {
-        padding: 100px 0 64px;
-    }
-
-    .features-grid,
-    .examples-grid {
-        grid-template-columns: 1fr;
     }
 
     .hero-buttons,
     .cta-buttons {
         flex-direction: column;
-        align-items: center;
     }
 
-    .btn {
+    .hero-buttons .button,
+    .cta-buttons .button {
         width: 100%;
         max-width: 300px;
-        justify-content: center;
     }
-}
-
-/* Smooth scrolling */
-html {
-    scroll-behavior: smooth;
 }
 
 /* Judul bagian tidak tertutup bilah navigasi yang menempel di atas */
