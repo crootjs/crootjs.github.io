@@ -103,6 +103,9 @@
         <symbol id="i-type" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/> <line x1="9" x2="15" y1="20" y2="20"/> <line x1="12" x2="12" y1="4" y2="20"/></symbol>
         <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol>
         <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol>
+        <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <polyline points="17 8 12 3 7 8"/> <line x1="12" x2="12" y1="3" y2="15"/></symbol>
+        <symbol id="i-clipboard-check" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/> <path d="m9 14 2 2 4-4"/></symbol>
+        <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/> <path d="M3 5V19A9 3 0 0 0 21 19V5"/> <path d="M3 12A9 3 0 0 0 21 12"/></symbol>
         <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/> <path d="M8.5 16.429a5 5 0 0 1 7 0"/> <path d="M5 12.859a10 10 0 0 1 5.17-2.69"/> <path d="M19 12.859a10 10 0 0 0-2.007-1.523"/> <path d="M2 8.82a15 15 0 0 1 4.177-2.643"/> <path d="M22 8.82a15 15 0 0 0-11.288-3.764"/> <path d="m2 2 20 20"/></symbol>
     </svg>
     <!-- Navigation -->
@@ -167,12 +170,12 @@
                 <div class="feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-network"/></svg>
                     <h3>Fetch Wrappers, Not a Framework</h3>
-                    <p><code>getJSON</code>, <code>postJSON</code>, <code>putJSON</code>, <code>deleteJSON</code> — thin wrappers over the native Fetch API with a consistent <code>{status, data}</code> result, by callback or <code>await</code>, with optional headers, timeout, and an ETag-aware localStorage cache.</p>
+                    <p><code>getJSON</code>, <code>postJSON</code>, <code>putJSON</code>, <code>deleteJSON</code> — thin wrappers over the native Fetch API with a consistent <code>{status, data}</code> result, by callback or <code>await</code>, with optional headers, timeout, cancellation, and an ETag-aware localStorage cache. <code>uploadFile</code> reports upload progress; <code>downloadFile</code> returns a Blob or saves the file.</p>
                 </div>
                 <div class="feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-mouse-pointer-click"/></svg>
                     <h3>DOM Helpers Without the Boilerplate</h3>
-                    <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>serializeForm</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls. Pair with <code>debounce.js</code> for search-as-you-type.</p>
+                    <p><code>onClick</code>, <code>setInner</code>, <code>getValue</code>, <code>serializeForm</code>, <code>fillForm</code>, <code>show</code>/<code>hide</code> — skip repetitive <code>document.getElementById</code> calls. <code>form.js</code> validates forms with messages under each field that screen readers announce. Pair with <code>debounce.js</code> for search-as-you-type.</p>
                 </div>
                 <div class="feature-card">
                     <svg class="icon feature-icon green" aria-hidden="true" focusable="false"><use href="#i-qr-code"/></svg>
@@ -207,12 +210,12 @@
                 <div class="feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-route"/></svg>
                     <h3>Markers, Routes &amp; Measurements</h3>
-                    <p>Optional add-ons of 1–8 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, basemap switchers (radio list or Google-Maps-style picture cards), layer switchers, cursor coordinates, a right-click / long-press context menu for GIS actions, and fullscreen (<code>mapcontrol.js</code>), drawing and editing points, lines and polygons as GeoJSON (<code>mapdraw.js</code>), address search and reverse geocoding (<code>mapsearch.js</code>), offline basemaps from a single PMTiles file (<code>mapoffline.js</code>), true-to-scale 3D models placed on the map (<code>mapmodel.js</code>), distance/area measuring, rotated image overlays and PNG export (<code>maptools.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), density heatmaps and nPerf-style square/hex coverage grids (<code>mapheat.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
+                    <p>Optional add-ons of 1–8 KB each: draggable pin and icon markers (<code>mapmarker.js</code>), a scale bar, locate-me, live tracking, basemap switchers (radio list or Google-Maps-style picture cards), layer switchers, cursor coordinates, a right-click / long-press context menu for GIS actions, and fullscreen (<code>mapcontrol.js</code>), drawing and editing points, lines and polygons as GeoJSON, also from the keyboard (<code>mapdraw.js</code>), address search and reverse geocoding (<code>mapsearch.js</code>), offline basemaps from a single raster or vector PMTiles file (<code>mapoffline.js</code>, <code>mapvector.js</code>), viewed tiles kept for offline use (<code>mapcache.js</code>), true-to-scale 3D models placed on the map (<code>mapmodel.js</code>), distance/area measuring, rotated image overlays and PNG export (<code>maptools.js</code>), clustering for very large point sets (<code>mapcluster.js</code>), density heatmaps and nPerf-style square/hex coverage grids (<code>mapheat.js</code>), distance, area and point-in-polygon (<code>geomeasure.js</code>), and shortest routes computed in the browser from your own GeoJSON lines (<code>georoute.js</code>).</p>
                 </div>
                 <div class="feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-box"/></svg>
                     <h3>3D Models Without Three.js</h3>
-                    <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code, with skinned characters and Draco-compressed models — in about 16 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, glTF animation playback, exploded views, cross-sections for interactive learning material, a “View in AR” button (Android Scene Viewer, iOS Quick Look), and re-export to a new <code>.glb</code>.</p>
+                    <p><code>model3d.js</code> shows glTF/GLB models on WebGL2 (with a WebGL1 fallback) using its own binary parser, matrices and shaders — orbit, pinch-zoom, click a part, recolor, hide or move it from code, with skinned characters and Draco-compressed models — in about 16 KB gzipped. <code>model3dtools.js</code> adds HTML labels pinned to the model, translate/rotate/scale gizmos, glTF animation playback, exploded views, cross-sections and distance/angle measuring for interactive learning material, AR inside the page with WebXR or a “View in AR” button (Android Scene Viewer, iOS Quick Look), and re-export to a new <code>.glb</code>.</p>
                 </div>
             </div>
         </div>
@@ -231,8 +234,8 @@
                 </div>
                 <pre class="code-content"><code><span class="comment">// Import CrootJS functions from CDN</span>
 <span class="keyword">import</span> { <span class="function">setInner</span>, <span class="function">onClick</span>, <span class="function">getValue</span> }
-<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.29/element.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.29/api.min.js"</span>;
+<span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">postJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.min.js"</span>;
 
 <span class="comment">// Configure backend URL</span>
 <span class="keyword">const</span> <span class="function">urlBackend</span> = <span class="string">"https://api.example.com"</span>;
@@ -340,6 +343,39 @@
 
                 <div class="example-card">
                     <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-clipboard-check"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Form Validation</h3>
+                        <p class="example-description">Messages under each invalid field from plain HTML attributes plus your own rules, announced to screen readers; fill the form from data for editing.</p>
+                        <a href="/examples/element/form/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-upload"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Upload With Progress</h3>
+                        <p class="example-description">uploadFile sends a file with a progress bar and a cancel button, and returns the same result shape as getJSON.</p>
+                        <a href="/examples/api/upload/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-database"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Cached API Calls</h3>
+                        <p class="example-description">getJSON with a localStorage cache that revalidates with ETag, showing response headers such as the GitHub API rate limit.</p>
+                        <a href="/examples/api/get/cache/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
                         <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-map-pinned"/></svg>
                     </div>
                     <div class="example-content">
@@ -410,8 +446,19 @@
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Offline Maps (PMTiles)</h3>
-                        <p class="example-description">A basemap from one PMTiles file — read piece by piece from a static host, or opened from the device with no internet.</p>
+                        <p class="example-description">A basemap from one raster or vector PMTiles file — read piece by piece from a host, or opened from the device with no internet. Vector maps stay sharp at every zoom.</p>
                         <a href="/examples/geo/offline/" class="example-link">View Demo →</a>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-preview">
+                        <svg class="icon" width="48" height="48" aria-hidden="true" focusable="false"><use href="#i-wifi-off"/></svg>
+                    </div>
+                    <div class="example-content">
+                        <h3 class="example-title">Map That Works Offline</h3>
+                        <p class="example-description">Every OpenStreetMap tile you have viewed is kept in the browser and shown again when the connection drops.</p>
+                        <a href="/examples/geo/cache/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
@@ -432,7 +479,7 @@
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">Draw on a Map</h3>
-                        <p class="example-description">Draw points, lines and areas, drag vertices to reshape them, and get GeoJSON with lengths and areas — mouse or touch.</p>
+                        <p class="example-description">Draw points, lines and areas, drag vertices to reshape them, and get GeoJSON with lengths and areas — mouse, touch, or keyboard.</p>
                         <a href="/examples/geo/draw/" class="example-link">View Demo →</a>
                     </div>
                 </div>
@@ -465,7 +512,7 @@
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">3D Learning Material</h3>
-                        <p class="example-description">Click a part to learn what it does, scrub an assembly animation, pull the parts apart, slice the model, and take a quick "find the part" quiz.</p>
+                        <p class="example-description">Click a part to learn what it does, scrub an assembly animation, pull the parts apart, slice the model, measure distances and angles on it, and take a quick "find the part" quiz.</p>
                         <a href="/examples/3d/belajar/" class="example-link">View Demo →</a>
                     </div>
                 </div>
