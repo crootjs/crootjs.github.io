@@ -1,0 +1,131 @@
+# Langkah terakhir rilis crootjs/lib, dipicu repository_dispatch "lib-released" dari workflow
+# rilis lib (atau manual dari tab Actions):
+#   1. naikkan pin crootjs/lib@<versi> di landing page dan llms.txt;
+#   2. tunggu docs dan examples (yang menaikkan pinnya sendiri) tayang dengan versi baru;
+#   3. bangun ulang sitemap.xml dan llms-full.txt (tools/build.sh), commit, minta build Pages;
+#   4. jalankan uji lib di croot.js.org/lib/tests/ dengan Chromium;
+#   5. kirim notifikasi Telegram (secret TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID, opsional).
+name: release
+
+on:
+  repository_dispatch:
+    types: [lib-released]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versi crootjs/lib, misalnya 0.0.31"
+        required: true
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency: release
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      VERSION: ${{ github.event.client_payload.version || inputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: site
+      # Riwayat lengkap: tanggal <lastmod> di sitemap diambil dari commit terakhir tiap file.
+      - uses: actions/checkout@v7
+        with:
+          repository: crootjs/docs
+          path: docs
+          fetch-depth: 0
+      - uses: actions/checkout@v7
+        with:
+          repository: crootjs/examples
+          path: examples
+          fetch-depth: 0
+
+      - name: Naikkan pin landing page
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/crootjs/lib/main/tools/bump-pins.sh -o /tmp/bump-pins.sh
+          sh /tmp/bump-pins.sh "$VERSION" site
+
+      - name: Tunggu docs dan examples tayang dengan versi baru
+        run: |
+          for i in $(seq 1 60); do
+            docs=$(curl -s https://croot.js.org/docs/api/ | grep -c "crootjs/lib@$VERSION/" || true)
+            pages=$(curl -s https://croot.js.org/examples/geo/offline/index.js | grep -c "crootjs/lib@$VERSION/" || true)
+            echo "docs $docs, examples $pages"
+            if [ "$docs" -gt 0 ] && [ "$pages" -gt 0 ]; then exit 0; fi
+            sleep 20
+          done
+          echo "docs/examples belum tayang dengan lib@$VERSION setelah 20 menit" >&2
+          exit 1
+
+      - name: Ambil docs dan examples terbaru
+        run: |
+          git -C docs pull --ff-only
+          git -C examples pull --ff-only
+
+      - name: Bangun ulang sitemap dan llms-full, commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sh site/tools/build.sh "$PWD/docs" "$PWD/examples"
+          cd site
+          if git diff --quiet; then
+            echo "Tidak ada perubahan."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
+          git commit -am "bump pins to lib@$VERSION; rebuild sitemap and llms-full"
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Build Pages tidak bisa diminta; tunggu build otomatis."
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Uji live di croot.js.org/lib/tests/
+        id: live
+        run: |
+          pip install -q playwright==1.65.2
+          python -m playwright install --with-deps chromium > /dev/null
+          python - <<'PY'
+          import os, re, sys
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as pw:
+              browser = pw.chromium.launch(args=["--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
+              page = browser.new_page()
+              page.goto("https://croot.js.org/lib/tests/")
+              page.wait_for_function("document.body.dataset.status !== 'running'", timeout=240000)
+              summary = re.findall(r"PASSED \d+ FAILED \d+ SKIPPED \d+", page.inner_text("body"))
+              failed = page.eval_on_selector_all(".failed", "items => items.map(item => item.innerText)")
+              status = page.evaluate("document.body.dataset.status")
+              browser.close()
+          print(summary[0] if summary else "tanpa ringkasan")
+          for item in failed:
+              print(item)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"summary={summary[0] if summary else status}\n")
+          sys.exit(0 if status == "passed" else 1)
+          PY
+
+      - name: Notifikasi Telegram
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RESULT: ${{ job.status }}
+          SUMMARY: ${{ steps.live.outputs.summary }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Secret Telegram belum dipasang; notifikasi dilewati."
+            exit 0
+          fi
+          if [ "$RESULT" = success ]; then
+            text="CrootJS $VERSION tayang: pin docs, examples, landing naik; sitemap dan llms-full dibangun ulang; uji live $SUMMARY."
+          else
+            text="CrootJS $VERSION: langkah rilis otomatis GAGAL ($RESULT). Lihat $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi
+          curl -s -o /dev/null -w '%{http_code}\n' -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$TELEGRAM_CHAT_ID" --data-urlencode "text=$text"
