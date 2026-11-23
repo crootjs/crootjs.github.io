@@ -1,20 +1,21 @@
-# Langkah terakhir rilis crootjs/lib, dipicu repository_dispatch "lib-released" dari workflow
-# rilis lib (atau manual dari tab Actions):
+# Langkah terakhir rilis crootjs/lib. Tiap jam membaca croot.js.org/lib/version.txt; kalau versinya
+# belum ada di llms.txt dan docs serta examples sudah tayang dengan versi itu (keduanya menaikkan
+# pinnya sendiri), maka:
 #   1. naikkan pin crootjs/lib@<versi> di landing page dan llms.txt;
-#   2. tunggu docs dan examples (yang menaikkan pinnya sendiri) tayang dengan versi baru;
-#   3. bangun ulang sitemap.xml dan llms-full.txt (tools/build.sh), commit, minta build Pages;
-#   4. jalankan uji lib di croot.js.org/lib/tests/ dengan Chromium;
-#   5. kirim notifikasi Telegram (secret TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID, opsional).
+#   2. bangun ulang sitemap.xml dan llms-full.txt (tools/build.sh), commit, minta build Pages;
+#   3. jalankan uji lib di croot.js.org/lib/tests/ dengan Chromium;
+#   4. kirim notifikasi Telegram (secret TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID, opsional).
+# Dijalankan manual dari tab Actions dengan versi tertentu, pengecekan llms.txt dilewati.
 name: release
 
 on:
-  repository_dispatch:
-    types: [lib-released]
+  schedule:
+    - cron: "37 * * * *"
   workflow_dispatch:
     inputs:
       version:
-        description: "Versi crootjs/lib, misalnya 0.0.31"
-        required: true
+        description: "Versi crootjs/lib, misalnya 0.0.33 (kosong = baca version.txt)"
+        required: false
 
 permissions:
   contents: write
@@ -23,11 +24,46 @@ permissions:
 concurrency: release
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Cek versi baru
+        id: check
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if [ -z "$VERSION" ]; then
+            VERSION=$(curl -fsS https://croot.js.org/lib/version.txt)
+            if grep -q "crootjs/lib@$VERSION/" llms.txt; then
+              echo "Landing page sudah lib@$VERSION."
+              exit 0
+            fi
+          fi
+          case $VERSION in
+            [0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "Versi tidak valid: $VERSION" >&2; exit 1 ;;
+          esac
+          docs=$(curl -s https://croot.js.org/docs/api/ | grep -c "crootjs/lib@$VERSION/" || true)
+          pages=$(curl -s https://croot.js.org/examples/geo/offline/index.js | grep -c "crootjs/lib@$VERSION/" || true)
+          echo "docs $docs, examples $pages"
+          if [ "$docs" -eq 0 ] || [ "$pages" -eq 0 ]; then
+            # Dicoba lagi jam berikutnya; docs dan examples mungkin belum menaikkan pin.
+            echo "::notice::docs/examples belum tayang dengan lib@$VERSION."
+            exit 0
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
   publish:
+    needs: check
+    if: needs.check.outputs.version
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
-      VERSION: ${{ github.event.client_payload.version || inputs.version }}
+      VERSION: ${{ needs.check.outputs.version }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -48,23 +84,6 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/crootjs/lib/main/tools/bump-pins.sh -o /tmp/bump-pins.sh
           sh /tmp/bump-pins.sh "$VERSION" site
-
-      - name: Tunggu docs dan examples tayang dengan versi baru
-        run: |
-          for i in $(seq 1 60); do
-            docs=$(curl -s https://croot.js.org/docs/api/ | grep -c "crootjs/lib@$VERSION/" || true)
-            pages=$(curl -s https://croot.js.org/examples/geo/offline/index.js | grep -c "crootjs/lib@$VERSION/" || true)
-            echo "docs $docs, examples $pages"
-            if [ "$docs" -gt 0 ] && [ "$pages" -gt 0 ]; then exit 0; fi
-            sleep 20
-          done
-          echo "docs/examples belum tayang dengan lib@$VERSION setelah 20 menit" >&2
-          exit 1
-
-      - name: Ambil docs dan examples terbaru
-        run: |
-          git -C docs pull --ff-only
-          git -C examples pull --ff-only
 
       - name: Bangun ulang sitemap dan llms-full, commit
         env:
