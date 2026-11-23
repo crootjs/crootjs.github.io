@@ -1,5 +1,9 @@
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.33/api.min.js";
+import { onClick, onClicks, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.33/element.min.js";
+import { toastError } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.33/toast.min.js";
+
 // Menu navigasi di layar sempit
-const toggle = document.querySelector(".nav-toggle");
+const toggle = document.getElementById("nav-toggle");
 const links = document.getElementById("nav-links");
 
 function setMenu(open) {
@@ -8,7 +12,7 @@ function setMenu(open) {
     toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
 }
 
-toggle.addEventListener("click", () => setMenu(!links.classList.contains("open")));
+onClick("nav-toggle", () => setMenu(!links.classList.contains("open")));
 links.addEventListener("click", (event) => {
     if (event.target.closest("a")) setMenu(false);
 });
@@ -33,16 +37,24 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 });
 
 // Copy code button
-document.querySelectorAll(".copy-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-        const text = button.parentElement.nextElementSibling.textContent;
-        navigator.clipboard.writeText(text).then(() => {
+onClicks("copy-btn", (button) => {
+    const text = button.parentElement.nextElementSibling.textContent;
+    navigator.clipboard.writeText(text).then(
+        () => {
             button.textContent = "Copied!";
             button.classList.add("copied");
             setTimeout(() => {
                 button.textContent = "Copy";
                 button.classList.remove("copied");
             }, 2000);
-        });
-    });
+        },
+        // Ditolak kalau browser tidak memberi izin clipboard
+        () => toastError("Could not copy. Select the code and copy it manually."),
+    );
+});
+
+// Versi terbaru dibaca dari file yang ditulis workflow rilis lib setelah jsDelivr siap.
+// Kalau gagal, tautan "Releases" di HTML tetap tampil.
+getJSON("/lib/version.json", ({ status, data }) => {
+    if (status === 200 && data?.version) setInnerText("hero-version", "v" + data.version);
 });

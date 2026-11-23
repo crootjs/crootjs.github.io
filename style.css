@@ -542,3 +542,7 @@ section[id],
 main {
     scroll-margin-top: 88px;
 }
+
+.hero-badges .badge {
+    text-decoration: none;
+}

@@ -1,4 +1,4 @@
-# Langkah terakhir rilis crootjs/lib. Tiap jam membaca croot.js.org/lib/version.txt; kalau versinya
+# Langkah terakhir rilis crootjs/lib. Tiap jam membaca croot.js.org/lib/version.json; kalau versinya
 # belum ada di llms.txt dan docs serta examples sudah tayang dengan versi itu (keduanya menaikkan
 # pinnya sendiri), maka:
 #   1. naikkan pin crootjs/lib@<versi> di landing page dan llms.txt;
@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Versi crootjs/lib, misalnya 0.0.33 (kosong = baca version.txt)"
+        description: "Versi crootjs/lib, misalnya 0.0.33 (kosong = baca version.json)"
         required: false
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
           VERSION: ${{ inputs.version }}
         run: |
           if [ -z "$VERSION" ]; then
-            VERSION=$(curl -fsS https://croot.js.org/lib/version.txt)
+            VERSION=$(curl -fsS https://croot.js.org/lib/version.json | jq -r .version)
             if grep -q "crootjs/lib@$VERSION/" llms.txt; then
               echo "Landing page sudah lib@$VERSION."
               exit 0
