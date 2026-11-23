@@ -3,12 +3,12 @@
 > CrootJS is a set of small, dependency-free vanilla JavaScript ES6+ modules meant to be imported directly from a CDN (jsDelivr, serving files straight from GitHub tags) — no npm install, no bundler, no build step. Each module is an independent file; import only the ones you need.
 
 Current release: see the `v*` tags at https://github.com/crootjs/lib/tags (changes per version: https://github.com/crootjs/lib/blob/main/CHANGELOG.md) — import a specific module as
-`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js`.
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js`.
 Always pin an exact version tag; do not use `@latest` in production code.
 
 For production, import the `.min.js` variant instead — jsDelivr auto-minifies any file on
 request (via Terser), even though no `.min.js` is committed to the repo, e.g.
-`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.min.js`. Use the unminified `.js` only
+`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
 ## Mandatory coding convention
@@ -23,6 +23,7 @@ Claude Code picks it up automatically on later runs).
 
 ## Modules
 
+- `croot.css` — (since 0.0.31) optional CSS framework, one file, no JS, no web fonts/images, ~2 KB gzipped: `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/croot.min.css">`. Classless base for semantic HTML (headings, links, code/pre, tables, label/input/select/textarea full width, label wrapping checkbox/radio inline, fieldset, `[aria-invalid="true"]` red border, `button` = accent button min 40px tall, `dialog` + backdrop, details, progress, visible `:focus-visible` ring). Button variants on `button` or `a.button`: `.secondary`, `.danger`, `.ghost`. Layout: `.container` (max 72rem, 16px padding), `.stack` (vertical gap), `.cluster` (wrapping row), `.grid` (auto-fit columns, min `--croot-min` 16rem), `.center`, `.muted`, `.visually-hidden`; per-element `--croot-gap`/`--croot-min` are NOT inherited. Components: `.card`, `.badge`, `.alert` (+ `.success`/`.warning`/`.danger`), `.nav` (header bar with a `<ul>` of links; `aria-current="page"`). Theme via `--croot-*` variables on `:root` (bg, surface, text, muted, border, accent, accent-text, danger, warning, success, info, focus, radius, space, max, font, mono); dark mode follows the device or `data-theme="light"|"dark"` on `<html>`. All rules are in `@layer croot`, so the page's own CSS always wins without `!important`. Needs Chrome/Edge 111+, Firefox 128+, Safari 16.4+.
 - `api.js` — fetch wrappers: `getJSON`, `postJSON`, `putJSON`, `deleteJSON` (signature: `fn(url, [data], responseFunction, [tokenkey], [tokenvalue])`, or since 0.0.29 `fn(url, [data], responseFunction, options)` with `options = { headers, timeout, signal, cache }`; `signal` is an AbortSignal, since 0.0.30). The callback receives `{status, data, headers, error, cached}`: `headers` is the response `Headers` (empty on failure or cache hit), `error` is `null` or, when `status` is 0, `"timeout"`/`"offline"`/`"network"`/`"abort"` (`"abort"` = cancelled via `signal`, not logged) (CORS rejection and unreachable server are both `"network"`; browsers don't distinguish them), `cached` is true when data came from the cache. `responseFunction` is always called, even on network failure or the timeout (15s default, `options.timeout` in ms) — then `{status: 0, data: null, error}`; check `status === 0` to distinguish "request never completed" from a real HTTP error status. These four also return a Promise of the same object that never rejects, so `const { status, data } = await getJSON(url)` works; pass `null` as `responseFunction` when awaiting (e.g. `await postJSON(url, body, null, "login", token)` or `await getJSON(url, null, { headers: { Authorization: "Bearer " + t } })`). `Content-Type: application/json` is sent only when there is a body, so a plain `getJSON` causes no CORS preflight and can read static hosts (GitHub Pages, raw.githubusercontent.com); any extra header still causes a preflight. `options.cache = { key, ttl }` (getJSON only, `ttl` in seconds) stores successful results in localStorage: within `ttl` no request is made; afterwards a stored `ETag` is sent as `If-None-Match` and a `304` returns the stored data with its stored status (200) and `cached: true`, so `status === 200` stays the success check. Failures are logged with `console.warn`. Since 0.0.30, use `uploadFile(url, source, responseFunction?, options?)` and `downloadFile(url, responseFunction?, options?)` for files — same `{status, data, headers, error}` result and Promise as `getJSON`. `uploadFile`: `source` = id of an `<input type="file">` (all chosen files), File/Blob, FileList/array, or a ready FormData; options `field = "file"` (form field name the backend reads), `data` (extra fields; objects sent as JSON), `method = "POST"`, `headers` (never set Content-Type), `timeout = 15000` ms WITHOUT PROGRESS (reset on every progress event), `signal`, `onProgress(fraction 0..1, loaded, total)`; `error: "nofile"` when nothing is selected (no request); uses XMLHttpRequest for progress. `downloadFile`: `data` = Blob on 2xx, else the parsed JSON error body or null; options `headers`, `timeout`, `signal`, `fileName` (save the 2xx file with this name). Also `insertHTML`, `getDomHTML`, and the older file helpers (kept unchanged for existing code): `postFile`/`postFileWithHeader` call back with the parsed JSON body, or `null` on network failure/timeout/non-JSON reply; `postFileJSON` calls back with `{status, data}` (`{status: 0, data: null}` on failure); `getFileWithHeader` downloads on 200, `getFileBytesWithHeader` calls back with an `ArrayBuffer` on 200 — both call back with the parsed error body (or `null`) on non-200 and `{status: 0}` on network failure/timeout. Every request in `api.js` (and `element.js`'s `renderHTML`/`replaceTag`) aborts after 15s. `insertHTML(url, id, runFunction, errorFunction?)` and `element.js`'s `renderHTML(id, url, callback?, errorCallback?)` take an optional error callback, called with an `Error` if the element doesn't exist, the reply is non-2xx, the network fails, or the request times out; on failure the element is left unchanged and the success callback is not called.
 - `element.js` — DOM helpers: `onClick`, `onChange`, `onInput` (and their `*s` plural variants for class selectors), `setInner`, `setInnerText`, `getValue`, `serializeForm` (all named fields of a form as one `{name: value}` object, skips disabled fields and file inputs; a single checkbox is a boolean, several checkboxes with the same name and `<select multiple>` give arrays of selected values since 0.0.30), `fillForm(id, data)` (since 0.0.30: the reverse — fills fields from an object of the same shape; only names present in `data`; file inputs skipped), `show`/`hide`, `addChild`, `renderHTML`, `replaceTag`, `addJS`/`addCSS`.
 - `form.js` — (since 0.0.30; imports `element.js`) form validation with messages under each invalid field instead of browser bubbles. `handleForm(id, onSubmit(data, event), options?)` sets `novalidate`, prevents the page reload, validates on submit, calls `onSubmit` only when valid (`data` from `serializeForm`), and re-checks a field on every change after the first submit attempt; returns `{ validate(), clear(), remove() }`. `validateForm(id, options?)` → boolean (shows/clears messages, focuses the first invalid field). `clearFormErrors(id)`. Rules come from HTML attributes (`required`, `type="email"/"url"`, `minlength`, `maxlength` — also checked for values set from code —, `min`, `max`, `step`, `pattern` with the message taken from the field's `title`). Options: `rules: { fieldName: (value, allValues) => "message" | null }` (run first), `messages: { fieldName: "msg" }` or `{ fieldName: { valueMissing, typeMismatch, tooShort, tooLong, rangeUnderflow, rangeOverflow, stepMismatch, badInput, patternMismatch } }`, `focus = true`. Default messages are Indonesian (e.g. "Wajib diisi.", "Minimal 3 karakter."). Accessible: `aria-invalid="true"` and `aria-describedby` to a `<p class="crootjs-field-error">` placed after the field (or its wrapping `<label>`, or at the end of the `<fieldset>` of a radio/checkbox group). Validation in the browser doesn't replace server-side checks.
@@ -101,6 +102,7 @@ Per-module documentation for `crootjs/lib`:
 
 - [api.js](api/) — `getJSON`, `postJSON`, `putJSON`, `deleteJSON` (callback or `await`, headers, timeout, cancellation, ETag cache), `uploadFile` with progress, `downloadFile`
 - [element.js](element/) — `onClick`, `setInner`, `getValue`, `serializeForm`, `fillForm`, and other DOM helpers
+- [croot.css](css) — small, green CSS framework (~2 KB gzipped): plain HTML looks finished without classes, plus layout (`.container`, `.stack`, `.cluster`, `.grid`), cards, badges, alerts, navigation, dark mode, and theming through CSS variables
 - [form.js](form) — form validation with a message under each field, screen-reader friendly (`handleForm`, `validateForm`, `clearFormErrors`)
 - [cookie.js](cookie) — set/get/delete cookies
 - [storage.js](storage) — set/get/delete data in localStorage & sessionStorage (with an optional expiry)
@@ -256,8 +258,8 @@ The WhatsAuth API can be used to implement SSO, QR login, and Google Sign-In. Cr
    ```
 2. main.js: login setup using crootjs
    ```js
-   import {qrController,deleteCookie,appendGoogleSignin} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/auth.js";
-   import { wauthparam } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/config.js";
+   import {qrController,deleteCookie,appendGoogleSignin} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/auth.js";
+   import { wauthparam } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/config.js";
    
    wauthparam.auth_ws="d3NzOi8vYXBpLndhLm15LmlkL3dzL3doYXRzYXV0aC9wdWJsaWM=";
    wauthparam.keyword="aHR0cHM6Ly93YS5tZS82MjgzMTMxODk1MDAwP3RleHQ9d2g0dDVhdXRoMA==";
@@ -324,9 +326,9 @@ In the index.html file
 
 In the index.js file
 ```js
-import {getCookie} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js";
-import {getJSON} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import {redirect} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/url.js";
+import {getCookie} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js";
+import {getJSON} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import {redirect} from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/url.js";
 
 if (getCookie("login")){
     getJSON("https://asia-southeast2-awangga.cloudfunctions.net/florka/data/user",responseFunction,"login",getCookie("login"));
@@ -366,7 +368,7 @@ Source: https://croot.js.org/docs/en/api/
 ## Usage (Import)
 
 ```javascript
-import { getJSON, postJSON, putJSON, deleteJSON, uploadFile, downloadFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { getJSON, postJSON, putJSON, deleteJSON, uploadFile, downloadFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 ```
 
 ## Result Shape
@@ -400,7 +402,7 @@ import { getJSON, postJSON, putJSON, deleteJSON, uploadFile, downloadFile } from
 A server that answers with an error status (400, 404, 500) is not a total failure: `status` holds the real code and `data` holds the server's error body. Total failures are logged with `console.warn` (except `"abort"`, which is intentional).
 
 ```javascript
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 const { status, data, error } = await getJSON("https://api.example.com/products");
 if (status === 200) {
@@ -454,8 +456,8 @@ await getJSON(url, null, { headers: { login: token }, timeout: 8000 });
 Useful for search-as-you-type: the old request is cancelled as soon as the user types again, so an old result does not overwrite a newer one.
 
 ```javascript
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import { onInput, getValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import { onInput, getValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 let search = null;
 onInput("search", async () => {
@@ -476,8 +478,8 @@ onInput("search", async () => {
 Example: the latest release version from the GitHub API, stored for 1 hour. After an hour GitHub answers `304` if there is no new release, and a `304` answer does not count against the quota of 60 requests per hour.
 
 ```javascript
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import { setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import { setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 const { status, data, headers, error } = await getJSON(
     "https://api.github.com/repos/crootjs/lib/releases/latest",
@@ -509,8 +511,8 @@ Note the order: `responseFunction` is **not** the last argument, and for `postJS
 | `options` | Replaces `tokenkey, tokenvalue`: `{ headers, timeout, signal, cache }` (see [Options](#options-headers-timeout-signal-and-cache)) |
 
 ```javascript
-import { getJSON, postJSON, putJSON, deleteJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js";
+import { getJSON, postJSON, putJSON, deleteJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js";
 
 const auth = { headers: { login: getCookie("login") } };
 
@@ -554,8 +556,8 @@ uploadFile(url, source, responseFunction, options)
 ```
 
 ```javascript
-import { uploadFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { uploadFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 let upload = null;
 onClick("upload", async () => {
@@ -587,7 +589,7 @@ downloadFile(url, responseFunction, options)
 Its options are `headers`, `timeout`, `signal` (same as `getJSON`), plus `fileName`: when set, a 2xx file is saved by the browser right away under that name.
 
 ```javascript
-import { downloadFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { downloadFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 // saved right away
 const { status, data } = await downloadFile("https://api.example.com/reports/7.pdf", null, {
@@ -610,7 +612,7 @@ insertHTML(url, id, runFunction, errorFunction?)
 Fetches HTML from `url`, sets it as the content of element `id`, then calls `runFunction()`. `errorFunction` (optional) is called with an `Error` if the element does not exist, the server answers with a non-2xx status, the network fails, or the request exceeds 15 seconds. On failure, the element's content is left unchanged and `runFunction` is not called.
 
 ```javascript
-import { insertHTML } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { insertHTML } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 insertHTML("./sections/navbar.html", "navbar", () => {
     console.log("Navbar loaded");
@@ -630,7 +632,7 @@ getDomHTML(url, domFunction)
 Fetches HTML from `url` and passes it to `domFunction(htmlDom)` as a parsed `Document`, so it can be read or modified before being inserted. The response status is not checked: a 404/500 error page is passed as a `Document` too. Only when the network fails or 15 seconds pass is `domFunction` not called (the reason is in the console).
 
 ```javascript
-import { getDomHTML } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { getDomHTML } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 getDomHTML("./sections/card.html", (htmlDom) => {
     const title = htmlDom.querySelector(".title");
@@ -672,7 +674,7 @@ Source: https://croot.js.org/docs/en/element/
 ## Usage (Import)
 
 ```javascript
-import { onClick, getValue, setInner, serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { onClick, getValue, setInner, serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 ```
 
 Unless stated otherwise, the functions on this page throw a `TypeError` when no element has the given ID.
@@ -705,7 +707,7 @@ If the element is not found, a warning is logged and nothing throws. Calling `on
 
 ```javascript
 // app.js
-import { onClick, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { onClick, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onClick("saveButton", () => {
     setInnerText("status", "Saved");
@@ -749,7 +751,7 @@ Sets an `input` handler on element `id` through the `oninput` property (replacin
 
 ```javascript
 // app.js
-import { onInput, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { onInput, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onInput("name", (input) => {
     setInnerText("preview", input.value);
@@ -837,8 +839,8 @@ Collects every field with a `name` attribute inside the form (text, email, check
 ```
 
 ```javascript
-import { serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 const data = serializeForm("signupForm");
 // { name: "...", email: "...", agree: true/false }
@@ -855,8 +857,8 @@ For validation with messages below each field before sending, see [`form.js`](..
 The reverse of `serializeForm` (since 0.0.30): fills the form's fields from an object, for example data from the server for an edit form. Values have the same shape as `serializeForm`'s result, so `fillForm(id, serializeForm(id))` changes nothing. Only fields whose name is a key in `data` are changed; `<input type="file">` is skipped; `null`/`undefined` clears a field. If the form is not found, a warning is logged and nothing throws.
 
 ```javascript
-import { fillForm, serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
-import { getJSON, putJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { fillForm, serializeForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
+import { getJSON, putJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 const { status, data } = await getJSON("https://api.example.com/profile/7");
 if (status === 200) fillForm("profileForm", data); // { name: "Sari", hobbies: ["reading"], agree: true }
@@ -946,7 +948,7 @@ Errors are always logged to the console as well. `<script>` tags inside the load
 
 ```javascript
 // app.js
-import { renderHTML, onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { renderHTML, onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 renderHTML("menu", "parts/menu.html");
 renderHTML("content", "parts/home.html", () => {
@@ -973,7 +975,7 @@ Loads an external JS or CSS file into `<head>` if it isn't on the page yet. Both
 Scripts are loaded as classic scripts (not `type="module"`), which suits third-party libraries that set a global variable.
 
 ```javascript
-import { addJS, addCSS } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { addJS, addCSS } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 await addCSS("https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css");
 await addJS("https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.js");
@@ -995,6 +997,136 @@ Earlier contributors to this page: Al Yasmin Assa'diyah (714240014), Affifah Put
 
 ---
 
+Source: https://croot.js.org/docs/en/css
+
+# `croot.css` Documentation
+
+*[Bahasa Indonesia](../css)*
+
+`croot.css` is the CrootJS CSS framework: **one file, no JavaScript, no web fonts or images**, about 2 KB gzipped. Plain HTML (headings, paragraphs, links, forms, buttons, tables, dialogs) looks finished without any classes. A few classes cover common layouts and components.
+
+It follows the same principles as the CrootJS JS modules: small and frugal (no fonts or icons to download, dark backgrounds in dark mode), easy to override, and accessible (keyboard focus is always visible, reduced-motion settings are respected).
+
+## Usage
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/croot.min.css">
+<link rel="stylesheet" href="style.css">
+```
+
+`croot.min.css` is minified automatically by jsDelivr. Put your page CSS **after** it, although the order doesn't actually matter: every `croot.css` rule lives in `@layer croot`, and unlayered CSS always beats layers, so you can override anything without `!important`.
+
+Full showcase of every element and component: [croot.js.org/examples/css](https://croot.js.org/examples/css/).
+
+## Without Classes
+
+These elements are styled as soon as the file loads:
+
+| Element | Look |
+|---|---|
+| `body`, headings, paragraphs, lists | System font, comfortable line height, theme colors |
+| `a` | Accent color, slightly offset underline |
+| `code`, `pre`, `kbd` | Monospace font; `pre` scrolls sideways when long |
+| `table` | Full width, lines between rows |
+| `blockquote`, `hr`, `details`/`summary` | Tidy lines and spacing |
+| `label`, `input`, `select`, `textarea` | Full width, bold label above |
+| `label` wrapping a checkbox/radio | Inline with its input |
+| `fieldset`, `legend` | Bordered box with a title |
+| `[aria-invalid="true"]` | Red border (set automatically by [`form.js`](form)) |
+| `button` | Primary button in the accent color, at least 40 px tall for touch |
+| `dialog` | Centered box with a dimmed backdrop |
+| `progress`, checkbox, radio, range | Accent color |
+| Keyboard focus (`:focus-visible`) | Blue ring that is always visible |
+
+## Buttons
+
+```html
+<button>Save</button>
+<button class="secondary">Cancel</button>
+<button class="danger">Delete</button>
+<button class="ghost">More</button>
+<a class="button" href="/signup">Sign up</a>
+```
+
+`.button` makes a link look like a button. `disabled` buttons (or `.button[aria-disabled="true"]`) are faded.
+
+## Layout
+
+| Class | Purpose |
+|---|---|
+| `.container` | Centered, max 72rem wide, 16 px side padding |
+| `.stack` | Children stacked vertically with equal gaps |
+| `.cluster` | Children in a row that wraps when it doesn't fit (buttons, tags) |
+| `.grid` | As many auto-fitting columns as fit, each at least 16rem |
+| `.center`, `.muted`, `.visually-hidden` | Centered text, muted color, hidden but still read by screen readers |
+
+Gaps and column widths are set per element with variables:
+
+```css
+.product-list { --croot-min: 12rem; --croot-gap: 2rem; }
+```
+
+`--croot-gap` and `--croot-min` are not inherited, so a `.grid` or `.stack` inside that element keeps its own default spacing.
+
+## Components
+
+```html
+<article class="card">
+  <h3>Title <span class="badge">new</span></h3>
+  <p>Card content.</p>
+</article>
+
+<div class="alert">Information.</div>
+<div class="alert success">Saved.</div>
+<div class="alert warning">Quota almost used up.</div>
+<div class="alert danger">Sending failed.</div>
+
+<header class="container nav">
+  <strong>Site Name</strong>
+  <ul>
+    <li><a href="/" aria-current="page">Home</a></li>
+    <li><a href="/about">About</a></li>
+  </ul>
+</header>
+```
+
+## Theme
+
+Colors, corners, spacing and fonts are variables on `:root`. Change them in your page CSS:
+
+```css
+:root {
+    --croot-accent: #7c3aed;     /* main color */
+    --croot-accent-text: #fff;   /* text on the main color */
+    --croot-radius: 4px;
+    --croot-font: "Inter", system-ui, sans-serif;
+}
+```
+
+| Variable | Meaning |
+|---|---|
+| `--croot-bg`, `--croot-surface` | Page background, and card/input background |
+| `--croot-text`, `--croot-muted`, `--croot-border` | Text, muted text, lines |
+| `--croot-accent`, `--croot-accent-text` | Main color and the text on it |
+| `--croot-danger`, `--croot-warning`, `--croot-success`, `--croot-info`, `--croot-focus` | Status colors and the focus ring |
+| `--croot-radius`, `--croot-space`, `--croot-max` | Corner radius, base spacing, `.container` width |
+| `--croot-font`, `--croot-mono` | Text and code fonts |
+
+**Dark mode** follows the device setting. To force it, set `data-theme="light"` or `data-theme="dark"` on `<html>`, for example from a theme button:
+
+```javascript
+document.documentElement.dataset.theme = "dark";   // dark
+delete document.documentElement.dataset.theme;      // follow the device
+```
+
+## Notes
+
+- Needs a browser that supports `@layer`, `:has()`, `color-mix()` and `@property` (Chrome/Edge 111+, Firefox 128+, Safari 16.4+). Older browsers still show a readable page, with some styling missing.
+- The styles are deliberately few. For a custom look, write it in your page's `style.css`; your rules always win.
+
+
+---
+
 Source: https://croot.js.org/docs/en/form
 
 # `form.js` Module Documentation
@@ -1008,7 +1140,7 @@ The messages are also read by screen readers: an invalid field gets `aria-invali
 ## Usage (Import)
 
 ```javascript
-import { handleForm, validateForm, clearFormErrors } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/form.js";
+import { handleForm, validateForm, clearFormErrors } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/form.js";
 ```
 
 ## `handleForm(id, onSubmit, options)`
@@ -1037,8 +1169,8 @@ The quickest way. Handles the submit of form `id`: the page does not reload, the
 ```
 
 ```javascript
-import { handleForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/form.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { handleForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/form.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 handleForm("signup", async (data) => {
     const { status } = await postJSON("https://api.example.com/signup", data, null);
@@ -1062,8 +1194,8 @@ The browser's built-in messages are turned off with `novalidate` while `handleFo
 Checks the form once, for example before moving to the next step of a multi-step form. Messages are shown or removed, and it returns `true` when everything is valid.
 
 ```javascript
-import { validateForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/form.js";
-import { onClick, show, hide } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { validateForm } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/form.js";
+import { onClick, show, hide } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onClick("next", () => {
     if (!validateForm("step-1")) return;
@@ -1129,7 +1261,7 @@ Source: https://croot.js.org/docs/en/cookie
 ## Usage (Import)
 
 ```javascript
-import { setCookieWithExpireHour, getCookie, deleteCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js";
+import { setCookieWithExpireHour, getCookie, deleteCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js";
 ```
 
 ## `setCookieWithExpireDay(cname, cvalue, exdays)`
@@ -1170,9 +1302,9 @@ Deletes cookie `cname` by setting its expiry to 1 January 1970. Only deletes a c
 ### Example: log in and log out
 
 ```javascript
-import { setCookieWithExpireHour, getCookie, deleteCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import { onClick, getValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { setCookieWithExpireHour, getCookie, deleteCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import { onClick, getValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onClick("loginButton", async () => {
     const { status, data } = await postJSON("https://api.example.com/login", { user: getValue("user"), password: getValue("password") }, null);
@@ -1204,7 +1336,7 @@ Source: https://croot.js.org/docs/en/storage
 ## Usage (Import)
 
 ```javascript
-import { setLocal, getLocal, deleteLocal } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/storage.js";
+import { setLocal, getLocal, deleteLocal } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/storage.js";
 ```
 
 ## `setLocal(key, value)`
@@ -1278,7 +1410,7 @@ Source: https://croot.js.org/docs/en/debounce
 ## Usage (Import)
 
 ```javascript
-import { debounce, throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/debounce.js";
+import { debounce, throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/debounce.js";
 ```
 
 ## `debounce(fn, delay)`
@@ -1288,9 +1420,9 @@ Returns a new function that holds off `fn` until there have been no calls for `d
 The typical use is search-as-you-type: the request goes out after the user stops typing, not on every keystroke.
 
 ```javascript
-import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/debounce.js";
-import { onInput } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/debounce.js";
+import { onInput } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 const searchProducts = debounce(async (input) => {
     const { status, data } = await getJSON(`https://api.example.com/products?q=${encodeURIComponent(input.value)}`);
@@ -1307,7 +1439,7 @@ Returns a new function that runs `fn` at most once every `delay` milliseconds. T
 The typical use is `scroll`, `resize`, and `mousemove` events.
 
 ```javascript
-import { throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/debounce.js";
+import { throttle } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/debounce.js";
 
 window.addEventListener("scroll", throttle(() => {
     console.log("scroll position:", window.scrollY);
@@ -1334,7 +1466,7 @@ Source: https://croot.js.org/docs/en/toast
 ## Usage (Import)
 
 ```javascript
-import { toast, toastSuccess, toastError, toastWarning, toastInfo } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/toast.js";
+import { toast, toastSuccess, toastError, toastWarning, toastInfo } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/toast.js";
 ```
 
 ## `toast(message, type = "info", duration = 3000)`
@@ -1371,8 +1503,8 @@ toastInfo("Loading data");
 For work whose duration you can't predict, such as an upload, pass `duration` `0` and close it yourself when done:
 
 ```javascript
-import { toastInfo, toastSuccess, toastError } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/toast.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { toastInfo, toastSuccess, toastError } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/toast.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 const close = toastInfo("Sending...", 0);
 const { status } = await postJSON("https://api.example.com/reports", { title: "Damaged road" }, null);
@@ -1406,7 +1538,7 @@ Whatever the data's source and shape, the result you receive is always the same:
 ## Usage (Import)
 
 ```javascript
-import { getGeoJSON, getBBox, getPropertyKeys } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geo.js";
+import { getGeoJSON, getBBox, getPropertyKeys } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geo.js";
 ```
 
 ## Fetching from a URL
@@ -1422,7 +1554,7 @@ Fetches GeoJSON from `target_url`. The parameter order is the same as `getJSON` 
 | Network failure, CORS rejected, or more than 15 seconds elapsed | `0` | `null` |
 
 ```javascript
-import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geo.js";
+import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geo.js";
 
 getGeoJSON("https://github.com/petapedia/geojson/blob/main/contoh.geojson", (response) => {
     if (response.status === 0) {
@@ -1449,8 +1581,8 @@ getGeoJSON("https://github.com/petapedia/geojson/blob/main/contoh.geojson", (res
 With a token (for your own backend):
 
 ```javascript
-import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geo.js";
-import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js";
+import { getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geo.js";
+import { getCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js";
 
 getGeoJSON("https://api.example.com/lokasi", tampilkan, "login", getCookie("login"));
 
@@ -1473,8 +1605,8 @@ Reads the file the user picked in `<input type="file" id="...">`. The file is re
 
 ```javascript
 // index.js
-import { readGeoJSONFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geo.js";
-import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { readGeoJSONFile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geo.js";
+import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onChange("berkas", () => {
     readGeoJSONFile("berkas", (data) => {
@@ -1503,7 +1635,7 @@ Accepted input shapes:
 | An array of `Feature`s/geometries (the shape backends typically return from a MongoDB query) | A `FeatureCollection` containing all of them |
 
 ```javascript
-import { parseGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geo.js";
+import { parseGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geo.js";
 
 parseGeoJSON('{"type":"Point","coordinates":[107.575914,-6.8732098]}');
 // { type: "FeatureCollection", features: [
@@ -1572,7 +1704,7 @@ toLatLng([107.575914, -6.8732098]); // [-6.8732098, 107.575914]
 To draw the data on a map, use [`map.js`](map) — CrootJS's own map module, with no external library. All `geo.js` functions are also exported from `map.js`, so a single import is enough:
 
 ```javascript
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
 
 createMap("peta"); // the <div id="peta"> element must get a height from CSS
 
@@ -1612,7 +1744,7 @@ Icon markers, a scale bar, "my location", live tracking, coordinates, a right-cl
 ## Usage (Import)
 
 ```javascript
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
 ```
 
 All [`geo.js`](geo) functions (`getGeoJSON`, `readGeoJSONFile`, `parseGeoJSON`, `getBBox`, and others) are re-exported from `map.js` as well. A page that shows a map only needs to import from `map.js`.
@@ -1637,7 +1769,7 @@ The map's container element **must have a height** set in CSS. The map fills tha
 
 ```javascript
 // index.js
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
 
 createMap("peta");
 
@@ -1912,8 +2044,8 @@ The returned `center` may differ from what you passed in the last few digits (fl
 The most common use: picking a location for a form.
 
 ```javascript
-import { createMap, addGeoJSON, onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { createMap, addGeoJSON, onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 17 });
 
@@ -1941,7 +2073,7 @@ While there is a listener, the browser's built-in menu does not appear on the ma
 For a ready-made menu complete with submenus, keyboard support, and a dark theme, use [`addContextMenu`](mapcontrol#addcontextmenuid-items-options) from `mapcontrol.js`. `onMapContextMenu` is for your own UI:
 
 ```javascript
-import { createMap, onMapContextMenu, showPopup } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
+import { createMap, onMapContextMenu, showPopup } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
 
 createMap("peta", { center: [107.6, -6.9], zoom: 14 });
 onMapContextMenu("peta", (position) => {
@@ -1958,8 +2090,8 @@ onMapContextMenu("peta", (position) => {
 The two are commonly used together to request **only the data in the visible area** from a backend. Because `onMapMove` fires very often, wrap it with [`debounce`](debounce) so a request is sent only after the map stops moving:
 
 ```javascript
-import { createMap, addGeoJSON, clearMap, onMapMove, getMapBounds, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/debounce.js";
+import { createMap, addGeoJSON, clearMap, onMapMove, getMapBounds, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { debounce } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/debounce.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 16 });
 
@@ -2044,7 +2176,7 @@ createMap("peta", {
 **Custom tile sources.** Besides a URL pattern, `tiles` (and the entries of `labels`) can be an object `{ getTile(z, x, y) }` that returns a Promise of an image `Blob`, a URL, or `null` if that tile does not exist. This is how [`mapoffline.js`](mapoffline) displays a map from a single PMTiles file, including from a file on the device with no internet:
 
 ```javascript
-import { openPMTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapoffline.js";
+import { openPMTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapoffline.js";
 
 const arsip = await openPMTiles("peta-bandung.pmtiles");
 createMap("peta", { tiles: arsip, maxNativeZoom: arsip.maxZoom, center: arsip.center, zoom: 13 });
@@ -2111,9 +2243,9 @@ Features that not every map needs are split into their own modules. Import only 
 | [`georoute.js`](georoute) | Shortest route along the lines in GeoJSON data (`findRoute`) |
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapmarker.js";
-import { addScaleBar, addLocateButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcontrol.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapmarker.js";
+import { addScaleBar, addLocateButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcontrol.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 17 });
 addMarker("peta", [107.575914, -6.8732098], { label: "ULBI", popup: "Kampus ULBI" });
@@ -2201,8 +2333,8 @@ Points in GeoJSON data are already drawn by `addGeoJSON` as small circles. `addM
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapmarker.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapmarker.js";
 ```
 
 The map must be created with `createMap` before `addMarker` is called.
@@ -2274,9 +2406,9 @@ A marker's popup always appears above the marker's top edge, whatever its anchor
 The most common use: the user drags the pin to the exact location, and its coordinates go into a form.
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapmarker.js";
-import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addMarker } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapmarker.js";
+import { setValue } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 createMap("peta", { center: [107.5759, -6.8736], zoom: 17 });
 
@@ -2293,7 +2425,7 @@ addMarker("peta", [107.5759, -6.8736], {
 To move a marker from code — for example to the point clicked on the map — use `setPosition`:
 
 ```javascript
-import { onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
+import { onMapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
 
 const pin = addMarker("peta", [107.5759, -6.8736]);
 onMapClick("peta", (position) => pin.setPosition(position));
@@ -2327,8 +2459,8 @@ Source: https://croot.js.org/docs/en/mapcontrol
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addScaleBar, addLocateButton, locateUser, addTrackButton, trackUser, addBasemapControl, setBasemap, addLayerControl, addCoordinateControl, addContextMenu, addFullscreenButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcontrol.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addScaleBar, addLocateButton, locateUser, addTrackButton, trackUser, addBasemapControl, setBasemap, addLayerControl, addCoordinateControl, addContextMenu, addFullscreenButton } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcontrol.js";
 ```
 
 The map must already have been created with `createMap`.
@@ -2370,8 +2502,8 @@ Asks the browser for the device's location (once), then:
 | Permission denied, device not supported, or 15 seconds elapsed | `null` |
 
 ```javascript
-import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcontrol.js";
-import { getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geomeasure.js";
+import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcontrol.js";
+import { getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geomeasure.js";
 
 const kampus = [107.575914, -6.8732098];
 
@@ -2408,8 +2540,8 @@ Returns a `stop()` function to stop tracking.
 If location permission is denied or the device does not support it, `responseFunction` is called **once** with `null` and tracking stops on its own. Temporary disruptions such as a lost signal do not stop tracking; the browser retries.
 
 ```javascript
-import { createMap, addGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { trackUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcontrol.js";
+import { createMap, addGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { trackUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcontrol.js";
 
 createMap("peta");
 
@@ -2587,7 +2719,7 @@ The copy button uses the Clipboard API, which is only available on HTTPS pages (
 **Local grid (CAD).** With [`createAffineTransform`](geomeasure#createaffinetransformfrom-to) from `geomeasure.js`, coordinates can be shown in a project grid. For example, with three control points whose grid coordinates and lng/lat are known:
 
 ```javascript
-import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geomeasure.js";
+import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geomeasure.js";
 
 const grid = [[1000, 2000], [1500, 2000], [1000, 2400]];                  // meters, CAD grid
 const wgs84 = [[107.57520, -6.87410], [107.57974, -6.87407], [107.57517, -6.87048]];
@@ -2652,8 +2784,8 @@ Besides objects, an item may also be:
 Returns `{ close(), remove() }`. `remove()` removes the context menu, and the browser's built-in menu appears again.
 
 ```javascript
-import { createMap, addGeoJSON, setMapView } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addContextMenu } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcontrol.js";
+import { createMap, addGeoJSON, setMapView } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addContextMenu } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcontrol.js";
 
 createMap("peta", { center: [107.6, -6.9], zoom: 14 });
 addGeoJSON("peta", dataBTS, { name: "bts" });
@@ -2741,8 +2873,8 @@ Source: https://croot.js.org/docs/en/maptools
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addMeasureControl, measure, addImageOverlay, exportMapImage, downloadMapImage } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/maptools.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addMeasureControl, measure, addImageOverlay, exportMapImage, downloadMapImage } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/maptools.js";
 ```
 
 The map must already have been created with `createMap`.
@@ -2827,7 +2959,7 @@ masterPlan.setOpacity(0.4);
 **From control points.** If what you know is a few points on the image (pixels) along with their lng/lat, build the transformation with [`createAffineTransform`](geomeasure#createaffinetransformfrom-to) and then compute the three corners:
 
 ```javascript
-import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geomeasure.js";
+import { createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geomeasure.js";
 
 // A 2400 x 1600 pixel image; three points recognized on both the image and the map.
 const piksel = [[310, 220], [2105, 260], [400, 1390]];
@@ -2894,8 +3026,8 @@ Without clustering, 20,000 points means 20,000 elements on the page and a map th
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcluster.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcluster.js";
 ```
 
 The map must already have been created with `createMap`.
@@ -2907,8 +3039,8 @@ Draws the point features (`Point` and `MultiPoint`) in `geojson` as clusters. `g
 Returns a `remove()` function that removes everything from the map.
 
 ```javascript
-import { createMap, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcluster.js";
+import { createMap, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addCluster } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcluster.js";
 
 createMap("peta");
 
@@ -2986,8 +3118,8 @@ For apps with many users, run your own Nominatim (the `url` option) or use anoth
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { searchPlace, reverseGeocode, addSearchControl } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapsearch.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { searchPlace, reverseGeocode, addSearchControl } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapsearch.js";
 ```
 
 ## `addSearchControl(id, options)`
@@ -3092,8 +3224,8 @@ PMTiles version 3 containing **raster** tiles (PNG, JPEG, WebP, AVIF) or, since 
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { openPMTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapoffline.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { openPMTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapoffline.js";
 ```
 
 ## `openPMTiles(source, responseFunction, options)`
@@ -3159,8 +3291,8 @@ The default style targets the [Protomaps Basemap](https://docs.protomaps.com/bas
 ```
 
 ```javascript
-import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
-import { setTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
+import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
+import { setTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
 
 createMap("peta", { tiles: false, center: [107.6, -6.9], zoom: 12 });
 onChange("berkas", async () => {
@@ -3202,8 +3334,8 @@ Unlike [`mapoffline.js`](mapoffline), there is no PMTiles file to prepare: an or
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { cachedTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcache.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { cachedTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcache.js";
 
 createMap("map", { tiles: cachedTiles(), center: [107.6, -6.9], zoom: 14 });
 ```
@@ -3252,8 +3384,8 @@ Downloads the tiles in `bounds` `[minLng, minLat, maxLng, maxLat]` from `minZoom
 **Only for your own tile server or a provider that allows it.** The OpenStreetMap policy forbids bulk downloading from `tile.openstreetmap.org`, so the default template is refused (`error` holds the reason, and no request is made).
 
 ```javascript
-import { getMapBounds } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { onClick, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { getMapBounds } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { onClick, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 const tiles = cachedTiles("https://tiles.example.com/{z}/{x}/{y}.png", { name: "agency-map", attribution: "© Public Works Agency" });
 createMap("map", { tiles, center: [107.6, -6.9], zoom: 14 });
@@ -3287,7 +3419,7 @@ Source: https://croot.js.org/docs/en/mapvector
 ## Usage (Import)
 
 ```javascript
-import { decodeMVT, renderVectorTile, DEFAULT_VECTOR_STYLE } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapvector.js";
+import { decodeMVT, renderVectorTile, DEFAULT_VECTOR_STYLE } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapvector.js";
 ```
 
 ## Style
@@ -3310,9 +3442,9 @@ A style is an array of **rules** drawn in order; later rules appear on top. The 
 Example: a map with more prominent highways and place names in Indonesian. The default rules are copied, then one rule is appended at the end so it is drawn on top:
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { openPMTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapoffline.js";
-import { DEFAULT_VECTOR_STYLE } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapvector.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { openPMTiles } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapoffline.js";
+import { DEFAULT_VECTOR_STYLE } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapvector.js";
 
 const style = [
     ...DEFAULT_VECTOR_STYLE,
@@ -3348,8 +3480,8 @@ Renders the output of `decodeMVT` into a Promise of a PNG `Blob`.
 Example: MVT tiles from an ordinary vector tile server, rendered for `map.js`.
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { decodeMVT, renderVectorTile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapvector.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { decodeMVT, renderVectorTile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapvector.js";
 
 const vector = {
     async getTile(z, x, y) {
@@ -3387,8 +3519,8 @@ The CrootJS map is viewed straight down from above, so each model is drawn on it
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addModel, setPartColor, highlightPart } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapmodel.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addModel, setPartColor, highlightPart } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapmodel.js";
 ```
 
 `mapmodel.js` **re-exports every function of [`model3d.js`](model3d)**. For models on the map, import those functions (`setPartColor`, `highlightPart`, `setPartTransform`, ...) from `mapmodel.js`, not from a separate `model3d.js` import: a module imported from another URL (for example `model3d.min.js`) is another copy with its own list of viewers, so it does not know the `viewerId` of a model on the map.
@@ -3454,8 +3586,8 @@ Useful for field surveys, marking coverage areas, drawing routes, or lot boundar
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addDrawControl, startDrawing, editFeature } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapdraw.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addDrawControl, startDrawing, editFeature } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapdraw.js";
 ```
 
 The map must already have been created with `createMap`.
@@ -3487,10 +3619,10 @@ The panel below the buttons shows instructions and the **Selesai** ("Done"), **H
 Returns `{ getData(), setData(geojson), clear(), remove() }`. `getData()` returns a copy of the FeatureCollection.
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addDrawControl } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapdraw.js";
-import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
-import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addDrawControl } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapdraw.js";
+import { postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
+import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 createMap("peta", { center: [107.6, -6.9], zoom: 16 });
 const gambar = addDrawControl("peta", {
@@ -3531,7 +3663,7 @@ While drawing, map clicks do not open popups and are not passed on to `onMapClic
 Returns `{ finish(), undo(), stop() }` for your own Done, Remove point, and Cancel buttons.
 
 ```javascript
-import { getArea } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geomeasure.js";
+import { getArea } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geomeasure.js";
 
 onClick("gambar-kavling", () => {
     startDrawing("peta", "polygon", (feature) => {
@@ -3605,8 +3737,8 @@ It is separate from `map.js` so that pages that don't use it don't have to downl
 ## Usage (Import)
 
 ```javascript
-import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { addHeatmap, addGridMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapheat.js";
+import { createMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { addHeatmap, addGridMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapheat.js";
 ```
 
 The map must already have been created with `createMap`.
@@ -3744,7 +3876,7 @@ It renders with **WebGL2**, and automatically falls back to **WebGL1** in older 
 ## Usage (Import)
 
 ```javascript
-import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/model3d.js";
+import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/model3d.js";
 ```
 
 ## Minimal Example
@@ -3764,8 +3896,8 @@ import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib
 
 ```javascript
 // index.js
-import { createViewer, loadModel, onModelClick, highlightPart } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/model3d.js";
-import { setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { createViewer, loadModel, onModelClick, highlightPart } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/model3d.js";
+import { setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 createViewer("model");
 loadModel("model", "models/bts.glb", (info, error) => {
@@ -3813,7 +3945,7 @@ On failure, `info` = `null` and `error` holds the reason (also printed to the co
 
 ```javascript
 // Opening a file from the user's computer
-import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { onChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onChange("file", () => {
     loadModel("model", document.getElementById("file").files[0], (info, error) => {
@@ -4006,8 +4138,8 @@ The middle three suit learning materials well: anatomy, engines, buildings, lab 
 ## Usage (Import)
 
 ```javascript
-import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/model3d.js";
-import { addHotspot, enableTransform, getAnimations, playAnimation, explodeModel, addSection, measureModel, addARButton, getARLink, isARSupported, startAR, exportGLB, downloadGLB } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/model3dtools.js";
+import { createViewer, loadModel } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/model3d.js";
+import { addHotspot, enableTransform, getAnimations, playAnimation, explodeModel, addSection, measureModel, addARButton, getARLink, isARSupported, startAR, exportGLB, downloadGLB } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/model3dtools.js";
 ```
 
 The viewer must already be created with `createViewer`. Hotspots and gizmos that refer to a part name need the model to be loaded, so call them inside `loadModel`'s `responseFunction`.
@@ -4171,7 +4303,7 @@ A measuring tool on the model's surface (since 0.0.30): click or tap points on t
 Returns `{ getResult(), clear(), remove() }`. Clicks are still passed on to `onModelClick` while measuring.
 
 ```javascript
-import { onClick, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { onClick, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 let alat = null;
 onClick("ukur-sudut", () => {
@@ -4233,8 +4365,8 @@ It must be called from a user click/tap; browsers refuse to open AR without one.
 Returns a Promise of `{ supported, end() }`; `supported` = `false` (with the reason in the console) if the AR session could not be opened.
 
 ```javascript
-import { isARSupported, startAR } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/model3dtools.js";
-import { onClick, show } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { isARSupported, startAR } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/model3dtools.js";
+import { onClick, show } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 if (await isARSupported()) show("tombol-ar");
 onClick("tombol-ar", () => startAR("model", { scale: 0.1 }));
@@ -4304,7 +4436,7 @@ Positions are always `[lng, lat]` as in GeoJSON, and results are always in **met
 ## Usage (Import)
 
 ```javascript
-import { getDistance, getArea, isInside, createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geomeasure.js";
+import { getDistance, getArea, isInside, createAffineTransform } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geomeasure.js";
 ```
 
 Functions that accept `geojson` are as flexible as [`parseGeoJSON`](geo): a `FeatureCollection`, a single `Feature`, a single bare geometry, an array of them, or JSON text. The examples below use `data` from [contoh.geojson](https://github.com/petapedia/geojson/blob/main/contoh.geojson).
@@ -4398,9 +4530,9 @@ An affine transform on `[lng, lat]` is accurate enough for district-sized areas 
 The most common combination: draw the radius, get the user's location, then check whether they are inside it.
 
 ```javascript
-import { createMap, addGeoJSON, fitMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mapcontrol.js";
-import { createCircle, isInside, getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/geomeasure.js";
+import { createMap, addGeoJSON, fitMap } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { locateUser } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mapcontrol.js";
+import { createCircle, isInside, getDistance } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/geomeasure.js";
 
 const kampus = [107.575914, -6.8732098];
 const area = createCircle(kampus, 100);
@@ -4447,7 +4579,7 @@ This module is pure computation. It doesn't need a map; the result is plain GeoJ
 ## Usage (Import)
 
 ```javascript
-import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/georoute.js";
+import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/georoute.js";
 ```
 
 All [`geomeasure.js`](geomeasure) functions (`getDistance`, `getLength`, `isInside`, and the rest) are also exported from `georoute.js`, so a page that computes routes only needs to import from here.
@@ -4480,8 +4612,8 @@ In that example neither point lies exactly on a road. **`from` and `to` can be a
 Since the result is a plain Feature, `addGeoJSON` can draw it directly:
 
 ```javascript
-import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/map.js";
-import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/georoute.js";
+import { createMap, addGeoJSON, fitMap, getGeoJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/map.js";
+import { findRoute } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/georoute.js";
 
 createMap("peta");
 
@@ -4545,7 +4677,7 @@ Source: https://croot.js.org/docs/en/url
 ## Usage (Import)
 
 ```javascript
-import { getQueryString, getHash, setHash, onHashChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/url.js";
+import { getQueryString, getHash, setHash, onHashChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/url.js";
 ```
 
 ## Summary
@@ -4603,7 +4735,7 @@ Same as `fullPath()` without the leading `/`, e.g. `"class/lesson/ch1.html"`. On
 Returns a Proxy over a `URLSearchParams` of the current query string, so parameters are read like object properties. Values are always strings, or `null` when the parameter is absent.
 
 ```javascript
-import { getQueryString } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/url.js";
+import { getQueryString } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/url.js";
 
 // URL: https://example.com/product.html?id=102&tab=reviews
 const query = getQueryString();
@@ -4619,7 +4751,7 @@ The Proxy is read-only in practice. Every property name is passed to `searchPara
 Sets or replaces one query string parameter, keeps the others, and writes the result to `window.location.search`. As a result the browser **reloads the page** with the new URL and adds a history entry. To change the URL without a reload, use `history.replaceState` or `history.pushState` directly.
 
 ```javascript
-import { setQueryString } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/url.js";
+import { setQueryString } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/url.js";
 
 setQueryString("category", "books"); // ...?category=books, page reloads
 ```
@@ -4639,8 +4771,8 @@ Navigates to `URL` (absolute or relative) with `window.location.replace`. The cu
 `URL` is not validated. Don't pass a value from the query string or user input straight into `redirect` without checking its destination, so your page can't be used to send people to another site.
 
 ```javascript
-import { redirect } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/url.js";
-import { deleteCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/cookie.js";
+import { redirect } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/url.js";
+import { deleteCookie } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/cookie.js";
 
 deleteCookie("token");
 redirect("/login.html");
@@ -4653,8 +4785,8 @@ Registers `runFunctionEvent(event)` for the `hashchange` event on `window`. `eve
 There is no way to remove this listener, and each call to `onHashChange` adds another one, so call it once.
 
 ```javascript
-import { getHash, onHashChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/url.js";
-import { renderHTML } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { getHash, onHashChange } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/url.js";
+import { renderHTML } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 function showPage() {
     renderHTML("content", `pages/${getHash() || "home"}.html`);
@@ -4680,7 +4812,7 @@ Every function takes an **input element** (not an ID) and returns nothing. That 
 ## Usage (Import)
 
 ```javascript
-import { validateUserName, validateHouseNumber, validatePhoneNumber, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/validate.js";
+import { validateUserName, validateHouseNumber, validatePhoneNumber, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/validate.js";
 ```
 
 ## `validateUserName(input)`
@@ -4745,8 +4877,8 @@ The `Rp. ` prefix is stripped again on the next call, so it is safe to attach to
 
 ```javascript
 // script.js
-import { validateUserName, validatePhoneNumber, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/validate.js";
-import { onInput } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { validateUserName, validatePhoneNumber, formatRupiah } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/validate.js";
+import { onInput } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onInput("uname", validateUserName);
 onInput("telepon", validatePhoneNumber);
@@ -4782,7 +4914,7 @@ Things to know before using this module:
 ## Usage (Import)
 
 ```javascript
-import { openWebSocketSetId, connectws, sendMessagetoWebSocket, closeWebSocket } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/websocket.js";
+import { openWebSocketSetId, connectws, sendMessagetoWebSocket, closeWebSocket } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/websocket.js";
 ```
 
 ## `openWebSocketSetId(id, url_ws, onMessage)`
@@ -4798,8 +4930,8 @@ If the browser doesn't support WebSocket, it calls `alert("Please Update Your br
 | `onMessage` | Optional. `function (data)` called with `event.data` for every incoming message. If omitted, the module calls `window.catcher(data)` if that function exists (legacy style); if neither exists, messages are ignored |
 
 ```javascript
-import { openWebSocketSetId, sendMessagetoWebSocket, closeWebSocket } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/websocket.js";
-import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { openWebSocketSetId, sendMessagetoWebSocket, closeWebSocket } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/websocket.js";
+import { onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 const ws = await openWebSocketSetId("user-714240001", btoa("wss://chat.example.com/ws"), (data) => {
     const message = JSON.parse(data);
@@ -4849,7 +4981,7 @@ So this module is only useful for applications that use that backend. For your o
 ## Usage (Import)
 
 ```javascript
-import { sendSTP, verifySTP, resendSTP } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/stp.js";
+import { sendSTP, verifySTP, resendSTP } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/stp.js";
 ```
 
 ## Shared Behavior
@@ -4880,8 +5012,8 @@ Requests the code to be sent to `phoneNumber` again.
 ## Example
 
 ```javascript
-import { sendSTP, verifySTP } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/stp.js";
-import { getValue, onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { sendSTP, verifySTP } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/stp.js";
+import { getValue, onClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 onClick("send-code", async () => {
     try {
@@ -4916,7 +5048,7 @@ Source: https://croot.js.org/docs/en/useragent
 ## Usage (Import)
 
 ```javascript
-import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/useragent.js";
+import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/useragent.js";
 ```
 
 ## `isMobile()`
@@ -4924,8 +5056,8 @@ import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/userage
 Returns `true` if `navigator.userAgent` contains any of `Android`, `webOS`, `iPhone`, `iPad`, `iPod`, `BlackBerry`, `IEMobile`, or `Opera Mini` (case-insensitive), and `false` otherwise. Takes no parameters.
 
 ```javascript
-import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/useragent.js";
-import { show, hide } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
+import { isMobile } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/useragent.js";
+import { show, hide } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
 
 if (isMobile()) {
     show("open-app-button");
@@ -4952,7 +5084,7 @@ Source: https://croot.js.org/docs/en/trace
 ## Usage (Import)
 
 ```javascript
-import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/trace.js";
+import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/trace.js";
 ```
 
 ## `tapClick(event)`
@@ -4968,7 +5100,7 @@ For every event it prints `Elemen yang dipicu:` ("Triggered element") followed b
 Coordinates are `clientX`/`clientY`, i.e. relative to the viewport, not to the page or the element.
 
 ```javascript
-import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/trace.js";
+import { tapClick } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/trace.js";
 
 document.addEventListener("click", tapClick);
 document.addEventListener("touchstart", tapClick);
@@ -4990,7 +5122,7 @@ Despite its name, `image.js` doesn't process images. It contains two functions f
 ## Usage (Import)
 
 ```javascript
-import { getRandomColor, getRandomColorName } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/image.js";
+import { getRandomColor, getRandomColorName } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/image.js";
 ```
 
 ## `getRandomColor()`
@@ -4998,7 +5130,7 @@ import { getRandomColor, getRandomColorName } from "https://cdn.jsdelivr.net/gh/
 Returns a 6-digit uppercase hex color string, for example `"#7A2B9C"`. Each digit is picked with `Math.random()`, so a color too light or too dark for the text on top of it can come up.
 
 ```javascript
-import { getRandomColor } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/image.js";
+import { getRandomColor } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/image.js";
 
 document.getElementById("avatar").style.backgroundColor = getRandomColor();
 ```
@@ -5012,7 +5144,7 @@ Returns one random Tailwind CSS palette color name, **without** a prefix or shad
 Some of these names (e.g. `sky`, `emerald`, `zinc`) are not standard CSS color names, so don't use them directly as a `color` or `background-color` value. Build a Tailwind class name instead:
 
 ```javascript
-import { getRandomColorName } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/image.js";
+import { getRandomColorName } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/image.js";
 
 const color = getRandomColorName();
 document.getElementById("category-label").classList.add(`bg-${color}-500`, "text-white");
@@ -5034,7 +5166,7 @@ Source: https://croot.js.org/docs/en/loading
 ## Usage (Import)
 
 ```javascript
-import { loading } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/loading.js";
+import { loading } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/loading.js";
 ```
 
 ## `loading`
@@ -5050,9 +5182,9 @@ import { loading } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/loading.
 The animation uses `<animateTransform>` (SMIL) inside the SVG: one full rotation every 1.5 seconds with `calcMode="spline"`, repeating indefinitely. No extra CSS or image file is needed.
 
 ```javascript
-import { loading } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/loading.js";
-import { setInner } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/element.js";
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { loading } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/loading.js";
+import { setInner } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/element.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 
 setInner("product-list", loading);
 
@@ -5080,7 +5212,7 @@ Source: https://croot.js.org/docs/en/mongo
 ## Usage (Import)
 
 ```javascript
-import { generateObjectId, getDateFromObjectId } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mongo.js";
+import { generateObjectId, getDateFromObjectId } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mongo.js";
 ```
 
 ## `generateObjectId()`
@@ -5088,7 +5220,7 @@ import { generateObjectId, getDateFromObjectId } from "https://cdn.jsdelivr.net/
 Creates a 24-character string in the shape of a MongoDB `ObjectId` (8 hex characters of the timestamp in seconds + 16 random hex characters from `Math.random()`, not a counter like a real ObjectId), directly in the browser, without calling a server or the `mongodb` library.
 
 ```javascript
-import { generateObjectId } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mongo.js";
+import { generateObjectId } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mongo.js";
 
 const id = generateObjectId();
 console.log(id); // e.g. "65f1a2b3c4d5e6f708192a3b"
@@ -5103,7 +5235,7 @@ Reads back the creation time embedded in the first 8 characters of an `ObjectId`
 | `stringID` | `string` | ObjectId string (24 hex characters, or at least the first 8) |
 
 ```javascript
-import { getDateFromObjectId } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/mongo.js";
+import { getDateFromObjectId } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/mongo.js";
 
 const created = getDateFromObjectId("65f1a2b3c4d5e6f708192a3b");
 console.log(created); // Date from the first 8 characters of the ObjectId
@@ -5172,7 +5304,7 @@ Never as a plain classic script. This matches how CrootJS itself is distributed 
 ## 3. Import CrootJS from a pinned CDN version
 
 ```js
-import { getJSON, postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.30/api.js";
+import { getJSON, postJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.31/api.js";
 ```
 
 - Always pin an exact version tag (`@0.0.5`), never `@latest`, in committed code — `@latest` can silently change behavior under you.

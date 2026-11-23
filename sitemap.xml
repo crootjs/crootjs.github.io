@@ -21,6 +21,11 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/docs/css</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/docs/debounce</loc>
     <lastmod>2026-11-23</lastmod>
     <priority>0.80</priority>
@@ -187,6 +192,11 @@
   </url>
   <url>
     <loc>https://croot.js.org/docs/en/cookie</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/css</loc>
     <lastmod>2026-11-23</lastmod>
     <priority>0.80</priority>
   </url>
@@ -376,6 +386,11 @@
     <priority>0.60</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/examples/api/explorer/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/examples/api/file/</loc>
     <lastmod>2026-09-14</lastmod>
     <priority>0.60</priority>
@@ -421,7 +436,17 @@
     <priority>0.60</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/examples/css/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/examples/element/form/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/element/kanban/</loc>
     <lastmod>2026-11-23</lastmod>
     <priority>0.60</priority>
   </url>
