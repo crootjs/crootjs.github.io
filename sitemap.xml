@@ -196,6 +196,11 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/docs/ui</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/docs/url</loc>
     <lastmod>2026-11-24</lastmod>
     <priority>0.80</priority>
@@ -407,6 +412,11 @@
   </url>
   <url>
     <loc>https://croot.js.org/docs/en/trace</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/docs/en/ui</loc>
     <lastmod>2026-11-24</lastmod>
     <priority>0.80</priority>
   </url>
@@ -628,6 +638,46 @@
   <url>
     <loc>https://croot.js.org/examples/geo/survey/</loc>
     <lastmod>2026-10-30</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/aplikasi/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/daftar-detail/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/formulir/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/kosong-404/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/landing/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/login/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/pola/pengaturan/</loc>
+    <lastmod>2026-11-24</lastmod>
     <priority>0.60</priority>
   </url>
   <url>
