@@ -5,12 +5,12 @@
 CrootJS is the successor of JSCroot (`jscroot/lib` on jsDelivr, jscroot.github.io). Code written for JSCroot: switch imports to `crootjs/lib@<version>` and see the migration table (removed functions, old `api.js` argument order) at https://croot.js.org/docs/en/migrasi.
 
 Current release: see the `v*` tags at https://github.com/crootjs/lib/tags (changes per version: https://github.com/crootjs/lib/blob/main/CHANGELOG.md) — import a specific module as
-`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.34/cookie.js`.
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.35/cookie.js`.
 Always pin an exact version tag; do not use `@latest` in production code.
 
 For production, import the `.min.js` variant instead — jsDelivr auto-minifies any file on
 request (via Terser), even though no `.min.js` is committed to the repo, e.g.
-`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.34/cookie.min.js`. Use the unminified `.js` only
+`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.35/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
 ## Mandatory coding convention
