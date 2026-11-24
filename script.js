@@ -1,6 +1,6 @@
-import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.38/api.min.js";
-import { onClick, onClicks, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.38/element.min.js";
-import { toastError } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.38/toast.min.js";
+import { getJSON } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/api.min.js";
+import { onClick, onClicks, setInnerText } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/element.min.js";
+import { toastError } from "https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/toast.min.js";
 
 // Menu navigasi di layar sempit
 const toggle = document.getElementById("nav-toggle");
