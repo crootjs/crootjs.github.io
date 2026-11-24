@@ -212,6 +212,11 @@
                     <p>What campus dashboards used jQuery, DataTables, Chart.js and icon fonts for: a single-page router with hash or history URLs (<code>router.js</code>), data tables with sorting, search, pagination and a server mode (<code>table.js</code>), SVG bar, line and donut charts (<code>chart.js</code>), and 49 hand-drawn icons (<code>icons.css</code>). All written from scratch, keyboard- and screen-reader-friendly.</p>
                 </div>
                 <div class="card feature-card">
+                    <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-book-open"/></svg>
+                    <h3>API Docs Without Swagger UI</h3>
+                    <p><code>openapi.js</code> turns an <code>openapi.yaml</code> or <code>.json</code> file into browsable API documentation, with a try-it button and ready-to-copy CrootJS <code>api.js</code> code for every operation. About 11 KB gzipped instead of Swagger UI's 460 KB; its YAML parser (<code>yaml.js</code>) is our own too.</p>
+                </div>
+                <div class="card feature-card">
                     <svg class="icon feature-icon" aria-hidden="true" focusable="false"><use href="#i-wifi-off"/></svg>
                     <h3>Markdown, QR Codes &amp; Offline Apps</h3>
                     <p><code>markdown.js</code> turns Markdown into HTML that is safe by design (raw HTML escaped, <code>javascript:</code> links refused). <code>qr.js</code> draws QR codes as SVG. <code>pwa.js</code> and <code>serviceworker.js</code> make your app installable and keep it opening without internet.</p>
@@ -667,8 +672,8 @@
                     </div>
                     <div class="example-content">
                         <h3 class="example-title">API Documentation</h3>
-                        <p class="example-description">Interactive API documentation powered by Swagger UI.</p>
-                        <a href="/examples/api/swagger/" class="example-link">View Demo →</a>
+                        <p class="example-description">API docs from an OpenAPI file with openapi.js: CrootJS code and a try-it button for every operation, no Swagger UI.</p>
+                        <a href="/examples/api/openapi/" class="example-link">View Demo →</a>
                     </div>
                 </div>
 
