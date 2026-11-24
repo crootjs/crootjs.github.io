@@ -64,6 +64,12 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/croot.min.css">
     <link rel="stylesheet" href="style.css">
+    <!-- Modul yang diimpor script.js, termasuk storage.min.js yang diimpor api.min.js: diunduh
+         bersamaan sejak awal, bukan satu per satu mengikuti rantai import. -->
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/api.min.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/storage.min.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/element.min.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.39/toast.min.js">
     <script type="module" src="script.js"></script>
 </head>
 <body>
