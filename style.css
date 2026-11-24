@@ -1,16 +1,15 @@
-/* Landing page di atas croot.css (reset, tipografi, tombol .button, .card, .grid, .cluster,
-   mode gelap). File ini hanya berisi warna merek dan bagian khas halaman ini. */
+/* Landing page di atas croot.css dan ui.css (akordeon tanya jawab), disusun mengikuti pola
+   examples/pola/landing: datar, garis tepi alih-alih bayangan, isi lebih dulu daripada hiasan
+   (docs/conventions.md bagian 5). File ini hanya berisi warna merek dan tata letak halaman ini. */
 
 /* Warna merek: biru. Ditulis untuk terang dan gelap sekaligus, karena aturan tanpa layer
    di sini mengalahkan nilai mode gelap bawaan croot.css. */
 :root {
-    --croot-accent: #007aff;
+    --croot-accent: #0062cc;
     --croot-accent-text: #ffffff;
-    --croot-focus: #007aff;
-    --brand-green: #17a962;
-    --code-bg: #0a0a0a;
-    --code-text: #e4e4e7;
-    --footer-bg: #111827;
+    --croot-focus: #0062cc;
+    --code-bg: #0f172a;
+    --code-text: #e2e8f0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,7 +17,7 @@
         --croot-accent: #60a5fa;
         --croot-accent-text: #0f172a;
         --croot-focus: #93c5fd;
-        --brand-green: #4ade80;
+        --code-bg: #020617;
     }
 }
 
@@ -26,15 +25,7 @@
     --croot-accent: #60a5fa;
     --croot-accent-text: #0f172a;
     --croot-focus: #93c5fd;
-    --brand-green: #4ade80;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    line-height: 1.7;
+    --code-bg: #020617;
 }
 
 /* Ikon: sprite SVG di awal <body>; tiap ikon <svg class="icon"><use href="#i-..."/></svg> */
@@ -57,127 +48,56 @@ svg.icon {
 /* Lompat ke isi, untuk pengguna keyboard dan pembaca layar */
 .skip-link {
     position: absolute;
-    left: 16px;
+    left: 1rem;
     top: -100px;
-    z-index: 2000;
-    padding: 12px 16px;
+    z-index: 10;
+    padding: 0.75rem 1rem;
     border-radius: var(--croot-radius);
     background-color: var(--croot-accent);
     color: var(--croot-accent-text);
     font-weight: 600;
-    text-decoration: none;
 }
 
 .skip-link:focus {
-    top: 16px;
+    top: 1rem;
 }
 
 .container {
-    max-width: 1280px;
-    padding-inline: 24px;
+    max-width: 72rem;
 }
 
-h1 {
-    font-size: clamp(36px, 5vw, 64px);
-    line-height: 1.2;
-    margin-bottom: 24px;
-}
-
-h2 {
-    font-size: clamp(32px, 4vw, 40px);
-    line-height: 1.3;
-    margin: 0 0 32px;
-    text-align: center;
-}
-
-h3 {
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 1.4;
-    margin: 0 0 16px;
-}
-
-main p {
-    font-size: 18px;
-    color: var(--croot-muted);
-}
-
-.section-intro {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto 48px;
-}
-
-.center-mt {
-    text-align: center;
-    margin-top: 32px;
-}
-
-/* Tombol croot.css, sedikit lebih besar untuk halaman muka */
-.button {
-    padding: 14px 30px;
-    font-size: 18px;
-    border-radius: 12px;
-    transition: transform 250ms ease-out;
-}
-
-.button:not(.secondary):hover {
-    transform: scale(1.03);
-}
-
-.button.secondary:hover {
-    background-color: color-mix(in srgb, var(--croot-text) 6%, transparent);
-}
-
-/* Navigation: bilah .nav croot.css yang menempel di atas */
+/* Navigasi */
 .site-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: var(--croot-surface);
+    position: relative;
     border-bottom: 1px solid var(--croot-border);
+    background-color: var(--croot-surface);
 }
 
 .site-header .nav {
-    position: relative;
-    padding-block: 16px;
     border-bottom: 0;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    text-decoration: none;
+    gap: 0.5rem;
     color: var(--croot-text);
-    font-weight: 600;
-    font-size: 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
 }
 
 .nav .nav-links {
-    gap: 32px;
+    gap: 1.5rem;
 }
 
-.nav-links a {
-    display: inline-block;
-    padding: 8px 0;
-    color: var(--croot-muted);
-    font-weight: 500;
-}
-
-.nav-links a:hover {
-    color: var(--croot-accent);
-}
-
-/* Tombol menu: hanya tampil di layar sempit */
+/* Tombol menu: hanya tampil di layar sempit (script.js membuka dan menutup daftarnya) */
 .nav-toggle {
     display: none;
     width: 44px;
     height: 44px;
     padding: 0;
     border: 1px solid var(--croot-border);
-    border-radius: 10px;
     background-color: var(--croot-surface);
     color: var(--croot-text);
 }
@@ -191,35 +111,31 @@ main p {
     display: block;
 }
 
-/* Hero Section */
-.hero {
-    padding: 120px 0 96px;
-    text-align: center;
-    border-bottom: 1px solid var(--croot-border);
+/* Pembuka: penjelasan di kiri, kode sungguhan di kanan */
+.pembuka {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+    padding-block: 3rem;
 }
 
-.hero-content {
-    max-width: 800px;
-    margin: 0 auto;
+@media (min-width: 60rem) {
+    .pembuka {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+        padding-block: 4.5rem 4rem;
+    }
 }
 
-.hero .hero-tagline {
-    font-size: 20px;
-    margin-bottom: 32px;
+.pembuka h1 {
+    max-width: 20ch;
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 2.9rem);
+    line-height: 1.1;
 }
 
-.hero-buttons,
-.cta-buttons {
-    justify-content: center;
-    --croot-gap: 24px;
-}
-
-.hero-buttons {
-    margin-top: 32px;
-}
-
-.hero-badges {
-    justify-content: center;
+.lead {
+    max-width: 46ch;
+    font-size: 1.1rem;
 }
 
 .hero-badges img {
@@ -227,261 +143,163 @@ main p {
     height: 20px;
 }
 
-/* Dulu bernama JSCroot */
-.formerly {
-    padding: 64px 0 0;
+.hero-badges .badge {
+    text-decoration: none;
 }
 
-.formerly-card {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 32px;
-    border-left: 4px solid var(--croot-accent);
+/* Bagian-bagian halaman */
+.bagian {
+    padding-block: 2.5rem;
+    border-top: 1px solid var(--croot-border);
 }
 
-.formerly-card h2 {
-    font-size: 28px;
-    margin-bottom: 16px;
-    text-align: left;
+.bagian h2 {
+    margin-bottom: 1rem;
 }
 
-/* Features Section */
-.features {
-    padding: 96px 0;
+.bagian h3 {
+    margin: 2rem 0 1rem;
+    color: var(--croot-muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
-.grid.features-grid,
-.grid.examples-grid {
-    --croot-gap: 32px;
-    margin-top: 48px;
+.sempit {
+    max-width: 46rem;
 }
 
-.grid.features-grid {
-    --croot-min: 350px;
+.fitur {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(26rem, 100%), 1fr));
+    gap: 1.25rem 3rem;
+    margin: 0;
 }
 
-.grid.examples-grid {
-    --croot-min: 300px;
+.fitur dt {
+    font-weight: 700;
 }
 
-/* Kartu datar: garis tepi dari croot.css, tanpa bayangan dan efek terangkat (docs/conventions.md,
-   bagian 5: tanpa tampilan khas AI). */
-.card.feature-card,
-.card.example-card {
-    min-width: 0;
+.fitur dd {
+    margin: 0.25rem 0 0;
+    max-width: 55ch;
 }
 
-.card.feature-card {
-    padding: 32px;
-    overflow-wrap: break-word;
+.langkah-mulai {
+    max-width: 46rem;
+    padding-left: 1.25rem;
 }
 
-.feature-icon {
-    width: 32px;
-    height: 32px;
-    margin-bottom: 16px;
+.langkah-mulai li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
 }
 
-.feature-icon.green {
-    color: var(--brand-green);
+.daftar-contoh {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+    gap: 0 3rem;
 }
 
-/* Code Examples Section */
-.code-examples,
-.examples {
-    padding: 96px 0;
-    background-color: var(--croot-surface);
+.daftar-contoh ul {
+    padding-left: 1.25rem;
 }
 
+.daftar-contoh li {
+    margin-bottom: 0.4rem;
+}
+
+.accordion {
+    max-width: 46rem;
+}
+
+/* Blok kode gelap dengan tombol salin (script.js menyalin isi <pre> sesudah header) */
 .code-block {
+    min-width: 0;
+    padding: 1.25rem;
+    border-radius: var(--croot-radius);
     background-color: var(--code-bg);
-    border-radius: 16px;
-    padding: 32px;
-    margin: 32px 0;
-    overflow-x: auto;
+    color: var(--code-text);
 }
 
 .code-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 0.75rem;
 }
 
 .code-title {
-    color: var(--code-text);
     font-family: var(--croot-mono);
-    font-size: 14px;
+    font-size: 0.85rem;
 }
 
 .copy-btn {
     min-height: 0;
-    padding: 8px 16px;
-    border: 1px solid #4b5563;
-    border-radius: 8px;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid #475569;
     background-color: transparent;
     color: var(--code-text);
-    font-size: 14px;
+    font-size: 0.85rem;
     font-weight: 400;
 }
 
 .copy-btn.copied {
-    background-color: #17a962;
-    border-color: #17a962;
-    color: #ffffff;
+    border-color: #4ade80;
+    color: #4ade80;
 }
 
 /* pre bawaan croot.css berbingkai; di sini bingkainya .code-block */
 pre.code-content {
     margin: 0;
     padding: 0;
+    overflow-x: auto;
     border: 0;
     background-color: transparent;
-    font-size: 16px;
     color: var(--code-text);
+    font-size: 0.85rem;
     line-height: 1.6;
 }
 
-.code-content .comment { color: #6a737d; }
-.code-content .keyword { color: #f97583; }
-.code-content .string { color: #9ecbff; }
-.code-content .function { color: #b392f0; }
-.code-content .import { color: #79b8ff; }
+.code-content .comment { color: #94a3b8; }
+.code-content .keyword { color: #f9a8d4; }
+.code-content .string { color: #a5d6ff; }
+.code-content .function { color: #c4b5fd; }
 
-/* Examples Section */
-.card.example-card {
-    padding: 0;
-    overflow: hidden;
-    background-color: var(--croot-bg);
-}
-
-.example-preview {
-    height: 160px;
-    border-bottom: 1px solid var(--croot-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Footer */
+.site-footer {
+    padding-block: 2rem 3rem;
+    border-top: 1px solid var(--croot-border);
     color: var(--croot-muted);
+    font-size: 0.9rem;
 }
 
-.example-content {
-    padding: 24px;
+/* ui.css menata isi <p> footer sebagai baris flex; kalimat ini satu baris teks biasa. */
+.site-footer p {
+    display: block;
 }
 
-.example-title {
-    font-size: 20px;
-    margin-bottom: 12px;
-}
-
-.example-link {
-    display: inline-block;
-    padding: 6px 0;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-.example-link:hover {
-    text-decoration: underline;
-}
-
-/* CTA Section dan footer: selalu gelap */
-.cta {
-    padding: 96px 0;
-    text-align: center;
-    background-color: var(--footer-bg);
-    color: #ffffff;
-}
-
-.cta h2 {
-    margin-bottom: 24px;
-}
-
-.cta p {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 32px;
-    font-size: 20px;
-}
-
-.cta .button:not(.secondary) {
-    background-color: #ffffff;
-    color: #007aff;
-}
-
-.cta .button.secondary {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-}
-
-.cta .button.secondary:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.footer {
-    background-color: var(--footer-bg);
-    color: #9ca3af;
-    padding: 48px 0;
-    text-align: center;
-}
-
-.footer p {
-    color: inherit;
-}
-
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-}
-
-.footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 20px;
-}
-
-.footer-links {
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.footer-links a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.footer-links a:hover {
-    color: #60a5fa;
-}
-
-.footer-bottom {
-    border-top: 1px solid #4b5563;
-    padding-top: 24px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Layar sempit: daftar navigasi turun di bawah bilah, dibuka dengan .nav-toggle */
+@media (max-width: 48rem) {
     .nav-toggle {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* Menu turun di bawah bilah navigasi, dibuka dengan .nav-toggle */
     .nav .nav-links {
         display: none;
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
+        z-index: 5;
         flex-direction: column;
         gap: 0;
-        padding: 8px 24px 16px;
+        padding: 0.5rem var(--croot-space) 1rem;
+        border-bottom: 1px solid var(--croot-border);
         background-color: var(--croot-surface);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 16px rgb(0 0 0 / 0.08);
     }
 
     .nav .nav-links.open {
@@ -490,53 +308,11 @@ pre.code-content {
 
     .nav-links a {
         display: block;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--croot-border);
-    }
-
-    .nav-links li:last-child a {
-        border-bottom: 0;
-    }
-
-    .hero {
-        padding: 100px 0 64px;
-    }
-
-    .hero .hero-tagline {
-        font-size: 17px;
-    }
-
-    .code-block {
-        padding: 20px;
-    }
-
-    pre.code-content {
-        font-size: 14px;
-    }
-
-    .card.feature-card,
-    .formerly-card {
-        padding: 24px;
-    }
-
-    .hero-buttons,
-    .cta-buttons {
-        flex-direction: column;
-    }
-
-    .hero-buttons .button,
-    .cta-buttons .button {
-        width: 100%;
-        max-width: 300px;
+        padding: 0.75rem 0;
     }
 }
 
-/* Judul bagian tidak tertutup bilah navigasi yang menempel di atas */
-section[id],
-main {
-    scroll-margin-top: 88px;
-}
-
-.hero-badges .badge {
-    text-decoration: none;
+/* 404.html */
+.bagian-404 {
+    padding-block: 4rem;
 }
