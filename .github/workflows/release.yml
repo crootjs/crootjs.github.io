@@ -1,20 +1,21 @@
-# Langkah terakhir rilis crootjs/lib. Tiap jam membaca croot.js.org/lib/version.json; kalau versinya
-# belum ada di llms.txt dan docs serta examples sudah tayang dengan versi itu (keduanya menaikkan
-# pinnya sendiri), maka:
-#   1. naikkan pin crootjs/lib@<versi> di landing page dan llms.txt;
-#   2. bangun ulang sitemap.xml dan llms-full.txt (tools/build.sh), commit, minta build Pages;
-#   3. jalankan uji lib di croot.js.org/lib/tests/ dengan Chromium;
-#   4. kirim notifikasi Telegram (secret TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID, opsional).
-# Dijalankan manual dari tab Actions dengan versi tertentu, pengecekan llms.txt dilewati.
+# Langkah terakhir rilis crootjs/lib, dipicu repository_dispatch "lib-released" dari workflow
+# rilis lib (atau manual dari tab Actions):
+#   1. tunggu docs dan examples (yang menaikkan pinnya sendiri) tayang dengan versi baru;
+#   2. naikkan pin crootjs/lib@<versi> di landing page dan llms.txt;
+#   3. bangun ulang sitemap.xml dan llms-full.txt (tools/build.sh), commit, minta build Pages;
+#   4. jalankan uji lib di croot.js.org/lib/tests/ dengan Chromium;
+#   5. kirim notifikasi Telegram (secret TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID, opsional).
+# Manual tanpa versi: versinya dibaca dari croot.js.org/lib/version.json, dan tidak ada yang
+# dikerjakan kalau llms.txt sudah memakai versi itu.
 name: release
 
 on:
-  schedule:
-    - cron: "37 * * * *"
+  repository_dispatch:
+    types: [lib-released]
   workflow_dispatch:
     inputs:
       version:
-        description: "Versi crootjs/lib, misalnya 0.0.33 (kosong = baca version.json)"
+        description: "Versi crootjs/lib, misalnya 0.0.34 (kosong = baca version.json)"
         required: false
 
 permissions:
@@ -26,15 +27,15 @@ concurrency: release
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 25  # termasuk menunggu docs dan examples
     outputs:
       version: ${{ steps.check.outputs.version }}
     steps:
       - uses: actions/checkout@v7
-      - name: Cek versi baru
+      - name: Tentukan versi, tunggu docs dan examples tayang
         id: check
         env:
-          VERSION: ${{ inputs.version }}
+          VERSION: ${{ github.event.client_payload.version || inputs.version }}
         run: |
           if [ -z "$VERSION" ]; then
             VERSION=$(curl -fsS https://croot.js.org/lib/version.json | jq -r .version)
@@ -47,15 +48,18 @@ jobs:
             [0-9]*.[0-9]*.[0-9]*) ;;
             *) echo "Versi tidak valid: $VERSION" >&2; exit 1 ;;
           esac
-          docs=$(curl -s https://croot.js.org/docs/api/ | grep -c "crootjs/lib@$VERSION/" || true)
-          pages=$(curl -s https://croot.js.org/examples/geo/offline/index.js | grep -c "crootjs/lib@$VERSION/" || true)
-          echo "docs $docs, examples $pages"
-          if [ "$docs" -eq 0 ] || [ "$pages" -eq 0 ]; then
-            # Dicoba lagi jam berikutnya; docs dan examples mungkin belum menaikkan pin.
-            echo "::notice::docs/examples belum tayang dengan lib@$VERSION."
-            exit 0
-          fi
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          for i in $(seq 1 60); do
+            docs=$(curl -s https://croot.js.org/docs/api/ | grep -c "crootjs/lib@$VERSION/" || true)
+            pages=$(curl -s https://croot.js.org/examples/geo/offline/index.js | grep -c "crootjs/lib@$VERSION/" || true)
+            echo "docs $docs, examples $pages"
+            if [ "$docs" -gt 0 ] && [ "$pages" -gt 0 ]; then
+              echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "docs/examples belum tayang dengan lib@$VERSION setelah 20 menit" >&2
+          exit 1
 
   publish:
     needs: check
