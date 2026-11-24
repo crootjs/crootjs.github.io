@@ -151,6 +151,11 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/docs/openapi</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/docs/pwa</loc>
     <lastmod>2026-11-24</lastmod>
     <priority>0.80</priority>
@@ -361,6 +366,11 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://croot.js.org/docs/en/openapi</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://croot.js.org/docs/en/pwa</loc>
     <lastmod>2026-11-24</lastmod>
     <priority>0.80</priority>
@@ -477,6 +487,11 @@
   </url>
   <url>
     <loc>https://croot.js.org/examples/api/get/fromgcf/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://croot.js.org/examples/api/openapi/</loc>
     <lastmod>2026-11-24</lastmod>
     <priority>0.60</priority>
   </url>
