@@ -136,7 +136,7 @@ main p {
     width: 100%;
     z-index: 1000;
     background-color: var(--croot-surface);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid var(--croot-border);
 }
 
 .site-header .nav {
@@ -264,22 +264,16 @@ main p {
     --croot-min: 300px;
 }
 
+/* Kartu datar: garis tepi dari croot.css, tanpa bayangan dan efek terangkat (docs/conventions.md,
+   bagian 5: tanpa tampilan khas AI). */
 .card.feature-card,
 .card.example-card {
     min-width: 0;
-    border-radius: 16px;
-    transition: transform 300ms ease-out, box-shadow 300ms ease-out;
-}
-
-.card:is(.feature-card, .example-card):hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 24px color-mix(in srgb, var(--croot-accent) 15%, transparent);
 }
 
 .card.feature-card {
     padding: 32px;
     overflow-wrap: break-word;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .feature-icon {
@@ -362,12 +356,12 @@ pre.code-content {
 }
 
 .example-preview {
-    height: 200px;
-    background: linear-gradient(135deg, #e5f2ff 0%, #17a962 100%);
+    height: 160px;
+    border-bottom: 1px solid var(--croot-border);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #111827;
+    color: var(--croot-muted);
 }
 
 .example-content {
