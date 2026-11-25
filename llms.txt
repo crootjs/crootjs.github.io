@@ -5,7 +5,7 @@
 CrootJS is the successor of JSCroot (`jscroot/lib` on jsDelivr, jscroot.github.io). Code written for JSCroot: switch imports to `crootjs/lib@<version>` and see the migration table (removed functions, old `api.js` argument order) at https://croot.js.org/docs/en/migrasi.
 
 Current release: see the `v*` tags at https://github.com/crootjs/lib/tags (changes per version: https://github.com/crootjs/lib/blob/main/CHANGELOG.md) — import a specific module as
-`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/cookie.js`.
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/<module>.js`, e.g. `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.43/cookie.js`.
 Always pin an exact version tag; do not use `@latest` in production code.
 
 For production, import the `.min.js` variant instead (since 0.0.38 release tags contain their own
@@ -17,7 +17,7 @@ that import others (e.g. `api` -> `storage`; `auth` -> `cookie`, `api`, `storage
 https://croot.js.org/docs/#memuat-lebih-cepat-dengan-modulepreload): add
 `<link rel="modulepreload" href=".../<module>.min.js">` for each imported module and its
 dependencies so they download in parallel instead of one round trip per import level. E.g.
-`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/cookie.min.js`. Use the unminified `.js` only
+`https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.43/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
 SRI (since 0.0.42 every release has `integrity.json` at
