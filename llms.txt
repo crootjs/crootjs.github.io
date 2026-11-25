@@ -22,8 +22,9 @@ for local reading/debugging.
 
 SRI (since 0.0.42 every release has `integrity.json` at
 `https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/integrity.json`: `{ files: { "<name>": "sha384-..." },
-imports: { "<module>.min.js": [...] } }` for every `.js`, `.min.js` and `.css`; not `.min.css`, which
-jsDelivr minifies itself). `integrity` on `modulepreload` alone is enforced only by Chromium; to make
+imports: { "<module>.min.js": [...] } }` for every `.js`, `.min.js` and `.css`, and since 0.0.43 `.min.css` (built by CrootJS; before that
+jsDelivr minified `.min.css` itself, so don't hash 0.0.42's). Stylesheets with `integrity` need
+`crossorigin="anonymous"`. `integrity` on `modulepreload` alone is enforced only by Chromium; to make
 Chromium, Firefox and Safari reject a changed module, install an import map with an `integrity` key
 from `integrity.js`, a classic script loaded first in `<head>` (`<script src="integrity.js"></script>`,
 before any modulepreload or module script; the one allowed exception to "JS as type=module", because
