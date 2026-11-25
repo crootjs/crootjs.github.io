@@ -65,15 +65,15 @@
     <!-- Skrip klasik, sebelum modul atau preload apa pun: memasang import map berisi hash SRI
          modul CrootJS (docs/#mengunci-isi-berkas-dengan-integrity-sri). -->
     <script src="integrity.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/croot.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/ui.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/croot.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/ui.min.css">
     <link rel="stylesheet" href="style.css">
     <!-- Modul yang diimpor script.js, termasuk storage.min.js yang diimpor api.min.js: diunduh
          bersamaan sejak awal, bukan satu per satu mengikuti rantai import. -->
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/api.min.js" integrity="sha384-FkrcJYDj82Td9axSh3O+A2TIpwCIg67PsrurLGMr5vk4KnL8c+zONZlBbaMEU0Cy">
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/storage.min.js" integrity="sha384-I68UpwZkgCfB4R68KBk7oSjwdRZqI+8zHf73gCvG+J2YFk5fxD3kBQjgt45dGk0Z">
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/element.min.js" integrity="sha384-6N+HI8HAMAoIP/QFZna5dQ5InvK/mipiijjWEWJIiJOX/simqIO4fLvZSQMbUp9f">
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/toast.min.js" integrity="sha384-F6CVYciiH723TqgIYwzLHsrZWnFHw3sVXzcsyeP9XEzVHFL/CHvZDfYeFpdQ6is1">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/api.min.js" integrity="sha384-FkrcJYDj82Td9axSh3O+A2TIpwCIg67PsrurLGMr5vk4KnL8c+zONZlBbaMEU0Cy">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/storage.min.js" integrity="sha384-I68UpwZkgCfB4R68KBk7oSjwdRZqI+8zHf73gCvG+J2YFk5fxD3kBQjgt45dGk0Z">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/element.min.js" integrity="sha384-6N+HI8HAMAoIP/QFZna5dQ5InvK/mipiijjWEWJIiJOX/simqIO4fLvZSQMbUp9f">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/toast.min.js" integrity="sha384-F6CVYciiH723TqgIYwzLHsrZWnFHw3sVXzcsyeP9XEzVHFL/CHvZDfYeFpdQ6is1">
     <script type="module" src="script.js"></script>
 </head>
 <body>
@@ -127,8 +127,8 @@
                 <span class="code-title">index.js</span>
                 <button type="button" class="copy-btn">Copy</button>
             </div>
-            <pre class="code-content"><code><span class="keyword">import</span> { <span class="function">getJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/api.min.js"</span>;
-<span class="keyword">import</span> { <span class="function">createTable</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/table.min.js"</span>;
+            <pre class="code-content"><code><span class="keyword">import</span> { <span class="function">getJSON</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/api.min.js"</span>;
+<span class="keyword">import</span> { <span class="function">createTable</span> } <span class="keyword">from</span> <span class="string">"https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.42/table.min.js"</span>;
 
 <span class="keyword">const</span> { status, data } = <span class="keyword">await</span> <span class="function">getJSON</span>(<span class="string">"https://api.example.com/students"</span>);
 <span class="keyword">if</span> (status === <span class="string">200</span>) {
