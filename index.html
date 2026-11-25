@@ -62,15 +62,18 @@
     }
     </script>
 
+    <!-- Skrip klasik, sebelum modul atau preload apa pun: memasang import map berisi hash SRI
+         modul CrootJS (docs/#mengunci-isi-berkas-dengan-integrity-sri). -->
+    <script src="integrity.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/croot.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/ui.min.css">
     <link rel="stylesheet" href="style.css">
     <!-- Modul yang diimpor script.js, termasuk storage.min.js yang diimpor api.min.js: diunduh
          bersamaan sejak awal, bukan satu per satu mengikuti rantai import. -->
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/api.min.js">
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/storage.min.js">
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/element.min.js">
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/toast.min.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/api.min.js" integrity="sha384-FkrcJYDj82Td9axSh3O+A2TIpwCIg67PsrurLGMr5vk4KnL8c+zONZlBbaMEU0Cy">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/storage.min.js" integrity="sha384-I68UpwZkgCfB4R68KBk7oSjwdRZqI+8zHf73gCvG+J2YFk5fxD3kBQjgt45dGk0Z">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/element.min.js" integrity="sha384-6N+HI8HAMAoIP/QFZna5dQ5InvK/mipiijjWEWJIiJOX/simqIO4fLvZSQMbUp9f">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/toast.min.js" integrity="sha384-F6CVYciiH723TqgIYwzLHsrZWnFHw3sVXzcsyeP9XEzVHFL/CHvZDfYeFpdQ6is1">
     <script type="module" src="script.js"></script>
 </head>
 <body>
@@ -175,7 +178,7 @@
         <h2 id="judul-mulai">Getting started</h2>
         <ol class="langkah-mulai">
             <li>Link <code>croot.min.css</code> and your own <code>style.css</code>, and load your script as a module: <code>&lt;script type="module" src="index.js"&gt;</code>. HTML, CSS and JS stay in separate files.</li>
-            <li>Import the modules you use from a pinned version, as <code>.min.js</code> in production, never mixed with <code>.js</code>. Add <code>&lt;link rel="modulepreload"&gt;</code> for them and the modules they import (<a href="/docs/en/#loading-faster-with-modulepreload">list</a>).</li>
+            <li>Import the modules you use from a pinned version, as <code>.min.js</code> in production, never mixed with <code>.js</code>. Add <code>&lt;link rel="modulepreload"&gt;</code> for them and the modules they import (<a href="/docs/en/#loading-faster-with-modulepreload">list</a>). To have the browser reject a file whose content changed, add <a href="/docs/en/#locking-file-contents-with-integrity-sri">SRI hashes</a>, and bump versions and hashes together with <code>bump-pins.py</code>.</li>
             <li>Put a <code>404.html</code> next to <code>index.html</code>, and check the page at phone width and in dark mode. The full rules are in the <a href="/docs/conventions">conventions</a>.</li>
         </ol>
     </section>

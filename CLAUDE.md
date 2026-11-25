@@ -6,7 +6,7 @@ This repo is the CrootJS landing page, published at https://croot.js.org/ (GitHu
 
 HTML, CSS, and JS live in separate files: `index.html`, `style.css`, `script.js`. No inline `<style>`/`<script>` blocks, no `onclick`/`style=""` attributes. `script.js` is loaded as `<script type="module" src="script.js">`. Full rules: https://croot.js.org/docs/conventions
 
-Exception: third-party library CDN tags are fine as classic scripts — that's an external dependency, not this page's own logic. The JSON-LD `<script type="application/ld+json">` block in `<head>` is structured data for search engines, not logic, and stays inline (search engines only read it there).
+Exception: third-party library CDN tags are fine as classic scripts — that's an external dependency, not this page's own logic. The JSON-LD `<script type="application/ld+json">` block in `<head>` is structured data for search engines, not logic, and stays inline (search engines only read it there). `integrity.js` is a classic script loaded first in `<head>` on purpose: it installs the import map with the SRI hashes of the CrootJS modules, and Firefox ignores an import map added after module loading started. Its hashes and the `modulepreload` `integrity` attributes are updated by `lib/tools/bump-pins.py` in `release.yml`; when `script.js` imports another CrootJS module, add it (and the modules it imports) to both with an empty hash and run `python3 ../lib/tools/bump-pins.py <version> .`.
 
 ## Icons
 

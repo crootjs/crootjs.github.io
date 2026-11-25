@@ -86,8 +86,8 @@ jobs:
 
       - name: Naikkan pin landing page
         run: |
-          curl -fsSL https://raw.githubusercontent.com/crootjs/lib/main/tools/bump-pins.sh -o /tmp/bump-pins.sh
-          sh /tmp/bump-pins.sh "$VERSION" site
+          curl -fsSL https://raw.githubusercontent.com/crootjs/lib/main/tools/bump-pins.py -o /tmp/bump-pins.py
+          python3 /tmp/bump-pins.py "$VERSION" site
 
       - name: Bangun ulang sitemap dan llms-full, commit
         env:

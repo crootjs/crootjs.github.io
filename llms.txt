@@ -20,6 +20,23 @@ dependencies so they download in parallel instead of one round trip per import l
 `https://cdn.jsdelivr.net/gh/crootjs/lib@0.0.41/cookie.min.js`. Use the unminified `.js` only
 for local reading/debugging.
 
+SRI (since 0.0.42 every release has `integrity.json` at
+`https://cdn.jsdelivr.net/gh/crootjs/lib@<version>/integrity.json`: `{ files: { "<name>": "sha384-..." },
+imports: { "<module>.min.js": [...] } }` for every `.js`, `.min.js` and `.css`; not `.min.css`, which
+jsDelivr minifies itself). `integrity` on `modulepreload` alone is enforced only by Chromium; to make
+Chromium, Firefox and Safari reject a changed module, install an import map with an `integrity` key
+from `integrity.js`, a classic script loaded first in `<head>` (`<script src="integrity.js"></script>`,
+before any modulepreload or module script; the one allowed exception to "JS as type=module", because
+Firefox ignores an import map added after module loading started). It creates
+`<script type="importmap">` with `{ integrity: { "<full jsDelivr URL>": "sha384-..." } }` and inserts
+it with `document.currentScript.after(map)`. List every imported module AND the modules it imports,
+and put the same hash on each `modulepreload` (otherwise Chromium downloads the module again). Example:
+https://croot.js.org/docs/en/#locking-file-contents-with-integrity-sri. To bump versions and hashes,
+`python3 bump-pins.py <version|latest> [folder]` (https://raw.githubusercontent.com/crootjs/lib/main/tools/bump-pins.py,
+Python 3 stdlib only): replaces every `crootjs/lib@x.y.z` in .html/.js/.md/.txt/.json, fills every
+`integrity="..."` / `"<CrootJS URL>": "..."` (empty values too), writes nothing if a hash can't be
+fetched, and reports modules missing from an import map.
+
 ## Mandatory coding convention
 
 Any project using CrootJS must separate HTML, CSS, and JS into their own files and load JS as
@@ -93,7 +110,7 @@ Claude Code picks it up automatically on later runs).
 ## Notes for coding agents
 
 - Always import from a pinned version tag, never `@latest`. Use `.min.js` for anything other than local debugging.
-- Put HTML, CSS, and JS in separate files; load JS as `<script type="module">`. See the convention above — this is not optional.
+- Put HTML, CSS, and JS in separate files; load JS as `<script type="module">`. See the convention above — this is not optional (only exception: the classic `integrity.js` for SRI, above).
 - `api.js` callbacks follow `(url, ..., responseFunction, tokenkey, tokenvalue)` — `responseFunction` is NOT the last argument for `getJSON`/`postJSON`/`putJSON`/`deleteJSON`; check the exact position per function above before generating calls.
 - `websocket.js`'s `openWebSocketSetId` is asynchronous (Promise-based) — it does not return a `WebSocket` synchronously.
 - A `404.html` next to every `index.html` (mandatory, https://croot.js.org/docs/conventions#6-a-404html-next-to-every-indexhtml): same folder as the site's index.html, absolute paths, `noindex`, plain message plus links to likely destinations.
